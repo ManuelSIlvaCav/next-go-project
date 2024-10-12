@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/knadh/koanf/providers/env"
@@ -15,10 +16,18 @@ type Postgres struct {
 	DBName   string
 }
 
+type Redis struct {
+	Host     string
+	Port     int
+	Username string
+	Password string
+}
+
 type Config struct {
 	Env      string
 	Port     int
 	Postgres Postgres
+	Redis    Redis
 }
 
 func NewConfig() *Config {
@@ -39,7 +48,43 @@ func NewConfig() *Config {
 			Password: k.String("postgres.password"),
 			DBName:   k.String("postgres.db"),
 		},
+		Redis: Redis{
+			Host:     k.String("redis.host"),
+			Port:     k.Int("redis.port"),
+			Username: k.String("redis.user"),
+			Password: k.String("redis.password"),
+		},
 	}
 
 	return newConfig
+}
+
+func (c *Config) IsDevelopment() bool {
+	return c.Env == "development"
+}
+
+func (c *Config) IsProduction() bool {
+	return c.Env == "production"
+}
+
+func (c *Config) RedisURL() string {
+	return fmt.Sprintf(
+		"%s:%s@%s:%d",
+		c.Redis.Username,
+		c.Redis.Password,
+		c.Redis.Host,
+		c.Redis.Port,
+	)
+}
+
+func (c *Config) PostgresURL() string {
+	dbURL := fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		c.Postgres.User,
+		c.Postgres.Password,
+		c.Postgres.Host,
+		c.Postgres.Port,
+		c.Postgres.DBName,
+	)
+	return dbURL
 }

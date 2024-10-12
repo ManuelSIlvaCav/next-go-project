@@ -4,6 +4,7 @@ services:
   go-server:
     build:
       context: ./server
+      dockerfile: Dockerfile
     container_name: floormarket-server
     hostname: floormarket-server
     env_file:
@@ -23,18 +24,41 @@ services:
       - ./server:/app
       #- $HOME/.aws/credentials:/home/app/.aws/credentials:ro # for aws credentials
 
-  go-server.db.migrations:
+  go-jobs:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.jobs
+    container_name: floormarket-jobs
+    hostname: floormarket-jobs
+    env_file:
+      - .env
+    ports:
+      - 4000:4000
     depends_on:
       postgresdb:
         condition: service_healthy
-    image: go-server.db.migrations
-    build:
-      context: ./server/db/
-      dockerfile: Dockerfile
-    env_file:
-      - .env
+      redis:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
     restart: on-failure
-    command: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable up"
+    volumes:
+      - ./server:/app
+      #- $HOME/.aws/credentials:/home/app/.aws/credentials:ro # for aws credentials
+
+  # go-server.db.migrations:
+  #   depends_on:
+  #     postgresdb:
+  #       condition: service_healthy
+  #   image: go-server.db.migrations
+  #   build:
+  #     context: ./server/db/
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   restart: on-failure
+  #   command: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable up"
 
   postgresdb:
     image: postgres:latest
@@ -69,6 +93,8 @@ services:
     command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
+    expose:
+      - ${REDIS_PORT}
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

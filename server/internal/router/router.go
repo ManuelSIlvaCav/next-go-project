@@ -2,8 +2,10 @@ package router
 
 import (
 	"fmt"
-	"server/internal/container"
 
+	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/labstack/echo/v4"
 )
 
@@ -11,12 +13,28 @@ type Router struct {
 	mainGroup *echo.Group
 }
 
-func NewRouter(e *echo.Echo, container *container.Container) *Router {
+func NewRouter(
+	e *echo.Echo,
+	internalModule *modules.InternalModule,
+) *Router {
 	router := &Router{}
-	logger := container.Logger()
 
-	logger.Info("Router initialized")
+	container := internalModule.Container
 	router.initializeRouter(e, container)
+
+	logger := container.Logger()
+	logger.Info("Router initialized")
+
+	modules := internalModule.Modules
+
+	for _, module := range modules {
+		domain := module.GetDomain()
+		handlers := module.GetHandlers()
+
+		logger.Info("Registering module", "domain", domain)
+
+		router.RegisterRoutes(domain, handlers)
+	}
 
 	return router
 }
@@ -25,24 +43,24 @@ func NewRouter(e *echo.Echo, container *container.Container) *Router {
 // @param domain string
 // @param routes map[string][]*interfaces.Route
 // @return void
-func (r *Router) RegisterRoutes(domain string, routes []Route) {
+func (r *Router) RegisterRoutes(domain string, routes []internal_models.Route) {
 	fmt.Println("Registering routes for domain", domain)
 	//Set the group for the domain
 	group := r.mainGroup.Group(domain)
 
 	//Register the routes
 	for _, route := range routes {
-
 		group.Add(route.Method, route.Path, route.Handler)
 	}
 }
 
-func (r *Router) SetRoutes(path string, routes []Route) error {
+func (r *Router) SetRoutes(path string, routes []internal_models.Route) error {
 	r.RegisterRoutes(path, routes)
 	return nil
 }
 
-func (r *Router) BuildRoute(method string, path string, handler echo.HandlerFunc) Route {
+func (r *Router) BuildRoute(
+	method string, path string, handler echo.HandlerFunc) Route {
 	return Route{
 		Method:  method,
 		Path:    path,
@@ -50,7 +68,9 @@ func (r *Router) BuildRoute(method string, path string, handler echo.HandlerFunc
 	}
 }
 
-func (r *Router) initializeRouter(e *echo.Echo, container *container.Container) {
+func (r *Router) initializeRouter(
+	e *echo.Echo,
+	container *container.Container) {
 	//setCORSConfig(e, container)
 	//setErrorController(e, container)
 	//setHealthController(e, container)

@@ -1,8 +1,9 @@
 package users
 
 type Contact struct {
-	Phone string `json:"phone"`
-	Email string `json:"email"`
+	UserID int    `json:"user_id"`
+	Phone  string `json:"phone"`
+	Email  string `json:"email"`
 }
 
 type User struct {

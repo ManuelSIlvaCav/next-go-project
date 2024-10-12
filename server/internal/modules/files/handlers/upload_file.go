@@ -1,10 +1,11 @@
 package files_handlers
 
 import (
-	"server/internal/container"
-	files "server/internal/files/models"
 	"time"
 
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
+	files "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files/models"
 	"github.com/labstack/echo/v4"
 )
 
@@ -29,7 +30,7 @@ func UploadFile(container *container.Container) echo.HandlerFunc {
 			return c.String(400, "Failed to bind file")
 		}
 
-		if _, err := container.DB().NamedExecContext(
+		if _, err := container.DB().Db.NamedExecContext(
 			c.Request().Context(),
 			"INSERT INTO files (id, name, size, url, created_at) VALUES (:id, :name, :size, :url, :created_at)",
 			file,
@@ -38,6 +39,21 @@ func UploadFile(container *container.Container) echo.HandlerFunc {
 		}
 
 		logger.Info("File uploaded", "file", file)
+
+		jobClient := container.JobClient()
+
+		task, err := tasks.NewHelloWorldTask("Hello, World!")
+		if err != nil {
+			logger.Error("could not create task", "error", err)
+			return nil
+		}
+
+		info, err := jobClient.Enqueue(task)
+		if err != nil {
+			logger.Error("could not enqueue task", "error", err)
+		}
+
+		logger.Info("Task enqueued", "taskId", info.ID, "queue", info.Queue)
 
 		return c.String(200, "Hello, World!")
 	}

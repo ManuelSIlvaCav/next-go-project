@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"server/internal"
 
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/router"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/fx"
 )
@@ -16,10 +17,11 @@ func NewServer() *echo.Echo {
 func registerHooks(
 	lifecycle fx.Lifecycle,
 	e *echo.Echo,
-	internalModule *internal.InternalModule) {
+	router *router.Router,
+	internalModule *modules.InternalModule,
+) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-
 			container := internalModule.Container
 			logger := container.Logger()
 			config := container.Config()
@@ -39,7 +41,8 @@ func registerHooks(
 func main() {
 	fx.New(
 		fx.Options(
-			internal.Module,
+			router.Module,
+			modules.Module,
 			fx.Provide(NewServer),
 			fx.Invoke(registerHooks),
 		),

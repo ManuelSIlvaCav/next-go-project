@@ -3,8 +3,8 @@ package database
 import (
 	"context"
 	"fmt"
-	"server/internal/container/config"
 
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/config"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
 )
@@ -17,15 +17,9 @@ type Postgres struct {
 
 func NewPostgres(config *config.Config) *Postgres {
 	newPostgres := &Postgres{}
+
 	fmt.Printf("Postgres config: %v", config.Postgres)
-	dbURL := fmt.Sprintf(
-		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
-		config.Postgres.User,
-		config.Postgres.Password,
-		config.Postgres.Host,
-		config.Postgres.Port,
-		config.Postgres.DBName,
-	)
+	dbURL := newPostgres.GetConnectionString(config)
 
 	sqlx, _ := newPostgres.connect(context.Background(), dbURL)
 	newPostgres.Db = sqlx
@@ -50,4 +44,16 @@ func (p *Postgres) connect(ctx context.Context, dbUrl string) (*sqlx.DB, error) 
 	fmt.Println("Connected to database")
 
 	return dbx, nil
+}
+
+func (p *Postgres) GetConnectionString(config *config.Config) string {
+	dbURL := fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		config.Postgres.User,
+		config.Postgres.Password,
+		config.Postgres.Host,
+		config.Postgres.Port,
+		config.Postgres.DBName,
+	)
+	return dbURL
 }
