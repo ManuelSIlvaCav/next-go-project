@@ -3,7 +3,6 @@ package files_handlers
 import (
 	"time"
 
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	files "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files/models"
 	"github.com/labstack/echo/v4"
@@ -40,7 +39,7 @@ func UploadFile(container *container.Container) echo.HandlerFunc {
 
 		logger.Info("File uploaded", "file", file)
 
-		jobClient := container.JobClient()
+		/* jobClient := container.JobClient()
 
 		task, err := tasks.NewHelloWorldTask("Hello, World!")
 		if err != nil {
@@ -49,11 +48,12 @@ func UploadFile(container *container.Container) echo.HandlerFunc {
 		}
 
 		info, err := jobClient.Enqueue(task)
+
 		if err != nil {
 			logger.Error("could not enqueue task", "error", err)
 		}
 
-		logger.Info("Task enqueued", "taskId", info.ID, "queue", info.Queue)
+		logger.Info("Task enqueued", "taskId", info.ID, "queue", info.Queue) */
 
 		return c.String(200, "Hello, World!")
 	}

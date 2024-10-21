@@ -22,7 +22,9 @@ services:
     restart: on-failure
     volumes:
       - ./server:/app
-      #- $HOME/.aws/credentials:/home/app/.aws/credentials:ro # for aws credentials
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
+    networks:
+      - default
 
   go-jobs:
     build:
@@ -45,7 +47,27 @@ services:
     restart: on-failure
     volumes:
       - ./server:/app
-      #- $HOME/.aws/credentials:/home/app/.aws/credentials:ro # for aws credentials
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
+    networks:
+      - default
+
+  asynqmon:
+    image: hibiken/asynqmon:latest
+    ports:
+      - 8080:8080
+    #entrypoint: ["./asynqmon", "--redis-addr=redis:6379"]
+    entrypoint:
+      [
+        "./asynqmon",
+        "--redis-url=redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}",
+      ]
+    depends_on:
+      redis:
+        condition: service_healthy
+      go-jobs:
+        condition: service_started
+    networks:
+      - default
 
   # go-server.db.migrations:
   #   depends_on:
@@ -107,3 +129,6 @@ services:
 volumes:
   pg_data:
     driver: local
+
+networks:
+  default:

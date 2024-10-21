@@ -1,11 +1,3 @@
-# Libraries
-
-- Uber FX for dependency injection
-- SQLX for postgres driver and sql queries/models
-- Echo for simple framework to develop web apps
-- Koanf for env variable handling
-- migrate v4 for hadling SQL migration https://github.com/golang-migrate/migrate
-
 ## Execute single container
 
 > docker build -f Dockerfile -t server-go .
@@ -26,8 +18,18 @@ Manualy
 
 But it should be handled by the docker image with jobs and migrations
 
-# TODO
+# Libraries
 
-- Add job events pub/sub between main app and jobs app
-- Program jobs with times 5sec, 1 min, 1week, etc
-- Deploy all of this
+- Uber FX for dependency injection
+- SQLX for postgres driver and sql queries/models
+- Echo for simple framework to develop web apps
+- Koanf for env variable handling
+- migrate v4 for hadling SQL migration https://github.com/golang-migrate/migrate
+- asyncq for jobs scheduling https://github.com/hibiken/asynq?tab=readme-ov-file
+
+## Interesting
+
+Processing 10k rows csv
+
+- No concurrency 55sec
+- with go routines, buffer channel and batch insert 1.3sec

@@ -28,3 +28,6 @@ docker/*
 
 server/main
 server/jobs
+
+.infracost
+.terraform

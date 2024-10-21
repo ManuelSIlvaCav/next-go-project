@@ -30,9 +30,12 @@ func registerHooks(
 
 			go e.Start(fmt.Sprintf(":%d",
 				config.Port))
+
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
+			container := internalModule.Container
+			container.DB().Close()
 			return e.Shutdown(ctx)
 		},
 	})

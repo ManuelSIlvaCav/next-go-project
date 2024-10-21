@@ -28,6 +28,8 @@ func registerHooks(
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
+			container := internalModule.Container
+			container.DB().Close()
 			return nil
 		},
 	})
