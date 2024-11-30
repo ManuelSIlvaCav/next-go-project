@@ -1,6 +1,8 @@
 package modules
 
 import (
+	"fmt"
+
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
@@ -26,6 +28,26 @@ func NewInternalModule(
 		clientsModule,
 	}
 	return &InternalModule{Container: container, Modules: modules}
+}
+
+func (m *InternalModule) Tasks() []internal_models.Task {
+	fmt.Printf("Tasks")
+	tasks := []internal_models.Task{}
+	//Access the pointers of the modules
+
+	for _, module := range m.Modules {
+		tasks = append(tasks, module.GetTasks()...)
+	}
+
+	return tasks
+}
+
+func (m *InternalModule) SetupScheduledJobs() []internal_models.ScheduledJob {
+	jobs := []internal_models.ScheduledJob{}
+	/* for _, module := range m.Modules {
+		jobs = append(jobs, module.GetScheduledJobs()...)
+	} */
+	return jobs
 }
 
 var Module = fx.Options(

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks"
+	client_tasks "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/tasks"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/labstack/echo/v4"
 )
 
-func UploadClients(container *container.Container,
+func UploadClients(
+	container *container.Container,
 	filesModule *files.FilesModule) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		logger := container.Logger()
@@ -43,7 +44,7 @@ func UploadClients(container *container.Container,
 		jobClient := container.JobClient()
 
 		//generate the task to process the upload
-		task, err := tasks.NewUploadClientsTask(file.Filename)
+		task, err := client_tasks.NewUploadClientsTask(file.Filename)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, &echo.Map{
 				"error": err.Error(),

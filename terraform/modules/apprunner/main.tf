@@ -1,5 +1,5 @@
-resource "aws_iam_role" "myroles" {
-  name = "myroles"
+resource "aws_iam_role" "apprunnerroles" {
+  name = "apprunnerroles"
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
@@ -18,12 +18,13 @@ resource "aws_iam_role" "myroles" {
 }
 
 resource "aws_iam_role_policy_attachment" "myrolespolicy" {
-  role = aws_iam_role.myroles.id
+  role = aws_iam_role.apprunnerroles.id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
 }
 
+// Wait for other resources to be created if needed
 resource "time_sleep" "waitrolecreate" {
-  depends_on = [aws_iam_role.myroles]
+  depends_on = [aws_iam_role.apprunnerroles]
   create_duration = "60s"
 }
 
@@ -41,7 +42,7 @@ resource "aws_apprunner_service" "demo-app-runner" {
 
   source_configuration {
     authentication_configuration {
-      access_role_arn = "${aws_iam_role.myroles.arn}"
+      access_role_arn = "${aws_iam_role.apprunnerroles.arn}"
     }
     image_repository {
       image_identifier      = "${var.ecr_repository_url}:latest"

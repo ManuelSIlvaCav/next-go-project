@@ -35,3 +35,13 @@ func (l *ListingModule) GetHandlers() []internal_models.Route {
 	)
 	return routes
 }
+
+func (l *ListingModule) GetTasks() []internal_models.Task {
+	tasks := []internal_models.Task{}
+	return tasks
+}
+
+func (l *ListingModule) GetScheduledJobs() []internal_models.ScheduledJob {
+	jobs := []internal_models.ScheduledJob{}
+	return jobs
+}

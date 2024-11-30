@@ -38,3 +38,13 @@ func (f *FilesModule) GetHandlers() []internal_models.Route {
 	return routes
 
 }
+
+func (f *FilesModule) GetTasks() []internal_models.Task {
+	tasks := []internal_models.Task{}
+	return tasks
+}
+
+func (f *FilesModule) GetScheduledJobs() []internal_models.ScheduledJob {
+	jobs := []internal_models.ScheduledJob{}
+	return jobs
+}

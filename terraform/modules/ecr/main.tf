@@ -1,6 +1,6 @@
 ## --------- ECR Repository ---------
 resource "aws_ecr_repository" "ecr" {
-  name                 = "${var.service_name}_${var.environment}"
+  name                 = var.ecr_repository_name
   force_delete         = false
   image_tag_mutability = "MUTABLE"
 

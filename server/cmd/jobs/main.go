@@ -20,11 +20,13 @@ func registerHooks(
 			container := internalModule.Container
 			logger := container.Logger()
 
-			logger.Info("Jobs service started")
+			logger.Info("Starting jobs server")
 
 			migrationController.RunMigrations()
 
 			jobServer.Run()
+
+			logger.Info("Jobs server started")
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {

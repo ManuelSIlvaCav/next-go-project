@@ -1,4 +1,4 @@
-package tasks
+package clients
 
 import (
 	"context"
@@ -114,55 +114,6 @@ func (p *UploadClientsProcessor) ProcessTask(ctx context.Context, t *asynq.Task)
 	close(channel)
 
 	return nil
-}
-
-func (p *UploadClientsProcessor) saveClientsToDB(record []string) error {
-	logger := p.Container.Logger()
-	db := p.Container.DB()
-	// Here we can save the records to the database
-	//["Index","Customer Id","First Name","Last Name","Company","City","Country","Phone 1","Phone 2","Email","Subscription Date","Website"]
-
-	customer := &clients.Client{
-		FirstName: record[2],
-		LastName:  record[3],
-		Email:     record[9],
-	}
-
-	stmt, err := db.Db.PrepareNamed("INSERT INTO clients (first_name, last_name, email) VALUES (:first_name, :last_name, :email) RETURNING id")
-
-	if err != nil {
-		logger.Error("Failed to insert client", "error", err)
-		return err
-	}
-
-	err = stmt.Get(&customer.ID, customer)
-
-	if err != nil {
-		logger.Error("Failed to insert client", "error", err)
-		return err
-	}
-
-	//logger.Info("Client saved", "client", customer)
-
-	contact := &clients.Contact{
-		ClientID: customer.ID,
-		Phone:    record[7],
-		Email:    record[9],
-	}
-
-	//Save the client infrmation to the database
-	if _, err := p.Container.DB().Db.NamedExecContext(
-		context.Background(),
-		"INSERT INTO client_contacts_information (client_id, phone, email) VALUES (:client_id, :phone, :email)",
-		contact,
-	); err != nil {
-		p.Container.Logger().Error("Failed to insert client", "error", err)
-	}
-
-	//logger.Info("Client information saved", "client", customer)
-
-	return nil
-
 }
 
 func (p *UploadClientsProcessor) saveClientsBatch(records [][]string) {
