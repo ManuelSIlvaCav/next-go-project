@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ColorModeToggle } from "./color-mode-toogle";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -10,6 +11,7 @@ import {
 export default function NavBar() {
   return (
     <div className="flex flex-row justify-end space-x-2 pt-4 pr-4 ">
+      <ColorModeToggle />
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
