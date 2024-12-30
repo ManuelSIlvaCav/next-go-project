@@ -4,6 +4,7 @@ import (
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	listings "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings/handlers"
+	"go.uber.org/fx"
 )
 
 type ListingModule struct {
@@ -45,3 +46,5 @@ func (l *ListingModule) GetScheduledJobs() []internal_models.ScheduledJob {
 	jobs := []internal_models.ScheduledJob{}
 	return jobs
 }
+
+var Module = fx.Options(fx.Provide(NewListingModule))

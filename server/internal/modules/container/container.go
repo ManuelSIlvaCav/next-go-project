@@ -8,6 +8,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/database"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/logger"
 	"github.com/hibiken/asynq"
+	"go.uber.org/fx"
 )
 
 type Container struct {
@@ -59,3 +60,5 @@ func (c *Container) JobClient() *asynq.Client {
 func (c *Container) AwsConfig() *aws_utils.AwsUtils {
 	return c.awsConfig
 }
+
+var Module = fx.Options(fx.Provide(NewContainer))

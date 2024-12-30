@@ -10,6 +10,10 @@
 
 > migrate create -ext sql -dir db/migrations -seq create_users_table
 
+Example from root folder
+
+> migrate create -ext sql -dir server/cmd/jobs/migration_controller/migrations -seq email_templates_create
+
 2. To run migrations
 
 Manualy
@@ -27,7 +31,7 @@ But it should be handled by the docker image with jobs and migrations
 - migrate v4 for hadling SQL migration https://github.com/golang-migrate/migrate
 - asyncq for jobs scheduling https://github.com/hibiken/asynq?tab=readme-ov-file
 
-## Interesting
+## Interesting Findings
 
 Processing 10k rows csv
 

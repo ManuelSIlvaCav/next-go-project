@@ -2,11 +2,14 @@ package router
 
 import (
 	"fmt"
+	"net/http"
 
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"go.uber.org/fx"
 )
 
 type Router struct {
@@ -37,6 +40,27 @@ func NewRouter(
 	}
 
 	return router
+}
+
+func setCORSConfig(e *echo.Echo) {
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowCredentials:                         true,
+		UnsafeWildcardOriginWithAllowCredentials: true,
+		AllowOrigins:                             []string{"*"},
+		AllowHeaders: []string{
+			echo.HeaderAccessControlAllowHeaders,
+			echo.HeaderContentType,
+			echo.HeaderContentLength,
+			echo.HeaderAcceptEncoding,
+		},
+		AllowMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodDelete,
+		},
+		MaxAge: 86400,
+	}))
 }
 
 // We register the domain in the group and then we register the routes for that module
@@ -71,7 +95,7 @@ func (r *Router) BuildRoute(
 func (r *Router) initializeRouter(
 	e *echo.Echo,
 	container *container.Container) {
-	//setCORSConfig(e, container)
+	setCORSConfig(e)
 	//setErrorController(e, container)
 	//setHealthController(e, container)
 	//setJWTConfig(e, container)
@@ -79,3 +103,5 @@ func (r *Router) initializeRouter(
 
 	r.mainGroup = e.Group("/api/v1")
 }
+
+var Module = fx.Options(fx.Provide(NewRouter))

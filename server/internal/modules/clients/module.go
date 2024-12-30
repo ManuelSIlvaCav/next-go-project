@@ -3,6 +3,7 @@ package clients
 import (
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	clients "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/handlers"
+	client_jobs "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/jobs"
 	client_tasks "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/tasks"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
@@ -54,6 +55,7 @@ func (c *ClientModule) GetTasks() []internal_models.Task {
 
 func (c *ClientModule) GetScheduledJobs() []internal_models.ScheduledJob {
 	jobs := []internal_models.ScheduledJob{}
+	jobs = append(jobs, client_jobs.NewHelloWorldJob(c.container))
 	return jobs
 }
 

@@ -4,6 +4,7 @@ import (
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	files_handlers "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files/handlers"
+	"go.uber.org/fx"
 )
 
 type FilesModule struct {
@@ -48,3 +49,5 @@ func (f *FilesModule) GetScheduledJobs() []internal_models.ScheduledJob {
 	jobs := []internal_models.ScheduledJob{}
 	return jobs
 }
+
+var Module = fx.Options(fx.Provide(NewFilesModule))

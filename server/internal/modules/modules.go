@@ -6,6 +6,7 @@ import (
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings"
 	"go.uber.org/fx"
@@ -21,11 +22,13 @@ func NewInternalModule(
 	filesModule *files.FilesModule,
 	listingModule *listings.ListingModule,
 	clientsModule *clients.ClientModule,
+	emailsModule *emails.EmailsModule,
 ) *InternalModule {
 	modules := []internal_models.IModule{
 		filesModule,
 		listingModule,
 		clientsModule,
+		emailsModule,
 	}
 	return &InternalModule{Container: container, Modules: modules}
 }
@@ -44,9 +47,9 @@ func (m *InternalModule) Tasks() []internal_models.Task {
 
 func (m *InternalModule) SetupScheduledJobs() []internal_models.ScheduledJob {
 	jobs := []internal_models.ScheduledJob{}
-	/* for _, module := range m.Modules {
+	for _, module := range m.Modules {
 		jobs = append(jobs, module.GetScheduledJobs()...)
-	} */
+	}
 	return jobs
 }
 
@@ -55,5 +58,6 @@ var Module = fx.Options(
 	files.Module,
 	listings.Module,
 	clients.Module,
+	emails.Module,
 	fx.Provide(NewInternalModule),
 )

@@ -8,7 +8,7 @@ import (
 
 func NewHelloWorldJob(container *container.Container) internal_models.ScheduledJob {
 	return internal_models.ScheduledJob{
-		Key: clients.TypeUploadClients,
+		Key: clients.TypeHelloWorldRecurrent,
 		Handler: clients.NewHelloWorldRecrrentProcessor(
 			container,
 		),

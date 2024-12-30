@@ -37,6 +37,8 @@ func (mc *MigrationController) RunMigrations() error {
 		return err
 	}
 
+	logger.Info("Creating migration instance", "dbURL", dbURL)
+
 	m, err := migrate.NewWithDatabaseInstance(
 		"file:///"+"app/cmd/jobs/migration_controller/migrations/",
 		"postgres", driver)
