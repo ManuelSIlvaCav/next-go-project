@@ -45,7 +45,7 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 
 	err = dbx.Ping()
 	if err != nil {
-		p.logger.Error("Failed to ping database: %v", "error", err)
+		p.logger.Fatal("Failed to ping database: %v", "error", err)
 		return nil, err
 	}
 

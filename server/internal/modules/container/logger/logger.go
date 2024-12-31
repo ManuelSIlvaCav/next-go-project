@@ -6,6 +6,7 @@ type Logger interface {
 	Info(msg string, data ...interface{})
 	Warn(msg string, data ...interface{})
 	Error(msg string, data ...interface{})
+	Fatal(msg string, data ...interface{})
 }
 
 type logger struct {
@@ -33,4 +34,9 @@ func (log *logger) Warn(msg string, data ...interface{}) {
 // Error implements Logger.
 func (log *logger) Error(msg string, data ...interface{}) {
 	log.Zap.Errorw(msg, append([]interface{}{}, data...)...)
+}
+
+// Fatal implements Logger.
+func (log *logger) Fatal(msg string, data ...interface{}) {
+	log.Zap.Fatalw(msg, append([]interface{}{}, data...)...)
 }

@@ -5,8 +5,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: floormarket-server
-    hostname: floormarket-server
+    container_name: housespot-server
+    hostname: housespot-server
     env_file:
       - .env
     ports:
@@ -30,8 +30,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.jobs
-    container_name: floormarket-jobs
-    hostname: floormarket-jobs
+    container_name: housespot-jobs
+    hostname: housespot-jobs
     env_file:
       - .env
     ports:

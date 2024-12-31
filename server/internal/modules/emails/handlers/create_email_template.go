@@ -4,18 +4,11 @@ import (
 	"net/http"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
+	emails_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/models"
 	emails "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/repositories"
+
 	"github.com/labstack/echo/v4"
 )
-
-type CreateEmailTemplateParams struct {
-	/* BusinessID string `json:"business_id"` */
-	Name    string `json:"name"`
-	Subject string `json:"subject"`
-	Body    string `json:"body"`
-	Design  string `json:"design"`
-	HTML    string `json:"html"`
-}
 
 func CreateEmailTemplate(container *container.Container,
 	emailRepository *emails.EmailTemplateRepository,
@@ -26,7 +19,7 @@ func CreateEmailTemplate(container *container.Container,
 			"Creating email templates handler", "path", c.Path(), "method",
 			c.Request().Method)
 
-		params := emails.CreateEmailTemplateParams{}
+		params := emails_models.CreateEmailTemplateParams{}
 
 		if err := c.Bind(&params); err != nil {
 			logger.Error("Failed to bind email template params", "error", err)
@@ -42,6 +35,6 @@ func CreateEmailTemplate(container *container.Container,
 		}
 
 		logger.Info("Email template created", "email_template", doc)
-		return c.JSON(http.StatusCreated, echo.Map{"emailTemplates": doc})
+		return c.JSON(http.StatusCreated, echo.Map{"email_template": doc})
 	}
 }

@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS addresses(
+    id SERIAL PRIMARY KEY,
+    building VARCHAR(50) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255),
+    zip_code VARCHAR(255),
+    country_code VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

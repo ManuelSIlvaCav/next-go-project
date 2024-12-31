@@ -13,22 +13,37 @@ import {
 import { CollapsibleTrigger } from "@radix-ui/react-collapsible";
 
 import {
+  BookUser,
+  ChartLine,
   ChevronDown,
-  Home,
-  Inbox,
-  Search,
+  HousePlus,
   Settings,
-  UserSearch,
+  Users,
 } from "lucide-react";
 import { Collapsible, CollapsibleContent } from "./ui/collapsible";
 
 const items = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/dashboard",
-    icon: Home,
+    icon: ChartLine,
   },
   {
+    title: "Proyectos",
+    url: "/dashboard/projects",
+    icon: HousePlus,
+  },
+  {
+    title: "Clientes",
+    url: "/dashboard/clients",
+    icon: Users,
+  },
+  {
+    title: "usuarios",
+    url: "/dashboard/users",
+    icon: BookUser,
+  },
+  /* {
     title: "Emails",
     url: "/dashboard/emails",
     icon: Inbox,
@@ -42,7 +57,7 @@ const items = [
     title: "Search",
     url: "#",
     icon: Search,
-  },
+  }, */
   {
     title: "Settings",
     url: "#",

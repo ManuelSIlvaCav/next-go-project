@@ -5,6 +5,15 @@ import (
 	"time"
 )
 
+type CreateEmailTemplateParams struct {
+	/* BusinessID string `json:"business_id"` */
+	Name    string `json:"name"`
+	Subject string `json:"subject"`
+	Body    string `json:"body"`
+	Design  string `json:"design"`
+	HTML    string `json:"html"`
+}
+
 type EmailTemplate struct {
 	ID string `json:"id" db:"id"`
 	/* BusinessID string                `json:"business_id" db:"business_id"` */

@@ -2,34 +2,37 @@ package emails
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"time"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	emails_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/models"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/utils"
 )
 
-type CreateEmailTemplateParams struct {
+/* type CreateEmailTemplateParams struct {
 	Name    string `json:"name" form:"name"`
 	Subject string `json:"subject" form:"subject"`
 	Body    string `json:"body" form:"body"`
 	Design  string `json:"design" form:"design"`
 	HTML    string `json:"html" form:"html"`
-}
+} */
 
 type EmailTemplateRepository struct {
 	container *container.Container
+	utils.BaseRepository[emails_models.EmailTemplate]
 }
 
 func NewEmailTemplateRepository(container *container.Container) *EmailTemplateRepository {
 	return &EmailTemplateRepository{
-		container: container,
+		container:      container,
+		BaseRepository: *utils.NewBaseRepository[emails_models.EmailTemplate](container),
 	}
 }
 
 func (e *EmailTemplateRepository) GetEmailTemplates(ctx context.Context, limit int, cursor int) ([]emails_models.EmailTemplate, error) {
-	logger := e.container.Logger()
+	return e.BasePagination(ctx, "email_templates", limit, cursor)
+	/* logger := e.container.Logger()
 
 	emailTemplates := []emails_models.EmailTemplate{}
 
@@ -67,14 +70,14 @@ func (e *EmailTemplateRepository) GetEmailTemplates(ctx context.Context, limit i
 		emailTemplates = append(emailTemplates, emailTemplate)
 	}
 
-	return emailTemplates, nil
+	return emailTemplates, nil */
 }
 
 func (e *EmailTemplateRepository) GetEmailTemplateByID(id string) (*emails_models.EmailTemplate, error) {
 	return nil, nil
 }
 
-func (e *EmailTemplateRepository) CreateEmailTemplate(ctx context.Context, params CreateEmailTemplateParams,
+func (e *EmailTemplateRepository) CreateEmailTemplate(ctx context.Context, params emails_models.CreateEmailTemplateParams,
 ) (*emails_models.EmailTemplate, error) {
 	logger := e.container.Logger()
 

@@ -13,3 +13,18 @@ CREATE TABLE IF NOT EXISTS contact_details (
 );
 
 
+CREATE TABLE IF NOT EXISTS businesses (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    identifier VARCHAR(255) NOT NULL,
+    legal_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS businesses_users (
+    business_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (business_id, user_id),
+    FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

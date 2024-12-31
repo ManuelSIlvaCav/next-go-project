@@ -9,6 +9,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/projects"
 	"go.uber.org/fx"
 )
 
@@ -23,12 +24,14 @@ func NewInternalModule(
 	listingModule *listings.ListingModule,
 	clientsModule *clients.ClientModule,
 	emailsModule *emails.EmailsModule,
+	projectsModule *projects.ProjectsModule,
 ) *InternalModule {
 	modules := []internal_models.IModule{
 		filesModule,
 		listingModule,
 		clientsModule,
 		emailsModule,
+		projectsModule,
 	}
 	return &InternalModule{Container: container, Modules: modules}
 }
@@ -59,5 +62,6 @@ var Module = fx.Options(
 	listings.Module,
 	clients.Module,
 	emails.Module,
+	projects.Module,
 	fx.Provide(NewInternalModule),
 )

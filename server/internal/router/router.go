@@ -78,20 +78,6 @@ func (r *Router) RegisterRoutes(domain string, routes []internal_models.Route) {
 	}
 }
 
-func (r *Router) SetRoutes(path string, routes []internal_models.Route) error {
-	r.RegisterRoutes(path, routes)
-	return nil
-}
-
-func (r *Router) BuildRoute(
-	method string, path string, handler echo.HandlerFunc) Route {
-	return Route{
-		Method:  method,
-		Path:    path,
-		Handler: handler,
-	}
-}
-
 func (r *Router) initializeRouter(
 	e *echo.Echo,
 	container *container.Container) {
