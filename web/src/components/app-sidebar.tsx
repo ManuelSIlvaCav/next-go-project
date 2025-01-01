@@ -65,6 +65,19 @@ const items = [
   },
 ];
 
+const adminItems = [
+  {
+    title: "Empresas",
+    url: "/dashboard/admin/businesses",
+    icon: Users,
+  },
+  {
+    title: "Users",
+    url: "/dashboard/admin/users",
+    icon: Users,
+  },
+];
+
 function SideBarMainGroup() {
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -96,13 +109,44 @@ function SideBarMainGroup() {
   );
 }
 
+function SideBarAdminGroup() {
+  return (
+    <Collapsible defaultOpen className="group/collapsible">
+      <SidebarGroup>
+        <SidebarGroupLabel asChild>
+          <CollapsibleTrigger>
+            Admin
+            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+          </CollapsibleTrigger>
+        </SidebarGroupLabel>
+        <CollapsibleContent>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {adminItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </CollapsibleContent>
+      </SidebarGroup>
+    </Collapsible>
+  );
+}
+
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader />
       <SidebarContent>
         <SideBarMainGroup />
-        <SidebarGroup />
+        <SideBarAdminGroup />
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>

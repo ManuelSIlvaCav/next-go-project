@@ -8,8 +8,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { DataTablePagination } from "@/components/data-table/data-table-pagination";
-import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTablePagination } from "@/components/data-table-examples/data-table-pagination";
+import { DataTableToolbar } from "@/components/data-table-examples/data-table-toolbar";
 import {
   Table,
   TableBody,

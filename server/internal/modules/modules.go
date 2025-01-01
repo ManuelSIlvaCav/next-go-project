@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
@@ -25,6 +26,7 @@ func NewInternalModule(
 	clientsModule *clients.ClientModule,
 	emailsModule *emails.EmailsModule,
 	projectsModule *projects.ProjectsModule,
+	businessesModule *businesses.BusinessesModule,
 ) *InternalModule {
 	modules := []internal_models.IModule{
 		filesModule,
@@ -32,6 +34,7 @@ func NewInternalModule(
 		clientsModule,
 		emailsModule,
 		projectsModule,
+		businessesModule,
 	}
 	return &InternalModule{Container: container, Modules: modules}
 }
@@ -63,5 +66,6 @@ var Module = fx.Options(
 	clients.Module,
 	emails.Module,
 	projects.Module,
+	businesses.Module,
 	fx.Provide(NewInternalModule),
 )

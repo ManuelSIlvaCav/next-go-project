@@ -5,20 +5,21 @@ import { ColumnDef } from "@tanstack/react-table";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type EmailTemplate = {
+export type Business = {
   id: string;
-  name: string;
-  subject: string;
-  body: string;
-  meta_data: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
+  legalName: string;
+  identifier: string;
+  createdAt: string;
 };
 
-export const columns: ColumnDef<EmailTemplate>[] = [
+export const columns: ColumnDef<Business>[] = [
   {
-    accessorKey: "name",
-    header: "Nombre",
+    accessorKey: "legal_name",
+    header: "Empresa",
+  },
+  {
+    accessorKey: "identifier",
+    header: "Rut",
   },
   {
     accessorKey: "created_at",

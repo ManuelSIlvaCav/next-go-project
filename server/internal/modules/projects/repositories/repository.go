@@ -80,7 +80,7 @@ func (e *ProjectsRepository) CreateProject(
 		newProject.TipologyCount,
 	).Scan(&newProject.ID); err != nil {
 		logger.Error("Failed to insert project", "error", err)
-		return &projects_models.Project{}, err
+		return nil, err
 	}
 
 	sqlStr := "INSERT INTO tipologies (project_id, total_area, net_area, list_price, bedrooms, bathrooms, count) VALUES "

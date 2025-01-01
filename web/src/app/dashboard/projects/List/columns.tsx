@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import { DataTableRowActions } from "@/components/data-table-examples/data-table-row-actions";
 import { ColumnDef } from "@tanstack/react-table";
 
 // This type is used to define the shape of our data.

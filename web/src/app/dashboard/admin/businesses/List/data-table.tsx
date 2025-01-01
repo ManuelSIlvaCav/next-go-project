@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 
 import { DataTablePagination } from "@/components/data-table-examples/data-table-pagination";
-import { DataTableToolbar } from "@/components/data-table-examples/data-table-toolbar";
 import {
   Table,
   TableBody,
@@ -18,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,10 +35,12 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  const router = useRouter();
+
   return (
     <div>
-      <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      {/* <DataTableToolbar table={table} /> */}
+      <div className="rounded-md border my-2">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -64,6 +66,11 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    console.log("rowClicked", row);
+                    router.push(`/dashboard/admin/businesses/${row.id}`);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
