@@ -6,24 +6,26 @@ import (
 
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules"
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/fx"
 )
 
 type Router struct {
-	mainGroup *echo.Group
+	mainGroup  *echo.Group
+	authModule *auth.AuthModule
 }
 
 func NewRouter(
 	e *echo.Echo,
 	internalModule *modules.InternalModule,
+	authModule *auth.AuthModule,
 ) *Router {
 	router := &Router{}
 
 	container := internalModule.Container
-	router.initializeRouter(e, container)
+	router.initializeRouter(e)
 
 	logger := container.Logger()
 	logger.Info("Router initialized")
@@ -67,10 +69,14 @@ func setCORSConfig(e *echo.Echo) {
 // @param domain string
 // @param routes map[string][]*interfaces.Route
 // @return void
-func (r *Router) RegisterRoutes(domain string, routes []internal_models.Route) {
+func (r *Router) RegisterRoutes(
+	domain string,
+	routes []internal_models.Route) {
 	fmt.Println("Registering routes for domain", domain)
 	//Set the group for the domain
 	group := r.mainGroup.Group(domain)
+
+	group.Use(r.authModule.AuthMiddleware())
 
 	//Register the routes
 	for _, route := range routes {
@@ -80,11 +86,10 @@ func (r *Router) RegisterRoutes(domain string, routes []internal_models.Route) {
 
 func (r *Router) initializeRouter(
 	e *echo.Echo,
-	container *container.Container) {
+) {
 	setCORSConfig(e)
 	//setErrorController(e, container)
 	//setHealthController(e, container)
-	//setJWTConfig(e, container)
 	//Set the main group
 
 	r.mainGroup = e.Group("/api/v1")

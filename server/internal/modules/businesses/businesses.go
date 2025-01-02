@@ -9,14 +9,14 @@ import (
 )
 
 type BusinessesModule struct {
-	businessesRepository *businesses.BusinessRepository
+	BusinessesRepository *businesses.BusinessRepository
 	container            *container.Container
 }
 
 func NewBusinessesModule(container *container.Container) *BusinessesModule {
 	businessesRepository := businesses.NewBusinessRepository(container)
 	return &BusinessesModule{
-		businessesRepository: businessesRepository,
+		BusinessesRepository: businessesRepository,
 		container:            container,
 	}
 }
@@ -33,7 +33,7 @@ func (l *BusinessesModule) GetHandlers() []internal_models.Route {
 			Method: "GET",
 			Path:   "",
 			Handler: businesses_handlers.PaginatedBusinesses(l.container,
-				l.businessesRepository),
+				l.BusinessesRepository),
 			Description:   "Get all businesses",
 			Authenticated: true,
 		},
@@ -41,7 +41,7 @@ func (l *BusinessesModule) GetHandlers() []internal_models.Route {
 			Method: "POST",
 			Path:   "",
 			Handler: businesses_handlers.CreateBusinessHandler(l.container,
-				l.businessesRepository),
+				l.BusinessesRepository),
 			Description:   "Create a new business",
 			Authenticated: true,
 		},
@@ -61,4 +61,4 @@ func (l *BusinessesModule) GetScheduledJobs() []internal_models.ScheduledJob {
 	return scheduledJobs
 }
 
-var Module = fx.Options(fx.Provide(NewBusinessesModule))
+var Module = fx.Module("businessesModule", fx.Provide(NewBusinessesModule))
