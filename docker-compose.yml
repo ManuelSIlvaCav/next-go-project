@@ -26,30 +26,30 @@ services:
     networks:
       - default
 
-  go-jobs:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.jobs
-    container_name: housespot-jobs
-    hostname: housespot-jobs
-    env_file:
-      - .env
-    ports:
-      - 4000:4000
-    depends_on:
-      postgresdb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    deploy:
-      restart_policy:
-        condition: on-failure
-    restart: on-failure
-    volumes:
-      - ./server:/app
-      - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
-    networks:
-      - default
+  # go-jobs:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile.jobs
+  #   container_name: housespot-jobs
+  #   hostname: housespot-jobs
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - 4000:4000
+  #   depends_on:
+  #     postgresdb:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   restart: on-failure
+  #   volumes:
+  #     - ./server:/app
+  #     - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
+  #   networks:
+  #     - default
 
   asynqmon:
     image: hibiken/asynqmon:latest
@@ -64,8 +64,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-      go-jobs:
-        condition: service_started
+      #go-jobs:
+      #   condition: service_started
     networks:
       - default
 

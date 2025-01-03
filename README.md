@@ -17,4 +17,12 @@ Prod-simple env is a simple deployment with app runners exposed for easy testing
 
 Prod is a more scalable solution with ecs deployments with a load balancer when transitioning is a simple way to evolve the platform
 
-### Using an existing ECR repository
+## Setup different terraform users
+
+Read the values of the aws credential file
+
+> nano ~/.aws/credentials
+
+To set a different user
+
+> export AWS_PROFILE=oikoflow-integration-user
