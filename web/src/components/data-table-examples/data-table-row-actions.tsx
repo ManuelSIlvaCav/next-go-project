@@ -28,6 +28,7 @@ import { z } from "zod";
 export const taskSchema = z.object({
   name: z.string(),
   created_at: z.string(),
+  label: z.string(),
 });
 
 export const labels = [

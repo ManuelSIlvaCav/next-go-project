@@ -75,8 +75,8 @@ module "vpc" {
   availability_zone_names = local.availability_zone_names
   public_subnets          = local.public_subnets
   private_subnets         = local.private_subnets
-  internet_gateway_id     = module.natgateway.internet_gateway_id // No need for internet gateway
-  nat_gateway_ids         = module.natgateway.nat_gateway_ids     // No need for NAT Gateway
+  internet_gateway_id     = module.natgateway.internet_gateway_id 
+  nat_gateway_ids         = module.natgateway.nat_gateway_ids     
 }
 
 

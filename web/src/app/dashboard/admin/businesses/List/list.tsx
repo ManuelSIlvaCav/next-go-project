@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { Business, columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -36,6 +37,8 @@ async function getData(): Promise<Business[]> {
 }
 
 export default async function BusinessesList() {
+  const cookieStore = cookies();
+  console.log("cookieStore", cookieStore);
   const data = await getData();
 
   return (
