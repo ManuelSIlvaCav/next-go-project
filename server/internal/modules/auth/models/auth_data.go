@@ -1,11 +1,9 @@
 package auth_models
 
 type (
-	AuthData struct {
-		Name   string   `json:"name"`
-		Admin  bool     `json:"admin"`
-		Access []string `json:"access"`
-		UserID string   `json:"user_id"`
+	JWTData struct {
+		Name           string `json:"name"`
+		BusinessUserID string `json:"business_user_id"`
 	}
 )
 
@@ -21,7 +19,6 @@ type UserEmailLogin struct {
 	ID                  string `json:"id" db:"id"`
 	Email               string `json:"email" db:"email"`
 	AuthenticationToken string `json:"authentication_token" db:"authentication_token"`
-	BusinessID          int    `json:"business_id" db:"business_id"`
 	CreatedAt           string `json:"created_at" db:"created_at"`
 	ExpiresAt           string `json:"expires_at" db:"expires_at"`
 }

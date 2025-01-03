@@ -12,9 +12,8 @@ import (
 
 type (
 	UserLogin struct {
-		Email      string `json:"email" validate:"required,email" errormgs:"email is required and must be a valid email address"`
-		Type       string `json:"type" validate:"required,oneof=email-only password" errormgs:"type is required"`
-		BusinessID int    `json:"business_id" validate:"required" errormgs:"business_id is required"`
+		Email string `json:"email" validate:"required,email" errormgs:"email is required and must be a valid email address"`
+		Type  string `json:"type" validate:"required,oneof=email-only password" errormgs:"type is required"`
 	}
 )
 
@@ -40,7 +39,7 @@ func Login(container *container.Container,
 
 		if user.Type == "email-only" {
 			createdEmailLogin, err := emailLogin(c, container,
-				authRepository, user.Email, user.BusinessID)
+				authRepository, user.Email)
 
 			if err != nil {
 				return c.JSON(http.StatusBadRequest, echo.Map{
@@ -90,13 +89,11 @@ func Login(container *container.Container,
 func emailLogin(c echo.Context,
 	container *container.Container,
 	authRepository *auth_repository.AuthRepository,
-	email string,
-	businessID int) (*auth_models.UserEmailLogin, error) {
+	email string) (*auth_models.UserEmailLogin, error) {
 	logger := container.Logger()
 	createdEmailLogin, err := authRepository.CreateUserMagicEmail(
 		c.Request().Context(),
 		email,
-		businessID,
 	)
 
 	logger.Info("Email login created", "email", createdEmailLogin)

@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	auth_jwt "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/jwt"
-	auth_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/models"
 	auth_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/repository"
 	businesses "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
@@ -53,19 +52,21 @@ func MagicLinkLogin(
 
 		/* Now we get the information of the desired User */
 
-		completeUser := &auth_models.User{
-			ID:        "1",
-			FirstName: "Manuel",
-			LastName:  "Silva",
-			Email:     "",
-			Password:  "",
+		businessUser, err := businessRepository.GetBusinessUser(c.Request().Context(), &businesses.GetBusinessUserParams{Email: params.Email})
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, echo.Map{
+				"error": "could not find user",
+			})
+
 		}
 
 		jwtParams := auth_jwt.CreateJwtTokenParams{
-			FirstName: completeUser.FirstName,
-			LastName:  completeUser.LastName,
-			UserId:    completeUser.ID,
+			FirstName: businessUser.FirstName,
+			LastName:  businessUser.LastName,
+			UserId:    businessUser.ID,
 		}
+
 		// Create token
 		token, err := auth_jwt.CreateJwtToken(jwtParams)
 

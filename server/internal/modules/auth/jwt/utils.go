@@ -14,7 +14,7 @@ import (
 // jwtCustomClaims are custom claims extending default ones.
 // See https://github.com/golang-jwt/jwt for more examples
 type JwtCustomClaims struct {
-	auth_models.AuthData
+	auth_models.JWTData
 	jwt.RegisteredClaims
 }
 
@@ -49,12 +49,13 @@ func CreateJwtToken(
 ) (t string, err error) {
 	// Set custom claims
 	claims := &JwtCustomClaims{
-		auth_models.AuthData{
-			Name:   fmt.Sprintf("%s %s", jwtParams.FirstName, jwtParams.LastName),
-			UserID: jwtParams.UserId,
+		auth_models.JWTData{
+			Name:           fmt.Sprintf("%s %s", jwtParams.FirstName, jwtParams.LastName),
+			BusinessUserID: jwtParams.UserId,
 		},
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)), // 1 week duration
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
 
@@ -66,19 +67,15 @@ func CreateJwtToken(
 
 }
 
-func GetJWTData(c echo.Context) auth_models.AuthData {
+func GetJWTData(c echo.Context) auth_models.JWTData {
 	user := c.Get("user").(*jwt.Token)
 
 	claims := user.Claims.(*JwtCustomClaims)
 	name := claims.Name
-	admin := claims.Admin
-	access := claims.Access
-	userId := claims.UserID
+	businessUserID := claims.BusinessUserID
 
-	return auth_models.AuthData{
-		Name:   name,
-		Admin:  admin,
-		Access: access,
-		UserID: userId,
+	return auth_models.JWTData{
+		Name:           name,
+		BusinessUserID: businessUserID,
 	}
 }

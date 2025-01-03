@@ -18,4 +18,6 @@ RUN go install github.com/githubnemo/CompileDaemon
 
 # The build flag sets how to build after a change has been detected in the source code
 # The command flag sets how to run the app after it has been built
-ENTRYPOINT CompileDaemon -build="go build -o . cmd/api/main.go" -command="./main"
+#ENTRYPOINT CompileDaemon -build="go build -o . cmd/api/main.go" -command="./main"
+
+ENTRYPOINT CompileDaemon -build="go build -o . cmd/monolith/main.go" -command="./main"

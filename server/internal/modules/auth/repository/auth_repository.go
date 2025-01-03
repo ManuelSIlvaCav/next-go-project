@@ -44,34 +44,31 @@ func (r *AuthRepository) LoginUserByEmail(
 	authentication_token string,
 ) (*auth_models.UserEmailLogin, error) {
 	logger := r.container.Logger()
-	query := `SELECT * FROM user_email_login WHERE email = $1 AND authentication_token = $2`
+	query := `SELECT email, expires_at FROM user_email_login WHERE email = $1 AND authentication_token = $2`
 
-	loginEmails := []auth_models.UserEmailLogin{}
+	loginEmail := auth_models.UserEmailLogin{}
 
-	if err := r.container.DB().Db.SelectContext(ctx, &loginEmails, query, email, authentication_token); err != nil {
+	if err := r.container.DB().Db.QueryRowContext(ctx, query, email, authentication_token).Scan(&loginEmail.Email, &loginEmail.ExpiresAt); err != nil {
 		logger.Error("Error getting user email login", "error", err)
 		return nil, err
 	}
 
-	if len(loginEmails) == 0 {
-		return nil, nil
-	}
+	logger.Info("User email login", "loginEmails", loginEmail)
 
-	return &loginEmails[0], nil
+	return &loginEmail, nil
 
 }
 
 func (r *AuthRepository) CreateUserMagicEmail(
 	ctx context.Context,
 	email string,
-	businessID int,
 ) (*auth_models.UserEmailLogin, error) {
 	logger := r.container.Logger()
 	newLoginEmail := &auth_models.UserEmailLogin{}
 
-	query := `INSERT INTO user_email_login (email, business_id) VALUES ($1, $2) RETURNING email, authentication_token`
+	query := `INSERT INTO user_email_login (email) VALUES ($1) RETURNING email, authentication_token`
 
-	if err := r.container.DB().Db.QueryRowContext(ctx, query, email, businessID).Scan(&newLoginEmail.Email, &newLoginEmail.AuthenticationToken); err != nil {
+	if err := r.container.DB().Db.QueryRowContext(ctx, query, email).Scan(&newLoginEmail.Email, &newLoginEmail.AuthenticationToken); err != nil {
 		logger.Error("Error creating user email login", "error", err)
 		return nil, err
 	}

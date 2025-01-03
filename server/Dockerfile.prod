@@ -1,4 +1,4 @@
-FROM golang:1.21 as builder
+FROM golang:1.22.5 as builder
 
 ENV GO111MODULE=on
 
@@ -9,15 +9,18 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server cmd/monolith/main.go
 
 FROM scratch
 
-ENV ENV="docker"
+WORKDIR /app
+
+ENV ENV="prod"
 #Gotta add all the env variables needed and defined in .env 
 
-COPY --from=builder /app/server /app/
+COPY --from=builder /app/server .
 
 EXPOSE 3001
 
-ENTRYPOINT ["/app/cmd/api"]
+#ENTRYPOINT ["/app/cmd/api"]
+ENTRYPOINT ["/app/server"]

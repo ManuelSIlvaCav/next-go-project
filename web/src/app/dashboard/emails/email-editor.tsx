@@ -84,7 +84,7 @@ export default function EmailEditorView() {
     });
   };
 
-  const onReady: EmailEditorProps["onReady"] = (unlayer) => {
+  const onReady: EmailEditorProps["onReady"] = () => {
     // editor is ready
     // you can load your template here;
     // the design json can be obtained by calling

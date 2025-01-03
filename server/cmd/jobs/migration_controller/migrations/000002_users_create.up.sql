@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS business_configuration (
 );
 
 CREATE TABLE IF NOT EXISTS businesses_users (
-    id INT NOT NULL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     business_id INT NOT NULL,
     FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
     first_name VARCHAR(255) NOT NULL,
@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS businesses_users (
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(255) NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_businesses_users_email ON businesses_users(email);
 
 CREATE TABLE IF NOT EXISTS roles (
     id SERIAL PRIMARY KEY,
@@ -54,7 +56,6 @@ CREATE TABLE IF NOT EXISTS business_user_roles (
 
 CREATE TABLE IF NOT EXISTS user_email_login (
     id SERIAL PRIMARY KEY,
-    business_id INT,
     email VARCHAR(255) NOT NULL,
     authentication_token uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

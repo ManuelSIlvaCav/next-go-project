@@ -3,7 +3,6 @@ package projects
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -22,15 +21,6 @@ func NewProjectsRepository(container *container.Container) *ProjectsRepository {
 		container:      container,
 		BaseRepository: *utils.NewBaseRepository[projects_models.Project](container),
 	}
-}
-
-// ReplaceSQL replaces the instance occurrence of any string pattern with an increasing $n based sequence
-func ReplaceSQL(old, searchPattern string) string {
-	tmpCount := strings.Count(old, searchPattern)
-	for m := 1; m <= tmpCount; m++ {
-		old = strings.Replace(old, searchPattern, "$"+strconv.Itoa(m), 1)
-	}
-	return old
 }
 
 func (e *ProjectsRepository) GetProjects(
@@ -96,7 +86,7 @@ func (e *ProjectsRepository) CreateProject(
 	sqlStr = strings.TrimSuffix(sqlStr, ",")
 
 	//Replacing ? with $n for postgres
-	sqlStr = ReplaceSQL(sqlStr, "?")
+	sqlStr = utils.ReplaceSQL(sqlStr, "?")
 
 	//prepare the statement
 	stmt, _ := tx.PrepareContext(ctx, sqlStr)

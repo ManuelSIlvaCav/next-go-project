@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/jmoiron/sqlx"
@@ -71,4 +73,13 @@ func (e *BaseRepository[T]) BasePagination(
 	}
 
 	return entities, nil
+}
+
+// ReplaceSQL replaces the instance occurrence of any string pattern with an increasing $n based sequence
+func ReplaceSQL(old, searchPattern string) string {
+	tmpCount := strings.Count(old, searchPattern)
+	for m := 1; m <= tmpCount; m++ {
+		old = strings.Replace(old, searchPattern, "$"+strconv.Itoa(m), 1)
+	}
+	return old
 }
