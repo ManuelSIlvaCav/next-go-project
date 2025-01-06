@@ -21,7 +21,8 @@ type JwtCustomClaims struct {
 type CreateJwtTokenParams struct {
 	FirstName string
 	LastName  string
-	UserId    string
+	UserID    string
+	AdminID   string
 }
 
 func GetJWTConfig() echojwt.Config {
@@ -29,13 +30,15 @@ func GetJWTConfig() echojwt.Config {
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(JwtCustomClaims)
 		},
+		ContextKey: "jwt",
 		SigningKey: []byte("CustomSecretFromProyectX"), //TODO Get secret fromconfig
 		Skipper: func(c echo.Context) bool {
 			/* Skip these */
 			if c.Path() == "/health" ||
 				c.Path() == "/api/v1/auth/login" ||
-				c.Path() == "/api/v1/businesses" ||
-				c.Path() == "/api/v1/auth/magic-link-login" {
+				//c.Path() == "/api/v1/businesses" ||
+				c.Path() == "/api/v1/auth/magic-link-login" ||
+				c.Path() == "/api/v1/auth/magic-link-login/admin" {
 				return true
 			}
 			return false
@@ -44,14 +47,19 @@ func GetJWTConfig() echojwt.Config {
 	return config
 }
 
+type CreateJWTData struct {
+	AccessToken string `json:"access_token"`
+	ExpiresAt   string `json:"expires_at"`
+}
+
 func CreateJwtToken(
 	jwtParams CreateJwtTokenParams,
-) (t string, err error) {
+) (data *CreateJWTData, err error) {
 	// Set custom claims
 	claims := &JwtCustomClaims{
 		auth_models.JWTData{
 			Name:           fmt.Sprintf("%s %s", jwtParams.FirstName, jwtParams.LastName),
-			BusinessUserID: jwtParams.UserId,
+			BusinessUserID: jwtParams.UserID,
 		},
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)), // 1 week duration
@@ -62,8 +70,17 @@ func CreateJwtToken(
 	// Create token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+	accessToken, err := token.SignedString([]byte("CustomSecretFromProyectX"))
+
+	if err != nil {
+		return nil, err
+	}
+
 	// Generate encoded token and send it as response.
-	return token.SignedString([]byte("CustomSecretFromProyectX"))
+	return &CreateJWTData{
+		AccessToken: accessToken,
+		ExpiresAt:   claims.ExpiresAt.Time.String(),
+	}, nil
 
 }
 

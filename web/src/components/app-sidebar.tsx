@@ -17,9 +17,12 @@ import {
   ChartLine,
   ChevronDown,
   HousePlus,
+  MailPlus,
   Settings,
   Users,
 } from "lucide-react";
+import { cookies } from "next/headers";
+import { Suspense } from "react";
 import { Collapsible, CollapsibleContent } from "./ui/collapsible";
 
 const items = [
@@ -72,6 +75,11 @@ const adminItems = [
     icon: Users,
   },
   {
+    title: "Emails Automaticos",
+    url: "/dashboard/admin/automatic-emails",
+    icon: MailPlus,
+  },
+  {
     title: "Users",
     url: "/dashboard/admin/users",
     icon: Users,
@@ -109,7 +117,15 @@ function SideBarMainGroup() {
   );
 }
 
-function SideBarAdminGroup() {
+async function SideBarAdminGroup() {
+  const cookieStore = await cookies();
+  /* Make a sleep 2 secs */
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const jwt = cookieStore.get("jwt");
+  if (!jwt) {
+    return null;
+  }
+
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
@@ -146,7 +162,9 @@ export function AppSidebar() {
       <SidebarHeader />
       <SidebarContent>
         <SideBarMainGroup />
-        <SideBarAdminGroup />
+        <Suspense fallback={<div></div>}>
+          <SideBarAdminGroup />
+        </Suspense>
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>

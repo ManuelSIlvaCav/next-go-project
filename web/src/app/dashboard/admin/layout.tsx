@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import AdminBreadcrumb from "./admin-breadcrumb";
 
 export default async function AdminLayout({
   children,
@@ -7,6 +8,13 @@ export default async function AdminLayout({
 }) {
   console.log("AdminLayout");
   const cookieStore = await cookies();
-  console.log("cookieStore", cookieStore);
-  return <div className="w-[75vw] flex flex-col pl-4">{children}</div>;
+  console.log("AdminLayout", { cookieStore });
+  /* Check if the cookie has is_admin, resources are secured so if the token is invalid nothing can be updated/read */
+
+  return (
+    <div className="w-[75vw] flex flex-col pl-4">
+      <AdminBreadcrumb />
+      {children}
+    </div>
+  );
 }

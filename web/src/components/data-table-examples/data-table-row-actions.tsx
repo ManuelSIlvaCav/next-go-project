@@ -26,23 +26,18 @@ import { z } from "zod";
 // We're keeping a simple non-relational schema here.
 // IRL, you will have a schema for your data models.
 export const taskSchema = z.object({
-  name: z.string(),
+  legal_name: z.string(),
   created_at: z.string(),
-  label: z.string(),
 });
 
 export const labels = [
   {
-    value: "name",
+    value: "legal_name",
     label: "Nombre",
   },
   {
     value: "created_at",
     label: "Fecha creacion",
-  },
-  {
-    value: "documentation",
-    label: "Documentation",
   },
 ];
 

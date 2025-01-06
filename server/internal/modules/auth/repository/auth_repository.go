@@ -24,19 +24,6 @@ func NewAuthRepository(container *container.Container) *AuthRepository {
 	}
 }
 
-func (r *AuthRepository) RegisterUser(
-	registerParams auth_models.User,
-) (*auth_models.User, error) {
-	return nil, nil
-}
-
-func (r *AuthRepository) LoginUser(
-	loginParams *LoginParams,
-) (*auth_models.User, error) {
-
-	return nil, nil
-}
-
 /* Magic redirect, when the user clicks on the link, the email button there is the url with the email and unique token to auth */
 func (r *AuthRepository) LoginUserByEmail(
 	ctx context.Context,
@@ -53,10 +40,7 @@ func (r *AuthRepository) LoginUserByEmail(
 		return nil, err
 	}
 
-	logger.Info("User email login", "loginEmails", loginEmail)
-
 	return &loginEmail, nil
-
 }
 
 func (r *AuthRepository) CreateUserMagicEmail(
@@ -74,4 +58,25 @@ func (r *AuthRepository) CreateUserMagicEmail(
 	}
 
 	return newLoginEmail, nil
+}
+
+func (r *AuthRepository) GetAdminUser(
+	ctx context.Context,
+	email string,
+) (*auth_models.Admin, error) {
+	logger := r.container.Logger()
+	user := &auth_models.Admin{
+		Email: email,
+	}
+
+	query := `SELECT id FROM admins WHERE email = $1`
+
+	if err := r.container.DB().Db.QueryRowContext(ctx, query, email).Scan(
+		&user.ID,
+	); err != nil {
+		logger.Error("Error getting admin user", "error", err)
+		return nil, err
+	}
+
+	return user, nil
 }

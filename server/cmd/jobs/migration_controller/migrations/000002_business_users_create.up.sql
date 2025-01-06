@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS admins (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT FALSE,
+    last_login_at TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS businesses (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -59,5 +67,6 @@ CREATE TABLE IF NOT EXISTS user_email_login (
     email VARCHAR(255) NOT NULL,
     authentication_token uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '1 day'
+    expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '1 day',
+    used_at TIMESTAMP
 )

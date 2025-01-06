@@ -26,3 +26,7 @@ Read the values of the aws credential file
 To set a different user
 
 > export AWS_PROFILE=oikoflow-integration-user
+
+### Changelog TODO 30/12/2024
+
+- Migration to add single superadmin and business

@@ -3,7 +3,6 @@ package auth_handlers
 import (
 	"net/http"
 
-	auth_jwt "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/jwt"
 	auth_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/models"
 	auth_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/repository"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
@@ -53,34 +52,8 @@ func Login(container *container.Container,
 			})
 		}
 
-		params := &auth_repository.LoginParams{
-			Email: user.Email,
-		}
-
-		loggedUser, err := authRepository.LoginUser(params)
-
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, echo.Map{
-				"error": "could not login user",
-			})
-		}
-
-		jwtParams := auth_jwt.CreateJwtTokenParams{
-			FirstName: loggedUser.FirstName,
-			LastName:  loggedUser.LastName,
-			UserId:    loggedUser.ID,
-		}
-		// Create token
-		token, err := auth_jwt.CreateJwtToken(jwtParams)
-
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, echo.Map{
-				"error": "could not create token",
-			})
-		}
-
-		return c.JSON(http.StatusOK, echo.Map{
-			"access_token": token,
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"message": "could not login user",
 		})
 	}
 }

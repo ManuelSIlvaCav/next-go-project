@@ -17,6 +17,7 @@ type PaginatedBusinessesParams struct {
 func PaginatedBusinesses(container *container.Container, businessRepository *businesses.BusinessRepository) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		logger := container.Logger()
+		logger.Info("Loggin jwt data", "data", c.Get("jwt"))
 
 		params := PaginatedBusinessesParams{}
 

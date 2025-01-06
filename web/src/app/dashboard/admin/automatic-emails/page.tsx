@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
-import BusinessesList from "./List/list";
+import AutomaticEmailsList from "./List/list";
 
-export default function AdminBusinessesPage() {
+export default function AdminAutomaticEmails() {
   return (
     <div className="w-[75vw] flex flex-col pl-4">
       <Suspense
@@ -12,7 +12,7 @@ export default function AdminBusinessesPage() {
           </div>
         }
       >
-        <BusinessesList />
+        <AutomaticEmailsList />
       </Suspense>
     </div>
   );

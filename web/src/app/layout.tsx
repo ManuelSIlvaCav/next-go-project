@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { fredoka, latto } from "./fonts";
 import "./globals.css";
+import InnerClientInit from "./inner-client-init";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,7 +44,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NavBar />
-          {children}
+          <InnerClientInit>{children}</InnerClientInit>
           <Toaster />
         </ThemeProvider>
       </body>

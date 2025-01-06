@@ -52,6 +52,12 @@ func (l *AuthModule) GetHandlers() []internal_models.Route {
 			Handler:     auth_handlers.MagicLinkLogin(l.container, l.authRepository, l.businessModule.BusinessesRepository),
 			Description: "Magic Link Login",
 		},
+		internal_models.Route{
+			Method:      "POST",
+			Path:        "/magic-link-login/admin",
+			Handler:     auth_handlers.MagicLinkAdminLogin(l.container, l.authRepository),
+			Description: "Magic Link Login Admin",
+		},
 	)
 	return routes
 }

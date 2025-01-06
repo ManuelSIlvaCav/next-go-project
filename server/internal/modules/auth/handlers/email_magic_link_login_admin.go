@@ -5,22 +5,13 @@ import (
 
 	auth_jwt "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/jwt"
 	auth_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/repository"
-	businesses "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/labstack/echo/v4"
 )
 
-type (
-	MagicLinkLoginParams struct {
-		Email string `json:"email" validate:"required,email" errormgs:"email is required and must be a valid email address" `
-		Token string `json:"token" validate:"required" errormgs:"token is required"`
-	}
-)
-
-func MagicLinkLogin(
+func MagicLinkAdminLogin(
 	container *container.Container,
 	authRepository *auth_repository.AuthRepository,
-	businessRepository *businesses.BusinessRepository,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		logger := container.Logger()
@@ -38,7 +29,7 @@ func MagicLinkLogin(
 			return c.JSON(http.StatusBadRequest, &echo.Map{"errors": validationErrs})
 		} */
 
-		logger.Info("Logging user with redirect", "user", params)
+		logger.Info("Logging admin with redirect", "user", params)
 
 		_, err := authRepository.LoginUserByEmail(
 			c.Request().Context(),
@@ -46,13 +37,15 @@ func MagicLinkLogin(
 
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, echo.Map{
-				"error": "could not login user",
+				"error": "could not login admin",
 			})
 		}
 
 		/* Now we get the information of the desired User */
-
-		businessUser, err := businessRepository.GetBusinessUser(c.Request().Context(), &businesses.GetBusinessUserParams{Email: params.Email})
+		admin, err := authRepository.GetAdminUser(
+			c.Request().Context(),
+			params.Email,
+		)
 
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, echo.Map{
@@ -62,9 +55,10 @@ func MagicLinkLogin(
 		}
 
 		jwtParams := auth_jwt.CreateJwtTokenParams{
-			FirstName: businessUser.FirstName,
-			LastName:  businessUser.LastName,
-			UserID:    businessUser.ID,
+			FirstName: "Admin",
+			LastName:  params.Email,
+			UserID:    admin.ID,
+			AdminID:   admin.ID,
 		}
 
 		// Create token

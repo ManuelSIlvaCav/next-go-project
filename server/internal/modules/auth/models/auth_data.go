@@ -1,18 +1,21 @@
 package auth_models
 
+import "time"
+
 type (
 	JWTData struct {
 		Name           string `json:"name"`
 		BusinessUserID string `json:"business_user_id"`
+		AdminUserID    string `json:"admin_user_id"`
 	}
 )
 
-type User struct {
-	ID        string `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+type Admin struct {
+	ID          string    `json:"id"`
+	Email       string    `json:"email"`
+	CreatedAt   time.Time `json:"created_at"`
+	LastLoginAt time.Time `json:"last_login_at"`
+	IsActive    bool      `json:"is_active"`
 }
 
 type UserEmailLogin struct {

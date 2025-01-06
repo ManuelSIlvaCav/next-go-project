@@ -30,6 +30,7 @@ async function createBusinessRequest(data: FormValues) {
       body: JSON.stringify(data),
     }
   );
+
   const json = await resp.json();
 
   if (!resp.ok) {
