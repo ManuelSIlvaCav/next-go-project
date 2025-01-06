@@ -41,7 +41,7 @@ async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
 }
 
 export default async function BusinessUsersList() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   console.log("cookieStore", cookieStore);
   const jwt = cookieStore.get("jwt")?.value;
 

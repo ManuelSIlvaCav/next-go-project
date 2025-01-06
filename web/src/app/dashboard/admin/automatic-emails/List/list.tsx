@@ -37,7 +37,7 @@ async function getData(): Promise<Business[]> {
 }
 
 export default async function AutomaticEmailsList() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   console.log("cookieStore", cookieStore);
   const data = await getData();
 

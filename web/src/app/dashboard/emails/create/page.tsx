@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
 const EmailEditorComponent = dynamic(() => import("../email-editor"), {
-  ssr: false,
   loading: () => <Skeleton />,
 });
 

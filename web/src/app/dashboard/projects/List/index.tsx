@@ -32,7 +32,7 @@ async function getData(): Promise<EmailTemplate[]> {
 }
 
 export default async function DemoList() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   console.log("cookieStore", cookieStore);
   const data = await getData();
 

@@ -28,6 +28,7 @@ import { z } from "zod";
 export const taskSchema = z.object({
   legal_name: z.string(),
   created_at: z.string(),
+  label: z.string(),
 });
 
 export const labels = [
@@ -38,6 +39,10 @@ export const labels = [
   {
     value: "created_at",
     label: "Fecha creacion",
+  },
+  {
+    value: "label",
+    label: "Etiqueta",
   },
 ];
 

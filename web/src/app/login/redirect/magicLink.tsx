@@ -4,18 +4,20 @@ import loginMagicLink from "@/lib/actions/loginMagicLink";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { RedirectPageProps } from "./page";
 
-export default function MagicLink(props: RedirectPageProps) {
+export default function MagicLink({
+  email,
+  token,
+  userInfo,
+}: {
+  email: string;
+  token: string;
+  userInfo: string;
+}) {
   const { push } = useRouter();
 
-  const { em, tk, ui } = props.searchParams;
-
   const { data, isPending } = useQuery({
-    queryKey: [
-      "magicLink",
-      { email: em, token: tk, adminLogin: ui === "admin" },
-    ],
+    queryKey: ["magicLink", { email, token, adminLogin: userInfo === "admin" }],
     queryFn: ({ queryKey }) =>
       loginMagicLink(
         queryKey[1] as { email: string; token: string; adminLogin: boolean }
@@ -31,7 +33,7 @@ export default function MagicLink(props: RedirectPageProps) {
     if (data?.data) {
       push("/dashboard");
     }
-  }, [data]);
+  }, [data, push]);
 
   return (
     <div className="flex flex-col  space-y-4 overflow-hidden">
