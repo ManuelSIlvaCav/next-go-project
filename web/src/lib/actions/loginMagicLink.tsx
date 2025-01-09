@@ -22,7 +22,6 @@ export default async function loginMagicLink(data: {
       body: JSON.stringify(data),
     }
   );
-  console.log(resp);
 
   /* Make a sleep[ of 2 sec] */
   await new Promise((resolve) => setTimeout(resolve, 2000));

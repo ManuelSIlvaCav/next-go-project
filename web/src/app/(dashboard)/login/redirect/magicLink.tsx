@@ -33,7 +33,7 @@ export default function MagicLink({
     if (data?.data) {
       push("/dashboard");
     }
-  }, [data, push]);
+  }, [JSON.stringify(data)]);
 
   return (
     <div className="flex flex-col  space-y-4 overflow-hidden">

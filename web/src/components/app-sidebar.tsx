@@ -17,6 +17,7 @@ import {
   ChartLine,
   ChevronDown,
   HousePlus,
+  Layers,
   MailPlus,
   Settings,
   Users,
@@ -45,6 +46,11 @@ const items = [
     title: "usuarios",
     url: "/dashboard/users",
     icon: BookUser,
+  },
+  {
+    title: "CMS",
+    url: "/dashboard/cms",
+    icon: Layers,
   },
   /* {
     title: "Emails",
