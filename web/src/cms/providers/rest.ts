@@ -24,13 +24,20 @@ export const rest = async (
     console.log("RES REST", { url, jsonResponse, args, options });
 
     if (jsonResponse.errors) {
+      console.log("JSON REST ERROR", {
+        url,
+        args,
+        options,
+        errors: jsonResponse.errors,
+      });
       throw new Error(jsonResponse.errors[0].message);
     }
 
     if (res.ok) {
       return jsonResponse;
     }
-  } catch (e: unknown) {
-    throw new Error(e as string);
+  } catch (error) {
+    console.log("ERROR REST", { url, args, options, error });
+    throw new Error(error as string);
   }
 };

@@ -6,6 +6,8 @@ import { buildConfig } from "payload";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 
 import { Users } from "@/cms/collections/Users";
+import { Pages } from "./cms/collections/Pages";
+import { Tenants } from "./cms/collections/Tenants";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -19,7 +21,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users],
+  routes: {
+    admin: "/cms/admin",
+  },
+  collections: [Users, Pages, Tenants],
   cors: ["http://localhost", process.env.NEXT_PUBLIC_SERVER_URL || ""].filter(
     Boolean
   ),

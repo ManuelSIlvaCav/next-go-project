@@ -19,16 +19,14 @@ export type Create = (args: {
   password: string;
 }) => Promise<User>;
 
-export type Login = (args: {
-  email: string;
-  password: string;
-}) => Promise<User>;
+export type Login = (args: Partial<User>) => Promise<User>;
 
 export type Logout = () => Promise<void>;
 
 export interface AuthContext {
   create: Create;
   login: Login;
+  externalLogin: Login;
   logout: Logout;
   permissions?: null | Permissions;
   setPermissions: (permissions: null | Permissions) => void;
@@ -70,6 +68,15 @@ export default function CMSAuthProvider({
     return;
   }, []);
 
+  const externalLogin = useCallback<Login>(async (args) => {
+    const user = await rest(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/external-users/login`,
+      args
+    );
+    setUser(user);
+    return user as User;
+  }, []);
+
   // On mount, get user and set
   /* useEffect(() => {
     const fetchMe = async () => {
@@ -91,6 +98,7 @@ export default function CMSAuthProvider({
       value={{
         create,
         login,
+        externalLogin,
         logout,
         permissions,
         setPermissions,

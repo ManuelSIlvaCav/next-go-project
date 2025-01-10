@@ -11,36 +11,6 @@ export const Users: CollectionConfig = {
       secure: true,
       domain: process.env.COOKIE_DOMAIN,
     },
-
-    /* strategies: [
-      {
-        name: "created-user",
-        authenticate: async ({
-          payload,
-          headers,
-        }): Promise<AuthStrategyResult> => {
-          console.log("loging authenticate 2", { headers });
-
-          const usersQuery = await payload.find({
-            collection: "users",
-            where: {
-              email: {
-                equals: "manuel@gmail.com",
-              },
-            },
-          });
-
-          const user = usersQuery.docs[0] || null;
-
-          return {
-            user: {
-              ...user,
-              collection: "users",
-            },
-          };
-        },
-      },
-    ], */
   },
   admin: {
     useAsTitle: "email",
@@ -66,11 +36,6 @@ export const Users: CollectionConfig = {
       unique: false,
     },
     {
-      name: "businessId",
-      type: "text",
-      required: true,
-    },
-    {
       name: "roles",
       type: "select",
       hasMany: true,
@@ -80,14 +45,37 @@ export const Users: CollectionConfig = {
       },
       options: [
         {
-          label: "Admin",
-          value: "admin",
-        },
-        {
           label: "User",
           value: "user",
         },
+        {
+          label: "Super Admin",
+          value: "super-admin",
+        },
       ],
+    },
+    {
+      name: "tenants",
+      type: "array",
+      fields: [
+        {
+          name: "tenant",
+          type: "relationship",
+          index: true,
+          relationTo: "tenants",
+          required: true,
+          saveToJWT: true,
+        },
+        {
+          name: "roles",
+          type: "select",
+          defaultValue: ["tenant-viewer"],
+          hasMany: true,
+          options: ["tenant-admin", "tenant-viewer"],
+          required: true,
+        },
+      ],
+      saveToJWT: true,
     },
   ],
 };

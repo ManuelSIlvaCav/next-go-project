@@ -8,9 +8,11 @@ import { Message } from "./Message";
 
 export default function CMSPage() {
   const searchParams = useSearchParams();
-  const allParams = searchParams.toString()
+
+  /* const allParams = searchParams.toString()
     ? `?${searchParams.toString()}`
-    : "";
+    : ""; */
+
   const { login } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -24,7 +26,7 @@ export default function CMSPage() {
         if (tryLoginData) {
           //Login success
           console.log("loging tryLoginData", tryLoginData);
-          return router.push(`/admin`);
+          return router.push(`/cms/admin`);
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
@@ -63,7 +65,7 @@ export default function CMSPage() {
         if (redirect) {
           router.push(redirect);
         } else {
-          return router.push(`/admin`);
+          return router.push(`/cms/admin`);
         }
       } catch (error) {
         console.error(error);
@@ -80,9 +82,8 @@ export default function CMSPage() {
     onSubmit({
       email: "manuel@gmail.com",
       name: "manuel",
-      password: "password",
-      roles: ["admin", "user"],
-      businessId: "1",
+      password: "manuel@gmail.com",
+      roles: ["super-admin", "user"],
     });
   }, []);
 
@@ -90,6 +91,7 @@ export default function CMSPage() {
     <div>
       <h1>CMS</h1>
       <Message error={error} />
+      {loading && <p>Loading...</p>}
     </div>
   );
 }
