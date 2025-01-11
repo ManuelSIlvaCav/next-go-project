@@ -33,7 +33,8 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
   blocks: {
-    banner: ({ node }) => (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    banner: ({ node }: { node: any }) => (
       <BannerBlock className="col-start-2 mb-4" {...node.fields} />
     ),
     /* mediaBlock: ({ node }) => (

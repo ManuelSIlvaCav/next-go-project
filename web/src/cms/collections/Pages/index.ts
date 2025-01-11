@@ -1,14 +1,16 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig } from 'payload'
 
-import { CallToAction } from "@/cms/blocks/CallToAction/config";
-import { tenantField } from "@/cms/fields/TenantField";
-import { getTenantAccessIDs } from "@/utilities/getTenantAccessIDs";
-import { baseListFilter } from "./access/baseListFilter";
-import { canMutatePage } from "./access/byTenant";
-import { readAccess } from "./access/readAccess";
+import { CallToAction } from '@/cms/blocks/CallToAction/config'
+import { Content } from '@/cms/blocks/Content/config'
+import { hero } from '@/cms/blocks/Heroe/confg'
+import { tenantField } from '@/cms/fields/TenantField'
+import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
+import { baseListFilter } from './access/baseListFilter'
+import { canMutatePage } from './access/byTenant'
+import { readAccess } from './access/readAccess'
 
 export const Pages: CollectionConfig = {
-  slug: "pages",
+  slug: 'pages',
   access: {
     create: canMutatePage,
     delete: canMutatePage,
@@ -17,30 +19,31 @@ export const Pages: CollectionConfig = {
   },
   admin: {
     baseListFilter,
-    useAsTitle: "title",
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'slug'],
   },
   hooks: {
     beforeValidate: [
       ({ req, data }) => {
-        console.log("beforeChange", { data, req, user: req?.user });
+        console.log('beforeChange', { data, req, user: req?.user })
         if (req?.user?.tenants?.length && data) {
-          const tenantIds = getTenantAccessIDs(req.user);
-          data.tenant = tenantIds[0];
+          const tenantIds = getTenantAccessIDs(req.user)
+          data.tenant = tenantIds[0]
         }
-        console.log("AFter", { data });
-        return data;
+        console.log('AFter', { data })
+        return data
       },
     ],
   },
   fields: [
     {
-      name: "title",
-      type: "text",
+      name: 'title',
+      type: 'text',
     },
     {
-      name: "slug",
-      type: "text",
-      defaultValue: "home",
+      name: 'slug',
+      type: 'text',
+      defaultValue: 'home',
       hooks: {
         /* We insert the tenant field based on the user who is operating */
         //beforeValidate: [ensureUniqueSlug],
@@ -49,23 +52,25 @@ export const Pages: CollectionConfig = {
     },
     tenantField,
     {
-      type: "tabs",
+      type: 'tabs',
       tabs: [
+        { fields: [hero], label: 'Hero' },
         {
           fields: [
             {
-              name: "layout",
-              type: "blocks",
-              blocks: [CallToAction],
+              name: 'layout',
+              type: 'blocks',
+              blocks: [CallToAction, Content],
               required: true,
               admin: {
                 //initCollapsed: true,
+                disableListFilter: true,
               },
             },
           ],
-          label: "Content",
+          label: 'Content',
         },
       ],
     },
   ],
-};
+}

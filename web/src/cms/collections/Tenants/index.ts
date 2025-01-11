@@ -1,18 +1,25 @@
 import type { CollectionConfig } from "payload";
 
 import { isSuperAdmin } from "@/cms/access/isSuperAdmin";
-import { canMutateTenant, filterByTenantRead } from "./access/byTenant";
+import { canMutateTenant } from "./access/byTenant";
 
 export const Tenants: CollectionConfig = {
   slug: "tenants",
   access: {
     create: isSuperAdmin,
     delete: canMutateTenant,
-    read: filterByTenantRead,
+    read: () => false, //filterByTenantRead,
     update: canMutateTenant,
   },
   admin: {
     useAsTitle: "name",
+    hidden: ({ user }) => {
+      console.log("hiding", user);
+      if (user.roles.includes("super-admin")) {
+        return true;
+      }
+      return false;
+    },
   },
   fields: [
     {
