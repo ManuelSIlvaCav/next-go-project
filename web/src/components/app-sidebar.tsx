@@ -29,37 +29,37 @@ import { Collapsible, CollapsibleContent } from "./ui/collapsible";
 const items = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/internal/dashboard",
     icon: ChartLine,
   },
   {
     title: "Proyectos",
-    url: "/dashboard/projects",
+    url: "/internal/dashboard/projects",
     icon: HousePlus,
   },
   {
     title: "Clientes",
-    url: "/dashboard/clients",
+    url: "/internal/dashboard/clients",
     icon: Users,
   },
   {
     title: "usuarios",
-    url: "/dashboard/users",
+    url: "/internal/dashboard/users",
     icon: BookUser,
   },
   {
     title: "CMS",
-    url: "/dashboard/cms",
+    url: "/internal/dashboard/cms",
     icon: Layers,
   },
   /* {
     title: "Emails",
-    url: "/dashboard/emails",
+    url: "/internal/dashboard/emails",
     icon: Inbox,
   },
   {
     title: "Clientes",
-    url: "/dashboard/clients",
+    url: "/internal/dashboard/clients",
     icon: UserSearch,
   },
   {
@@ -77,17 +77,17 @@ const items = [
 const adminItems = [
   {
     title: "Empresas",
-    url: "/dashboard/admin/businesses",
+    url: "/internal/dashboard/admin/businesses",
     icon: Users,
   },
   {
     title: "Emails Automaticos",
-    url: "/dashboard/admin/automatic-emails",
+    url: "/internal/dashboard/admin/automatic-emails",
     icon: MailPlus,
   },
   {
     title: "Users",
-    url: "/dashboard/admin/users",
+    url: "/internal/dashboard/admin/users",
     icon: Users,
   },
 ];

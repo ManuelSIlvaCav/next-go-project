@@ -2,6 +2,7 @@ import configPromise from "@payload-config";
 import { draftMode, headers } from "next/headers";
 import { getPayload } from "payload";
 
+import { RenderBlocks } from "@/cms/blocks/RenderBlocks";
 import type { Page as PageType } from "@/payload-types";
 import { cache } from "react";
 import PageClient from "./page.client";
@@ -54,11 +55,12 @@ export default async function Page({ params: paramsPromise }: Args) {
     page = homeStatic
   } */
 
-  /* if (!page) {
-    return <PayloadRedirects url={url} />
-  } */
+  if (!page) {
+    return <div>Page not found</div>;
+    //return <PayloadRedirects url={url} />
+  }
 
-  /*   const { hero, layout } = page */
+  const { layout } = page;
 
   console.log("poage", { page, domain });
 
@@ -72,6 +74,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {/* {draft && <LivePreviewListener />} */}
       {/* <RenderHero {...hero} />
       <RenderBlocks blocks={layout} /> */}
+      <RenderBlocks blocks={layout} />
     </article>
   );
 }

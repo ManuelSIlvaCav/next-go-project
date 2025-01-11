@@ -47,13 +47,13 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
     "zod": "^3.23.8",
-    "@payloadcms/next": "latest",
-    "@payloadcms/richtext-slate": "latest",
-    "@payloadcms/ui": "latest",
-    "payload": "latest",
+    "@payloadcms/next": "3.15.1",
+    "@payloadcms/ui": "3.15.1",
+    "payload": "3.15.1",
     "@payloadcms/db-sqlite": "3.9.0",
     "cross-env": "^7.0.3",
-    "graphql": "^16.8.2"
+    "graphql": "^16.8.2",
+    "@payloadcms/richtext-lexical": "3.15.1"
   },
   "devDependencies": {
     "@types/node": "^20",

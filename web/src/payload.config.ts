@@ -1,4 +1,3 @@
-import { slateEditor } from "@payloadcms/richtext-slate";
 import { fileURLToPath } from "node:url";
 import path from "path";
 import { buildConfig } from "payload";
@@ -8,6 +7,7 @@ import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { Users } from "@/cms/collections/Users";
 import { Pages } from "./cms/collections/Pages";
 import { Tenants } from "./cms/collections/Tenants";
+import { defaultLexical } from "./cms/fields/defaultLexical";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -20,6 +20,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    user: Users.slug,
   },
   routes: {
     admin: "/cms/admin",
@@ -37,7 +38,7 @@ export default buildConfig({
       url: process.env.DATABASE_URI || "",
     },
   }),
-  editor: slateEditor({}),
+  editor: defaultLexical,
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),

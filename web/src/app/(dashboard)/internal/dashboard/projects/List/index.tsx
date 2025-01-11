@@ -24,7 +24,7 @@ async function getData(): Promise<EmailTemplate[]> {
       updated_at: '2024-12-01T15:16:45.802732Z'} */
     console.log("data", data);
 
-    return data.emailTemplates;
+    return data?.emailTemplates?.length ? data.emailTemplates : [];
   } catch (error) {
     console.log("Error fetching data", error);
     return [];

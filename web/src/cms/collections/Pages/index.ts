@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 
+import { CallToAction } from "@/cms/blocks/CallToAction/config";
 import { tenantField } from "@/cms/fields/TenantField";
 import { getTenantAccessIDs } from "@/utilities/getTenantAccessIDs";
 import { baseListFilter } from "./access/baseListFilter";
@@ -47,14 +48,24 @@ export const Pages: CollectionConfig = {
       index: true,
     },
     tenantField,
-    /* {
-      name: "tenant",
-      type: "relationship",
-      hasMany: false,
-      index: true,
-      relationTo: "tenants",
-      required: true,
-      hidden: true,
-    }, */
+    {
+      type: "tabs",
+      tabs: [
+        {
+          fields: [
+            {
+              name: "layout",
+              type: "blocks",
+              blocks: [CallToAction],
+              required: true,
+              admin: {
+                //initCollapsed: true,
+              },
+            },
+          ],
+          label: "Content",
+        },
+      ],
+    },
   ],
 };

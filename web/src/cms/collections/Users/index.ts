@@ -5,7 +5,7 @@ import { protectRoles } from "./hooks/protectRoles";
 export const Users: CollectionConfig = {
   slug: "users",
   auth: {
-    tokenExpiration: 7200, // 8 hours
+    tokenExpiration: 129600, // 36 hours
     cookies: {
       sameSite: "None",
       secure: true,

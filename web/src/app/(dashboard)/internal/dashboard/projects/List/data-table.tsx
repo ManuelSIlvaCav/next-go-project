@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 
 import { DataTablePagination } from "@/components/data-table-examples/data-table-pagination";
-import { DataTableToolbar } from "@/components/data-table-examples/data-table-toolbar";
 import {
   Table,
   TableBody,
@@ -37,7 +36,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <DataTableToolbar table={table} />
+      {/* <DataTableToolbar table={table} /> */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
