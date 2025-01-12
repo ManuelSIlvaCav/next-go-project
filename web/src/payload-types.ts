@@ -159,7 +159,7 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock)[];
+  layout: (CallToActionBlock | ContentBlock | CarrouselBlock)[];
   updatedAt: string;
   createdAt: string;
 }
@@ -170,21 +170,6 @@ export interface Page {
 export interface Media {
   id: number;
   alt?: string | null;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -345,6 +330,26 @@ export interface ContentBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarrouselBlock".
+ */
+export interface CarrouselBlock {
+  sliderItems: {
+    /**
+     * Image should be 1920x1080
+     */
+    landscapeImg?: (number | null) | Media;
+    /**
+     * Image should be 1080x1920
+     */
+    portraitImg?: (number | null) | Media;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -467,6 +472,7 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
+        carousel?: T | CarrouselBlockSelect<T>;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -523,6 +529,21 @@ export interface ContentBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarrouselBlock_select".
+ */
+export interface CarrouselBlockSelect<T extends boolean = true> {
+  sliderItems?:
+    | T
+    | {
+        landscapeImg?: T;
+        portraitImg?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tenants_select".
  */
 export interface TenantsSelect<T extends boolean = true> {
@@ -545,7 +566,6 @@ export interface TenantsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  caption?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 
 import { RenderHero } from '@/cms/blocks/Heroe/RenderHero'
 import { RenderBlocks } from '@/cms/blocks/RenderBlocks'
+import { LivePreviewListener } from '@/cms/components/LivePreviewListener'
 import type { Page as PageType } from '@/payload-types'
 import { cache } from 'react'
 import PageClient from './page.client'
@@ -63,7 +64,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const { layout, hero } = page
 
-  console.log('poage', { page, domain })
+  console.log('poage', { page, domain, draft })
 
   return (
     <article className="pt-16 pb-24">
@@ -72,7 +73,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {`${slug}, ${url}, ${draft}`}
       {/* Allows redirects for valid pages too */}
       {/*  <PayloadRedirects disableNotFound url={url} /> */}
-      {/* {draft && <LivePreviewListener />} */}
+      {draft && <LivePreviewListener />}
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />
     </article>
@@ -106,8 +107,6 @@ const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: s
     },
   })
 
-  console.log('tenantsQuery', tenantsQuery)
-
   if (!tenantsQuery.docs?.[0]) {
     return null
   }
@@ -133,8 +132,6 @@ const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: s
       ],
     },
   })
-
-  console.log('pageSQuery', result)
 
   return result.docs?.[0] || null
 })

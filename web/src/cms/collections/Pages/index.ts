@@ -1,9 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
 import { CallToAction } from '@/cms/blocks/CallToAction/config'
+import { CarrouselBlock } from '@/cms/blocks/Carrousel/config'
 import { Content } from '@/cms/blocks/Content/config'
-import { hero } from '@/cms/blocks/Heroe/confg'
+import { hero } from '@/cms/blocks/Heroe/config'
 import { tenantField } from '@/cms/fields/TenantField'
+import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
 import { baseListFilter } from './access/baseListFilter'
 import { canMutatePage } from './access/byTenant'
@@ -21,6 +23,23 @@ export const Pages: CollectionConfig = {
     baseListFilter,
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug'],
+    livePreview: {
+      url: ({ data, req }) => {
+        const path = generatePreviewPath({
+          slug: typeof data?.slug === 'string' ? data.slug : '',
+          collection: 'pages',
+          req,
+        })
+
+        return path
+      },
+    },
+    preview: (data, { req }) =>
+      generatePreviewPath({
+        slug: typeof data?.slug === 'string' ? data.slug : '',
+        collection: 'pages',
+        req,
+      }),
   },
   hooks: {
     beforeValidate: [
@@ -60,7 +79,7 @@ export const Pages: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content],
+              blocks: [CallToAction, Content, CarrouselBlock],
               required: true,
               admin: {
                 //initCollapsed: true,

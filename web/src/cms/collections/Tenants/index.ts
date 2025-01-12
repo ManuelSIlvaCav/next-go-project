@@ -1,10 +1,10 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig } from 'payload'
 
-import { isSuperAdmin } from "@/cms/access/isSuperAdmin";
-import { canMutateTenant } from "./access/byTenant";
+import { isSuperAdmin } from '@/cms/access/isSuperAdmin'
+import { canMutateTenant } from './access/byTenant'
 
 export const Tenants: CollectionConfig = {
-  slug: "tenants",
+  slug: 'tenants',
   access: {
     create: isSuperAdmin,
     delete: canMutateTenant,
@@ -12,24 +12,24 @@ export const Tenants: CollectionConfig = {
     update: canMutateTenant,
   },
   admin: {
-    useAsTitle: "name",
+    useAsTitle: 'name',
     hidden: ({ user }) => {
-      console.log("hiding", user);
-      if (user.roles.includes("super-admin")) {
-        return true;
+      console.log('hiding', user)
+      if (user?.roles?.includes?.('super-admin')) {
+        return true
       }
-      return false;
+      return false
     },
   },
   fields: [
     {
-      name: "name",
-      type: "text",
+      name: 'name',
+      type: 'text',
       required: true,
     },
     {
-      name: "businessId",
-      type: "text",
+      name: 'businessId',
+      type: 'text',
       required: true,
       unique: true,
     },
@@ -39,35 +39,35 @@ export const Tenants: CollectionConfig = {
 
     // Uncomment this field if you want to enable domain-based tenant handling.
     {
-      name: "domains",
-      type: "array",
+      name: 'domains',
+      type: 'array',
       fields: [
         {
-          name: "domain",
-          type: "text",
+          name: 'domain',
+          type: 'text',
           required: true,
         },
       ],
       index: true,
     },
     {
-      name: "slug",
-      type: "text",
+      name: 'slug',
+      type: 'text',
       admin: {
-        description: "Used for url paths, example: /tenant-slug/page-slug",
+        description: 'Used for url paths, example: /tenant-slug/page-slug',
       },
       index: true,
       required: true,
     },
     {
-      name: "public",
-      type: "checkbox",
+      name: 'public',
+      type: 'checkbox',
       admin: {
-        description: "If checked, logging in is not required.",
-        position: "sidebar",
+        description: 'If checked, logging in is not required.',
+        position: 'sidebar',
       },
       defaultValue: false,
       index: true,
     },
   ],
-};
+}

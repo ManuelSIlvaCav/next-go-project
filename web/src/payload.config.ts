@@ -5,10 +5,14 @@ import { buildConfig } from 'payload'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 
 import { Users } from '@/cms/collections/Users'
+import sharp from 'sharp'
 import { Media } from './cms/collections/Media'
 import { Pages } from './cms/collections/Pages'
 import { Tenants } from './cms/collections/Tenants'
 import { defaultLexical } from './cms/fields/defaultLexical'
+
+import { en } from '@payloadcms/translations/languages/en'
+import { es } from '@payloadcms/translations/languages/es'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,20 +26,47 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
+    livePreview: {
+      breakpoints: [
+        {
+          label: 'Mobile',
+          name: 'mobile',
+          width: 375,
+          height: 667,
+        },
+        {
+          label: 'Tablet',
+          name: 'tablet',
+          width: 768,
+          height: 1024,
+        },
+        {
+          label: 'Desktop',
+          name: 'desktop',
+          width: 1440,
+          height: 900,
+        },
+      ],
+    },
   },
   routes: {
     admin: '/cms/admin',
   },
   collections: [Users, Pages, Tenants, Media],
-  cors: ['http://localhost', process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  csrf: ['http://localhost', process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+  i18n: {
+    supportedLanguages: {
+      en,
+      es,
+    },
+  },
+
   db: sqliteAdapter({
     client: {
       url: process.env.DATABASE_URI || '',
     },
   }),
   editor: defaultLexical,
+  sharp,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

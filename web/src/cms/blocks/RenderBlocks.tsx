@@ -2,11 +2,13 @@ import React, { Fragment } from 'react'
 
 import type { Page } from '@/payload-types'
 import { CallToActionBlock } from './CallToAction/Component'
-import { ContentBlock } from './Content/Componen'
+import { CarrouselBlock } from './Carrousel/Component'
+import { ContentBlock } from './Content/Component'
 
 const blockComponents = {
   cta: CallToActionBlock,
   content: ContentBlock,
+  carousel: CarrouselBlock,
 }
 
 export const RenderBlocks: React.FC<{
@@ -27,9 +29,9 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div className="my-16" key={index}>
+                <div className="" key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
-                  <Block {...block} disableInnerContainer />
+                  <Block {...block} disableInnerContainer={true} />
                 </div>
               )
             }

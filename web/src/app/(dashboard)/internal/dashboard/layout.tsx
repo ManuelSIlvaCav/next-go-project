@@ -1,18 +1,14 @@
-import CMSAuthProvider from "@/cms/providers/Auth";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import CMSAuthProvider from '@/cms/providers/Auth'
+import { AppSidebar } from '@/components/app-sidebar'
+import { SidebarProvider } from '@/components/ui/sidebar'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies()
 
-  if (!cookieStore?.get("jwt")) {
-    redirect("/login");
+  if (!cookieStore?.get('jwt')) {
+    redirect('/internal/login')
   }
 
   return (
@@ -27,5 +23,5 @@ export default async function Layout({
         </SidebarProvider>
       </CMSAuthProvider>
     </div>
-  );
+  )
 }

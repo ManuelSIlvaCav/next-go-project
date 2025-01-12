@@ -1,8 +1,6 @@
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import '../globals.css'
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   //const { isEnabled } = await draftMode();
 
   return (
@@ -14,5 +12,5 @@ export default async function RootLayout({
       </head>
       <body>{children}</body>
     </html>
-  );
+  )
 }
