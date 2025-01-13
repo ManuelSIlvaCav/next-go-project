@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'path'
 import { buildConfig } from 'payload'
 
+import { mongooseAdapter } from '@payloadcms/db-mongodb' // database-adapter-import
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 
 import { Users } from '@/cms/collections/Users'
@@ -60,11 +61,16 @@ export default buildConfig({
     },
   },
 
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URI || '',
-    },
-  }),
+  db:
+    process.env.ENV === 'prod'
+      ? mongooseAdapter({
+          url: process.env.DATABASE_URI || '',
+        })
+      : sqliteAdapter({
+          client: {
+            url: process.env.DATABASE_URI || '',
+          },
+        }),
   editor: defaultLexical,
   sharp,
   secret: process.env.PAYLOAD_SECRET || '',

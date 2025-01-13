@@ -2,7 +2,7 @@ import configPromise from '@payload-config'
 import { draftMode, headers } from 'next/headers'
 import { getPayload } from 'payload'
 
-import { RenderHero } from '@/cms/blocks/Heroe/RenderHero'
+import { RenderHero } from '@/cms/FixedBlocks/Heroe/RenderHero'
 import { RenderBlocks } from '@/cms/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/cms/components/LivePreviewListener'
 import type { Page as PageType } from '@/payload-types'

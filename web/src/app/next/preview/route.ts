@@ -2,6 +2,7 @@ import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { CollectionSlug, getPayload, type PayloadRequest } from 'payload'
+import '../../globals.css'
 
 //const payloadToken = 'payload-token'
 

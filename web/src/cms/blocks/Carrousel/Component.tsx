@@ -44,7 +44,7 @@ export const CarrouselBlock: React.FC<CarrouselBlockProps> = (props) => {
         <CarouselContent>
           {Array.from(sliderItems).map((item, index) => {
             return (
-              <CarouselItem key={index} className="h-[65vh] md:h-[40vh] xl:h-[55vh] 2xl:h-[65vh]">
+              <CarouselItem key={index} className="h-[70vh] md:h-[50vh] xl:h-[60vh] 2xl:h-[70vh]">
                 {item.landscapeImg && typeof item.landscapeImg === 'object' && (
                   <>
                     <Media
