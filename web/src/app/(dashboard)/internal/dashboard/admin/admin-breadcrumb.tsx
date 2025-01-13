@@ -13,14 +13,13 @@ export default function AdminBreadcrumb() {
   const pathname = usePathname()
 
   /* Parse the pathname from /dashboard/admin onwards */
-  const path = pathname.split('/').slice(3)
-  console.log('AdminBreadcrumb', { path })
+  const path = pathname.split('/').slice(4)
 
   const items = path.map((segment, index) => {
-    const href = '/internal/dashboard/admin' + path.slice(0, index + 1).join('/')
+    const href = '/internal/dashboard/admin/' + path.slice(0, index + 1).join('/')
     const key = (segment.charAt(0) + segment.slice(1)) as keyof typeof nameDictionary
 
-    return { name: nameDictionary[key], href }
+    return { name: nameDictionary[key] ?? key, href }
   })
 
   const currentPage = items.pop() || {

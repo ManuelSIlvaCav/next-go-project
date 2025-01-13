@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
+import createBusinessRequest from '@/lib/actions/createBusiness'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { ApiParams } from '../[id]/Users/list'
 
 const FormSchema = z.object({
   name: z.string(),
@@ -19,26 +20,6 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
-async function createBusinessRequest(apiParams: ApiParams, data: FormValues) {
-  console.log(data)
-  const resp = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/v1/businesses`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiParams.jwt}`,
-    },
-    body: JSON.stringify(data),
-  })
-
-  const json = await resp.json()
-
-  if (!resp.ok) {
-    throw new Error(json.message)
-  }
-
-  return json
-}
-
 type CreateBusinessFormProps = {
   params: { jwt: string | undefined }
 }
@@ -47,6 +28,24 @@ export default function CreateBusinessForm(props: CreateBusinessFormProps) {
   const { jwt } = props.params
   const { toast } = useToast()
   const router = useRouter()
+
+  const mutation = useMutation({
+    mutationFn: createBusinessRequest,
+    onSuccess: () => {
+      toast({
+        title: 'Business created',
+        description: 'The business has been created successfully',
+      })
+      router.push('/internal/dashboard/admin/businesses')
+      router.refresh()
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+      })
+    },
+  })
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -58,14 +57,7 @@ export default function CreateBusinessForm(props: CreateBusinessFormProps) {
   })
 
   const onSubmit = async (values: FormValues) => {
-    await createBusinessRequest({ jwt }, values)
-
-    toast({
-      title: 'Business created',
-      description: 'The business has been created successfully',
-    })
-    router.push('/dashboard/admin/businesses')
-    router.refresh()
+    mutation.mutate({ apiParams: { jwt }, ...values })
   }
 
   return (

@@ -1291,10 +1291,10 @@
   resolved "https://registry.npmjs.org/@nolyfill/is-core-module/-/is-core-module-1.0.39.tgz"
   integrity sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==
 
-"@payloadcms/db-mongodb@latest":
-  version "3.16.0"
-  resolved "https://registry.yarnpkg.com/@payloadcms/db-mongodb/-/db-mongodb-3.16.0.tgz#8da5229a250280d4c0fcd97d95780734a9d8f94d"
-  integrity sha512-NmK39dw7xF/xJNIZeAZ/LaOf6sAWJ+iTMp2RuGny7WSgI2FCqdGfYdfm7cYAabn8UirRjORNoKBQPilauQbp3w==
+"@payloadcms/db-mongodb@3.15.1":
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/@payloadcms/db-mongodb/-/db-mongodb-3.15.1.tgz#35525c351eb62d51a2e9aa33baf9f57d4d11c5bf"
+  integrity sha512-Ur8E3wuqaq60MfpSDgzOj3lAUQh8+hiRJZdJ87iqM6zlEAV6J7qW0lK1fBDVCk2rya81gTBppF+5Dl+e1lkf0A==
   dependencies:
     http-status "1.6.2"
     mongoose "8.8.3"
@@ -1303,13 +1303,13 @@
     prompts "2.4.2"
     uuid "10.0.0"
 
-"@payloadcms/db-sqlite@3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@payloadcms/db-sqlite/-/db-sqlite-3.9.0.tgz#0b288fd0b2849909e0f338ee9e16e4f7658486f7"
-  integrity sha512-F+PgOxZ0GZqnRPJGq1A6o2LDdNtrq2t3+SfS8wtSm+WC0ZLP/An6cLdmZVSTS1623fdsCBYFOYC54ygQJwleWg==
+"@payloadcms/db-sqlite@3.15.1":
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/@payloadcms/db-sqlite/-/db-sqlite-3.15.1.tgz#408c05770f43096f9b078c6deedaff9977e4ae23"
+  integrity sha512-Mm9OVctlzd1/ATdrDXtQVZzuZAK9E1ef/Sy9+uvM4GFSY82L0WYdKKErBA7cEcpG105sJ7ZbtKAicCa98m3x2Q==
   dependencies:
     "@libsql/client" "0.14.0"
-    "@payloadcms/drizzle" "3.9.0"
+    "@payloadcms/drizzle" "3.15.1"
     console-table-printer "2.12.1"
     drizzle-kit "0.28.0"
     drizzle-orm "0.36.1"
@@ -1317,10 +1317,10 @@
     to-snake-case "1.0.0"
     uuid "9.0.0"
 
-"@payloadcms/drizzle@3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@payloadcms/drizzle/-/drizzle-3.9.0.tgz#33f8ea9f49970b2b0732baf1d91c7860f16ea44f"
-  integrity sha512-BIPFTdmq8Bl3VulilbnBB0NfIJ+EvGdh0a/+KqqOlOUGQaimKkELZnV3GDp1m0JYjn7ze4xIWR07JUTxdvSRhw==
+"@payloadcms/drizzle@3.15.1":
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/@payloadcms/drizzle/-/drizzle-3.15.1.tgz#3954036e6595c335a32a9bbde5b79b88240620af"
+  integrity sha512-aMZ3xVmf/G5rJv0eJVx1kQ6CPErpCMa6MMg2SK+9AM9jpZB77blbUOQEp7C9/LLqIeL5lgafUvryM9al62EDaA==
   dependencies:
     console-table-printer "2.12.1"
     drizzle-orm "0.36.1"
