@@ -64,7 +64,7 @@ export default buildConfig({
   db:
     process.env.ENV === 'prod'
       ? mongooseAdapter({
-          url: process.env.DATABASE_URI || '',
+          url: process.env.MONGODB_URI || process.env.DATABASE_URI || '',
         })
       : sqliteAdapter({
           client: {
