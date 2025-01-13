@@ -62,7 +62,7 @@ export default buildConfig({
   },
 
   db:
-    process.env.ENV === 'prod'
+    process.env.ENV === 'prod' || process.env.ENV === 'dev'
       ? mongooseAdapter({
           url: process.env.MONGODB_URI || process.env.DATABASE_URI || '',
         })
