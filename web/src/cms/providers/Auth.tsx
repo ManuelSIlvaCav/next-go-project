@@ -12,14 +12,17 @@ export type ResetPassword = (args: {
 
 export type ForgotPassword = (args: { email: string }) => Promise<User>
 
-export type Create = (args: {
-  email: string
-  name: string
-  lastName: string
-  password: string
-}) => Promise<User>
+export type Create = (
+  url: string,
+  args: {
+    email: string
+    name: string
+    lastName: string
+    password: string
+  },
+) => Promise<User>
 
-export type Login = (domain: string, args: Partial<User>) => Promise<User>
+export type Login = (url: string, args: Partial<User>) => Promise<User>
 
 export type Logout = () => Promise<void>
 
@@ -40,8 +43,8 @@ export default function CMSAuthProvider({ children }: { children: React.ReactNod
   const [user, setUser] = useState<null | User>()
   const [permissions, setPermissions] = useState<null | Permissions>(null)
 
-  const create = useCallback<Create>(async (args) => {
-    const user = await rest(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, args)
+  const create = useCallback<Create>(async (url, args) => {
+    const user = await rest(`${url ? url : process.env.NEXT_PUBLIC_SERVER_URL}/api/users}`, args)
     setUser(user)
     return user as User
   }, [])
@@ -58,9 +61,9 @@ export default function CMSAuthProvider({ children }: { children: React.ReactNod
     return
   }, [])
 
-  const externalLogin = useCallback<Login>(async (domain, args) => {
+  const externalLogin = useCallback<Login>(async (url, args) => {
     const user = await rest(
-      `${domain ? domain : process.env.NEXT_PUBLIC_SERVER_URL}/api/users/external-users/login`,
+      `${url ? url : process.env.NEXT_PUBLIC_SERVER_URL}/api/users/external-users/login`,
       args,
     )
     setUser(user)
