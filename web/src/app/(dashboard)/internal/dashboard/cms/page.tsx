@@ -20,7 +20,7 @@ export default function CMSPage() {
   const [error, setError] = useState<null | string>(null)
 
   const onSubmit = useCallback(
-    async (data: Partial<User> & { businessId: string }) => {
+    async (data: Partial<User> & { businessId: string; isAdmin: boolean }) => {
       try {
         const tryLoginData = await externalLogin(getClientSideURL(), data)
 
@@ -42,7 +42,6 @@ export default function CMSPage() {
         method: 'POST',
       })
 
-      console.log('loging response', response)
       if (!response.ok) {
         const message = response.statusText || 'There was an error creating the account.'
         setError(message)
@@ -80,6 +79,7 @@ export default function CMSPage() {
       password: 'manuel@gmail.com',
       roles: ['super-admin', 'user'],
       businessId: '2',
+      isAdmin: true,
     })
   }, [])
 

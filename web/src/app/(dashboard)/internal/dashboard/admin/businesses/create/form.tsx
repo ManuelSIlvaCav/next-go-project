@@ -1,11 +1,12 @@
 'use client'
 
 import TextInput from '@/components/form/text-input'
+import { WithJwtProps } from '@/components/hoc/withJwt'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
-import createBusinessRequest from '@/lib/actions/createBusiness'
+import createBusinessRequest from '@/lib/actions/create-business'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
@@ -20,12 +21,10 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
-type CreateBusinessFormProps = {
-  params: { jwt: string | undefined }
-}
+export type CreateBusinessFormProps = {} & WithJwtProps
 
 export default function CreateBusinessForm(props: CreateBusinessFormProps) {
-  const { jwt } = props.params
+  const { jwt } = props
   const { toast } = useToast()
   const router = useRouter()
 

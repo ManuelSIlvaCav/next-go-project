@@ -9,8 +9,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { CollapsibleTrigger } from "@radix-ui/react-collapsible";
+} from '@/components/ui/sidebar'
+import { CollapsibleTrigger } from '@radix-ui/react-collapsible'
 
 import {
   BookUser,
@@ -21,35 +21,37 @@ import {
   MailPlus,
   Settings,
   Users,
-} from "lucide-react";
-import { cookies } from "next/headers";
-import { Suspense } from "react";
-import { Collapsible, CollapsibleContent } from "./ui/collapsible";
+  WorkflowIcon,
+} from 'lucide-react'
+import { cookies } from 'next/headers'
+import Link from 'next/link'
+import { Suspense } from 'react'
+import { Collapsible, CollapsibleContent } from './ui/collapsible'
 
 const items = [
   {
-    title: "Dashboard",
-    url: "/internal/dashboard",
+    title: 'Dashboard',
+    url: '/internal/dashboard',
     icon: ChartLine,
   },
   {
-    title: "Proyectos",
-    url: "/internal/dashboard/projects",
+    title: 'Proyectos',
+    url: '/internal/dashboard/projects',
     icon: HousePlus,
   },
   {
-    title: "Clientes",
-    url: "/internal/dashboard/clients",
+    title: 'Clientes',
+    url: '/internal/dashboard/clients',
     icon: Users,
   },
   {
-    title: "usuarios",
-    url: "/internal/dashboard/users",
+    title: 'usuarios',
+    url: '/internal/dashboard/users',
     icon: BookUser,
   },
   {
-    title: "CMS",
-    url: "/internal/dashboard/cms",
+    title: 'CMS',
+    url: '/internal/dashboard/cms',
     icon: Layers,
   },
   /* {
@@ -68,29 +70,34 @@ const items = [
     icon: Search,
   }, */
   {
-    title: "Settings",
-    url: "#",
+    title: 'Settings',
+    url: '#',
     icon: Settings,
   },
-];
+]
 
 const adminItems = [
   {
-    title: "Empresas",
-    url: "/internal/dashboard/admin/businesses",
+    title: 'Empresas',
+    url: '/internal/dashboard/admin/businesses',
     icon: Users,
   },
   {
-    title: "Emails Automaticos",
-    url: "/internal/dashboard/admin/automatic-emails",
+    title: 'Email Templates',
+    url: '/internal/dashboard/admin/email-templates',
     icon: MailPlus,
   },
   {
-    title: "Users",
-    url: "/internal/dashboard/admin/users",
+    title: 'Acciones',
+    url: '/internal/dashboard/admin/actions',
+    icon: WorkflowIcon,
+  },
+  {
+    title: 'Users',
+    url: '/internal/dashboard/admin/users',
     icon: Users,
   },
-];
+]
 
 function SideBarMainGroup() {
   return (
@@ -108,10 +115,10 @@ function SideBarMainGroup() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -120,16 +127,16 @@ function SideBarMainGroup() {
         </CollapsibleContent>
       </SidebarGroup>
     </Collapsible>
-  );
+  )
 }
 
 async function SideBarAdminGroup() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies()
   /* Make a sleep 2 secs */
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  const jwt = cookieStore.get("jwt");
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+  const jwt = cookieStore.get('jwt')
   if (!jwt) {
-    return null;
+    return null
   }
 
   return (
@@ -147,10 +154,10 @@ async function SideBarAdminGroup() {
               {adminItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -159,7 +166,7 @@ async function SideBarAdminGroup() {
         </CollapsibleContent>
       </SidebarGroup>
     </Collapsible>
-  );
+  )
 }
 
 export function AppSidebar() {
@@ -174,5 +181,5 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
-  );
+  )
 }

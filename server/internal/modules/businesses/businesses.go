@@ -4,6 +4,8 @@ import (
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	businesses_handlers "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/handlers"
 	businesses "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
+	businesses_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/services"
+
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"go.uber.org/fx"
 )
@@ -11,13 +13,17 @@ import (
 type BusinessesModule struct {
 	BusinessesRepository *businesses.BusinessRepository
 	container            *container.Container
+	DomainService        *businesses_services.DomainService
 }
 
 func NewBusinessesModule(container *container.Container) *BusinessesModule {
 	businessesRepository := businesses.NewBusinessRepository(container)
+	domainService := businesses_services.NewDomainService(container)
+
 	return &BusinessesModule{
 		BusinessesRepository: businessesRepository,
 		container:            container,
+		DomainService:        domainService,
 	}
 }
 
@@ -43,6 +49,34 @@ func (l *BusinessesModule) GetHandlers() []internal_models.Route {
 			Handler: businesses_handlers.CreateBusinessHandler(l.container,
 				l.BusinessesRepository),
 			Description:   "Create a new business",
+			Authenticated: true,
+		},
+		internal_models.Route{
+			Method: "GET",
+			Path:   "/:id/users",
+			Handler: businesses_handlers.GetBusinessUsersHandler(
+				l.container,
+				l.BusinessesRepository),
+			Description:   "Get all users by user",
+			Authenticated: true,
+		},
+		internal_models.Route{
+			Method: "POST",
+			Path:   "/:id/users",
+			Handler: businesses_handlers.CreateBusinessUserHandler(
+				l.container,
+				l.BusinessesRepository),
+			Description:   "Create a new user",
+			Authenticated: true,
+		},
+		internal_models.Route{
+			Method: "POST",
+			Path:   "/:id/settings",
+			Handler: businesses_handlers.UpdateBusinessSettingsHandler(
+				l.container,
+				l.BusinessesRepository,
+				l.DomainService),
+			Description:   "Create a new user",
 			Authenticated: true,
 		},
 	)

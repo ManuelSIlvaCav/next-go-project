@@ -50,4 +50,10 @@ func (f *FilesModule) GetScheduledJobs() []internal_models.ScheduledJob {
 	return jobs
 }
 
+const FilesModuleKey = "files"
+
+func (f *FilesModule) Key() string {
+	return FilesModuleKey
+}
+
 var Module = fx.Options(fx.Provide(NewFilesModule))

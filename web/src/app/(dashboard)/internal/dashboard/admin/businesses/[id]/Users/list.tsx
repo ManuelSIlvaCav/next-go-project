@@ -1,12 +1,8 @@
-import { Button } from '@/components/ui/button'
-import { cookies } from 'next/headers'
-import Link from 'next/link'
+import { WithJwtProps } from '@/components/hoc/withJwt'
+import { ApiParams } from '@/lib/types'
 import { Business, columns } from './columns'
 import { DataTable } from './data-table'
-
-export type ApiParams = {
-  jwt: string | undefined
-}
+import NewUserDialog from './NewUserDialog'
 
 async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
   try {
@@ -18,16 +14,20 @@ async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
         Authorization: `Bearer ${apiParams.jwt}`,
       },
       cache: 'no-store',
+      /* next: {
+        tags: ['businesses-users']
+      } */
     })
     const resp = await response.json()
 
-    /* {id: '9',
-      name: 'A cute little name2',
-      subject: 'Test Subject',
-      body: 'body',
-      meta_data: [Object],
-      created_at: '2024-12-01T15:16:45.802732Z',
-      updated_at: '2024-12-01T15:16:45.802732Z'} */
+    /* {
+      id: '1',
+      business_id: '1',
+      first_name: 'Manuel',
+      last_name: 'Silva',
+      email: 'manuel@gmail.com',
+      phone: '1111111'
+    } */
     console.log('data', resp)
 
     return resp.data?.length ? resp.data : []
@@ -37,19 +37,15 @@ async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
   }
 }
 
-export default async function BusinessUsersList() {
-  const cookieStore = await cookies()
-  console.log('cookieStore', cookieStore)
-  const jwt = cookieStore.get('jwt')?.value
+export default async function BusinessUsersList(props: WithJwtProps & { id: string }) {
+  const { jwt } = props
 
-  const data = await getData({ jwt }, '1')
+  const data = await getData({ jwt }, props.id)
 
   return (
     <div className="flex flex-col container mx-auto py-10 gap-4">
       <div className="flex flex-row justify-end">
-        <Button className="" variant={'default'} type="button" asChild>
-          <Link href="/dashboard/admin/businesses/create">Agregar Usuario</Link>
-        </Button>
+        <NewUserDialog businessId={props.id} jwt={jwt} />
       </div>
       <DataTable columns={columns} data={data} />
     </div>

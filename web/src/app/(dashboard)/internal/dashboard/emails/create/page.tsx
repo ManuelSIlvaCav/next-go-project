@@ -1,10 +1,11 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { withJwt } from '@/components/hoc/withJwt'
+import { Skeleton } from '@/components/ui/skeleton'
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
-const EmailEditorComponent = dynamic(() => import("../email-editor"), {
+const EmailEditorComponent = dynamic(() => import('../EmailEditorForm'), {
   loading: () => <Skeleton />,
-});
+})
 
 export default function EmailPage() {
   return (
@@ -16,8 +17,10 @@ export default function EmailPage() {
           </div>
         }
       >
-        <EmailEditorComponent />
+        <EmailEditorWithJwt />
       </Suspense>
     </div>
-  );
+  )
 }
+
+const EmailEditorWithJwt = withJwt(EmailEditorComponent)

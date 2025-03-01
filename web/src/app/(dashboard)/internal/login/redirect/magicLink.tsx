@@ -1,6 +1,6 @@
 'use client'
 
-import loginMagicLink from '@/lib/actions/loginMagicLink'
+import loginMagicLink from '@/lib/actions/login-magic-link'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -20,14 +20,11 @@ export default function MagicLink({
     queryKey: ['magicLink', { email, token, adminLogin: userInfo === 'admin' }],
     queryFn: ({ queryKey }) =>
       loginMagicLink(queryKey[1] as { email: string; token: string; adminLogin: boolean }),
+    refetchOnWindowFocus: false,
   })
 
-  /* We grab the query params email and token */
-  /* We call the loginMagicLink function with the email and token */
-
-  console.log('respt', { data, isPending })
-
   useEffect(() => {
+    console.log('data', data)
     if (data?.data) {
       push('/internal/dashboard')
     }

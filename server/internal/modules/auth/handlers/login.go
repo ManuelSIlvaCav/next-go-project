@@ -11,8 +11,9 @@ import (
 
 type (
 	UserLogin struct {
-		Email string `json:"email" validate:"required,email" errormgs:"email is required and must be a valid email address"`
-		Type  string `json:"type" validate:"required,oneof=email-only password" errormgs:"type is required"`
+		Email    string `json:"email" validate:"required,email" errormgs:"email is required and must be a valid email address"`
+		Type     string `json:"type" validate:"required,oneof=email-only password" errormgs:"type is required"`
+		UserType string `json:"user_type" validate:"required,oneof=user admin" errormgs:"user_type is required"`
 	}
 )
 
@@ -37,6 +38,7 @@ func Login(container *container.Container,
 		logger.Info("Logging user", "user", user)
 
 		if user.Type == "email-only" {
+
 			createdEmailLogin, err := emailLogin(c, container,
 				authRepository, user.Email)
 
@@ -46,7 +48,9 @@ func Login(container *container.Container,
 				})
 			}
 
-			return c.JSON(http.StatusOK, echo.Map{
+			/* We send the email for the login */
+
+			return c.JSON(http.StatusCreated, echo.Map{
 				"message": "email sent",
 				"email":   createdEmailLogin.Email,
 			})

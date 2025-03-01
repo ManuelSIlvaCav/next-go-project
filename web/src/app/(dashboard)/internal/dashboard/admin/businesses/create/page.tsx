@@ -1,18 +1,15 @@
-import { cookies } from 'next/headers'
-import CreateBusinessForm from './form'
+import { withJwt } from '@/components/hoc/withJwt'
+import CreateBusinessForm, { CreateBusinessFormProps } from './form'
 
 export default async function CreatePage() {
-  const cookieStore = await cookies()
-  console.log('cookieStore', cookieStore)
-  const jwt = cookieStore.get('jwt')?.value
-
   return (
     <div>
-      <h1>Create Business</h1>
-
-      <div className="flex flex-col justify-center items-center">
-        <CreateBusinessForm params={{ jwt }} />
+      <h2>Crear Nuevo Negocio</h2>
+      <div className="flex flex-col justify-center items-center pt-4">
+        <BusinessFormComponent />
       </div>
     </div>
   )
 }
+
+const BusinessFormComponent = withJwt<Omit<CreateBusinessFormProps, 'jwt'>>(CreateBusinessForm)

@@ -26,6 +26,7 @@ type CreateJwtTokenParams struct {
 }
 
 func GetJWTConfig() echojwt.Config {
+
 	config := echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(JwtCustomClaims)
@@ -44,6 +45,7 @@ func GetJWTConfig() echojwt.Config {
 			return false
 		},
 	}
+
 	return config
 }
 

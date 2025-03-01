@@ -2,25 +2,27 @@ import type { CollectionConfig } from 'payload'
 
 import { isSuperAdmin } from '@/cms/access/isSuperAdmin'
 import { canMutateTenant } from './access/byTenant'
+import { externalCreateTenant } from './endpoints/externalCreateTenant'
+import { externalUpdateTenant } from './endpoints/externalUpdateTenant'
 
 export const Tenants: CollectionConfig = {
   slug: 'tenants',
   access: {
     create: isSuperAdmin,
     delete: canMutateTenant,
-    read: () => false, //filterByTenantRead,
+    read: () => true, //filterByTenantRead,
     update: canMutateTenant,
   },
   admin: {
     useAsTitle: 'name',
     hidden: ({ user }) => {
-      console.log('hiding', user)
       if (user?.roles?.includes?.('super-admin')) {
-        return true
+        return false
       }
-      return false
+      return true
     },
   },
+  endpoints: [externalCreateTenant, externalUpdateTenant],
   fields: [
     {
       name: 'name',
@@ -50,7 +52,7 @@ export const Tenants: CollectionConfig = {
       ],
       index: true,
     },
-    {
+    /* {
       name: 'slug',
       type: 'text',
       admin: {
@@ -58,8 +60,8 @@ export const Tenants: CollectionConfig = {
       },
       index: true,
       required: true,
-    },
-    {
+    }, */
+    /* {
       name: 'public',
       type: 'checkbox',
       admin: {
@@ -68,6 +70,6 @@ export const Tenants: CollectionConfig = {
       },
       defaultValue: false,
       index: true,
-    },
+    }, */
   ],
 }

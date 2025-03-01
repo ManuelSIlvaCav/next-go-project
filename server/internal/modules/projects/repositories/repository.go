@@ -51,6 +51,7 @@ func (e *ProjectsRepository) CreateProject(
 
 	// Get a Tx for making transaction requests.
 	tx, err := e.container.DB().Db.BeginTx(ctx, nil)
+
 	if err != nil {
 		return &projects_models.Project{}, fmt.Errorf("failed to start transaction: %w", err)
 	}

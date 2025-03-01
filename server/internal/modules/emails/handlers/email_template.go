@@ -10,12 +10,15 @@ func GetEmailTemplate(container *container.Container,
 	emailRepository *emails.EmailTemplateRepository,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		logger := container.Logger()
 
 		emailTemplateID := c.Param("email_template_id")
 
-		logger.Info("Get email template handler", "path", c.Path(), "method", c.Request().Method, "email_template_id", emailTemplateID)
+		emailTemplate, err := emailRepository.GetEmailTemplateByID(emailTemplateID)
 
-		return c.JSON(200, echo.Map{"emailTemplates": nil})
+		if err != nil {
+			return c.JSON(500, echo.Map{"error": "Failed to get email template"})
+		}
+
+		return c.JSON(200, echo.Map{"emailTemplate": emailTemplate})
 	}
 }

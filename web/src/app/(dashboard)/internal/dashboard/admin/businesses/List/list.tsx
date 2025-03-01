@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
+import { ApiParams } from '@/lib/types'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { ApiParams } from '../[id]/Users/list'
 import { Business, columns } from './columns'
 import { DataTable } from './data-table'
 

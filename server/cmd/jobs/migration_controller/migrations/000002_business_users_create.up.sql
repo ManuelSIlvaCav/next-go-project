@@ -68,5 +68,6 @@ CREATE TABLE IF NOT EXISTS user_email_login (
     authentication_token uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '1 day',
-    used_at TIMESTAMP
+    used_at TIMESTAMP,
+    deleted_at TIMESTAMP
 )

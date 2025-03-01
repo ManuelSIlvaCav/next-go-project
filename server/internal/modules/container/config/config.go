@@ -23,11 +23,22 @@ type Redis struct {
 	Password string
 }
 
+type Resend struct {
+	ApiKey string
+}
+
+type Vercel struct {
+	ProjectId string
+	AuthToken string
+}
+
 type Config struct {
 	Env      string
 	Port     int
 	Postgres Postgres
 	Redis    Redis
+	Resend   Resend
+	Vercel
 }
 
 func NewConfig() *Config {
@@ -53,6 +64,13 @@ func NewConfig() *Config {
 			Port:     k.Int("redis.port"),
 			Username: k.String("redis.user"),
 			Password: k.String("redis.password"),
+		},
+		Resend: Resend{
+			ApiKey: k.String("resend.apikey"),
+		},
+		Vercel: Vercel{
+			ProjectId: k.String("vercel.projectid"),
+			AuthToken: k.String("vercel.token"),
 		},
 	}
 

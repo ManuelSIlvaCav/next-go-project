@@ -35,9 +35,9 @@ export async function GET(
       return new Response('No path provided', { status: 404 })
     }
 
-    if (!slug) {
+    /* if (!slug) {
       return new Response('No path provided', { status: 404 })
-    }
+    } */
 
     if (!path.startsWith('/')) {
       return new Response('This endpoint can only be used for internal previews', { status: 500 })

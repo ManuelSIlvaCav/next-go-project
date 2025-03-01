@@ -11,7 +11,6 @@ import PageClient from './page.client'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
-
   const pages = await payload.find({
     collection: 'pages',
     draft: false,
@@ -44,7 +43,9 @@ export default async function Page({ params: paramsPromise }: Args) {
   const headersList = await headers()
   const domain = headersList.get('host') || ''
 
-  const { slug = 'home' } = await paramsPromise
+  //If no slug is found ex. google.com then slug is undefined we use reserved
+  const { slug = 'reserved' } = await paramsPromise
+
   const url = '/' + slug
 
   const page: PageType | null = await queryPageBySlug({
@@ -70,7 +71,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     <article className="pt-16 pb-24">
       <PageClient />
       Page Client
-      {`${slug}, ${url}, ${draft}`}
+      {` ${slug}, ${url}, ${draft}`}
       {/* Allows redirects for valid pages too */}
       {/*  <PayloadRedirects disableNotFound url={url} /> */}
       {draft && <LivePreviewListener />}
@@ -107,6 +108,8 @@ const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: s
     },
   })
 
+  console.log('tenantsQuery', { tenant: tenantsQuery.docs?.[0], slug, domain })
+
   if (!tenantsQuery.docs?.[0]) {
     return null
   }
@@ -121,12 +124,7 @@ const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: s
       and: [
         {
           slug: {
-            equals: slug,
-          },
-        },
-        {
-          'tenant.slug': {
-            equals: tenantsQuery.docs?.[0]?.slug,
+            equals: slug === 'reserved' ? '' : slug,
           },
         },
       ],

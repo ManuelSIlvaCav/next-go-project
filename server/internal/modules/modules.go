@@ -20,6 +20,15 @@ type InternalModule struct {
 	Modules   []internal_models.IModule
 }
 
+const (
+	EmailsModuleKey   = "emails"
+	AuthModuleKey     = "auth"
+	BusinessModuleKey = "businesses"
+	ClientModuleKey   = "clients"
+	ListingModuleKey  = "listings"
+	ProjectsModuleKey = "projects"
+)
+
 func NewInternalModule(
 	container *container.Container,
 	filesModule *files.FilesModule,
@@ -30,6 +39,7 @@ func NewInternalModule(
 	businessesModule *businesses.BusinessesModule,
 	authModule *auth.AuthModule,
 ) *InternalModule {
+
 	modules := []internal_models.IModule{
 		filesModule,
 		listingModule,

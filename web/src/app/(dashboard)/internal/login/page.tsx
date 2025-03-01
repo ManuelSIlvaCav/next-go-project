@@ -5,15 +5,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import type { Metadata } from "next";
-import Link from "next/link";
-import LoginForm from "./form";
+} from '@/components/ui/card'
+import type { Metadata } from 'next'
+import LoginForm from './form'
 
 export const metadata: Metadata = {
-  title: "Login",
-  description: "Sign in to your account to continue.",
-};
+  title: 'Login',
+  description: 'Sign in to your account to continue.',
+}
 
 export default function Login() {
   return (
@@ -22,25 +21,16 @@ export default function Login() {
         <div className="w-full max-w-md ">
           <Card className="w-[350px]">
             <CardHeader>
-              <CardTitle>Create project</CardTitle>
-              <CardDescription>
-                Deploy your new project in one-click.
-              </CardDescription>
+              <CardTitle>Login</CardTitle>
+              <CardDescription>Ingresa tu correo</CardDescription>
             </CardHeader>
             <CardContent>
-              <LoginForm />
+              <LoginForm ui={'user'} />
             </CardContent>
-            <CardFooter className="flex justify-between">
-              <div className=" text-sm/5 ">
-                Not a member?{" "}
-                <Link href="#" className="font-medium hover:text-gray-600">
-                  Create an account
-                </Link>
-              </div>
-            </CardFooter>
+            <CardFooter className="flex justify-between"></CardFooter>
           </Card>
         </div>
       </div>
     </main>
-  );
+  )
 }

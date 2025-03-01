@@ -6,6 +6,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/hibiken/asynq"
 )
@@ -14,13 +15,22 @@ type JobServer struct {
 	Container       *container.Container
 	Server          *asynq.Server
 	FilesModule     *files.FilesModule
+	EmailsModule    *emails.EmailsModule
 	InternalModules *modules.InternalModule
 }
 
 func NewJobServer(container *container.Container,
 	filesModule *files.FilesModule,
+	emailsModule *emails.EmailsModule,
 	internalModules *modules.InternalModule) *JobServer {
-	newJobServer := &JobServer{Container: container, FilesModule: filesModule, InternalModules: internalModules}
+
+	newJobServer := &JobServer{
+		Container:       container,
+		FilesModule:     filesModule,
+		EmailsModule:    emailsModule,
+		InternalModules: internalModules,
+	}
+
 	return newJobServer
 }
 
@@ -60,6 +70,8 @@ func (js *JobServer) Run() *asynq.Server {
 	}
 
 	mux.Handle(tasks.TypeHelloWorld, tasks.NewHelloWorldProcessor(js.Container))
+	mux.Handle(tasks.TypeEvent, tasks.NewEventProcessor(js.Container, js.EmailsModule))
+
 	/* mux.Handle(tasks.TypeUploadClients, tasks.NewUploadClientsProcessor(js.Container, js.FilesModule)) */
 
 	go srv.Run(mux)

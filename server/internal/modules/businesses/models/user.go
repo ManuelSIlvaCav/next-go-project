@@ -1,11 +1,27 @@
-package businesses
+package businesses_models
 
 type CreateBusinessUserParams struct {
-	BusinessID string `json:"business_id"`
+	BusinessID string `json:"business_id" param:"id"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`
 	Email      string `json:"email"`
 	Phone      string `json:"phone"`
+}
+
+type UpdateBusinessSettingsParams struct {
+	BusinessID string `json:"business_id" param:"id"`
+	Subdomain  string `json:"subdomain"`
+}
+
+type GetBusinessUserParams struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
+
+type GetBusinessUsersParams struct {
+	Limit      int    `json:"limit" query:"limit"`
+	Cursor     int    `json:"cursor" query:"cursor"`
+	BusinessID string `json:"business_id" param:"id"`
 }
 
 type BusinessUser struct {

@@ -6,6 +6,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	emails_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/models"
 	emails "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/repositories"
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,8 +17,11 @@ func CreateEmailTemplate(container *container.Container,
 	return func(c echo.Context) error {
 		logger := container.Logger()
 		logger.Info(
-			"Creating email templates handler", "path", c.Path(), "method",
-			c.Request().Method)
+			"Creating email templates handler", "path", c.Path(),
+			"method",
+			c.Request().Method,
+			"user",
+			c.Get("jwt").(*jwt.Token))
 
 		params := emails_models.CreateEmailTemplateParams{}
 

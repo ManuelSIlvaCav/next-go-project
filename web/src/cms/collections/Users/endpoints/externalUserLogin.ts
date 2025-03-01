@@ -1,4 +1,4 @@
-import type { Collection, Endpoint } from 'payload'
+import type { Collection, Endpoint, Where } from 'payload'
 
 import { headersWithCors, mergeHeaders } from '@payloadcms/next/utilities'
 import { APIError, generateCookie, getCookieExpiration } from 'payload'
@@ -16,11 +16,10 @@ export const externalUsersLogin: Endpoint = {
         data = await req.json()
       }
     } catch (error) {
-      // swallow error, data is already empty object
       console.log('Error json data empty externalUsersLogin', { error })
     }
 
-    const { password, businessId, email } = data
+    const { password, businessId, email, isAdmin = false } = data
 
     console.log('External login', req)
 
@@ -28,46 +27,48 @@ export const externalUsersLogin: Endpoint = {
       throw new APIError('Email and Password are required for login.', 400, null, true)
     }
 
-    const fullTenant = (
-      await req.payload.find({
-        collection: 'tenants',
-        where: {
-          or: [
-            {
-              businessId: {
-                equals: businessId,
-              },
-            },
-          ],
-        },
+    let foundUser = null
+
+    //If the external Login is an admin
+    if (isAdmin) {
+      foundUser = await req.payload.find({
+        collection: 'users',
+        where: buildQuery({
+          isAdmin: Boolean(isAdmin),
+          email,
+        }),
       })
-    ).docs[0]
-
-    if (!fullTenant) {
-      throw new APIError(`Tenant not found for email ${email}`, 400, null, true)
-    }
-
-    const foundUser = await req.payload.find({
-      collection: 'users',
-      where: {
-        or: [
-          {
-            and: [
+    } else {
+      const fullTenant = (
+        await req.payload.find({
+          collection: 'tenants',
+          where: {
+            or: [
               {
-                email: {
-                  equals: email,
-                },
-              },
-              {
-                'tenants.tenant': {
-                  equals: fullTenant.id,
+                businessId: {
+                  equals: businessId,
                 },
               },
             ],
           },
-        ],
-      },
-    })
+        })
+      ).docs[0]
+
+      if (!fullTenant) {
+        throw new APIError(`Tenant not found for email ${email}`, 400, null, true)
+      }
+
+      foundUser = await req.payload.find({
+        collection: 'users',
+        where: buildQuery({
+          isAdmin: Boolean(isAdmin),
+          email,
+          tenantId: fullTenant?.id,
+        }),
+      })
+    }
+
+    console.log('foundUser', { foundUser })
 
     if (foundUser.totalDocs > 0) {
       try {
@@ -137,4 +138,45 @@ export const externalUsersLogin: Endpoint = {
 
     throw new APIError('Unable to login with the provided username and password.', 400, null, true)
   },
+}
+
+function buildQuery({
+  isAdmin,
+  email,
+  tenantId,
+}: {
+  isAdmin: boolean
+  email: string
+  tenantId?: string | number
+}): Where {
+  if (isAdmin) {
+    return {
+      and: [
+        {
+          email: {
+            equals: email,
+          },
+        },
+        {
+          roles: {
+            contains: 'super-admin',
+          },
+        },
+      ],
+    }
+  }
+  return {
+    and: [
+      {
+        email: {
+          equals: email,
+        },
+      },
+      {
+        'tenants.tenant': {
+          equals: tenantId,
+        },
+      },
+    ],
+  }
 }

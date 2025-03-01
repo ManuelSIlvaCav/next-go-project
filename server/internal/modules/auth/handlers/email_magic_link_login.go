@@ -5,6 +5,8 @@ import (
 
 	auth_jwt "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/jwt"
 	auth_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/repository"
+
+	businesses_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/models"
 	businesses "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/labstack/echo/v4"
@@ -52,7 +54,7 @@ func MagicLinkLogin(
 
 		/* Now we get the information of the desired User */
 
-		businessUser, err := businessRepository.GetBusinessUser(c.Request().Context(), &businesses.GetBusinessUserParams{Email: params.Email})
+		businessUser, err := businessRepository.GetBusinessUser(c.Request().Context(), &businesses_models.GetBusinessUserParams{Email: params.Email})
 
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, echo.Map{

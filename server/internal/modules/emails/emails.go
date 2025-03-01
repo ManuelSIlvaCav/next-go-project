@@ -5,11 +5,12 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	emails "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/handlers"
 	emails_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/repositories"
+	emails_service "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/services"
 	"go.uber.org/fx"
 )
 
 type EmailsModule struct {
-	EmailService            EmailService
+	EmailService            *emails_service.EmailService
 	EmailTemplateRepository *emails_repositories.EmailTemplateRepository
 	container               *container.Container
 }
@@ -19,7 +20,7 @@ func NewEmailsModule(container *container.Container) *EmailsModule {
 	emailTemplateRepository := emails_repositories.NewEmailTemplateRepository(container)
 
 	return &EmailsModule{
-		EmailService:            NewResendService(container),
+		EmailService:            emails_service.NewEmailService(container, emailTemplateRepository),
 		container:               container,
 		EmailTemplateRepository: emailTemplateRepository,
 	}

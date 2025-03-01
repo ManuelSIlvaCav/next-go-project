@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation'
 
 const nameDictionary = {
   businesses: 'Negocio',
-  create: 'Crear Negocio',
-  'automatic-emails': 'Emails Automáticos',
+  create: 'Crear',
+  'email-templates': 'Emails Templates',
+  actions: 'Acciones',
 }
 
 export default function AdminBreadcrumb() {

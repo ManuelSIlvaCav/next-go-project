@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@payloadcms/db-mongodb": "3.15.1",
     "@payloadcms/db-sqlite": "3.15.1",
     "@payloadcms/live-preview-react": "3.15.1",
     "@payloadcms/next": "3.15.1",
@@ -29,6 +30,7 @@
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-navigation-menu": "^1.2.3",
     "@radix-ui/react-popover": "^1.1.2",
+    "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.1",
@@ -56,8 +58,7 @@
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
-    "zod": "^3.23.8",
-    "@payloadcms/db-mongodb": "3.15.1"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@payloadcms/graphql": "latest",

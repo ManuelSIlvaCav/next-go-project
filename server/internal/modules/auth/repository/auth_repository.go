@@ -31,11 +31,23 @@ func (r *AuthRepository) LoginUserByEmail(
 	authentication_token string,
 ) (*auth_models.UserEmailLogin, error) {
 	logger := r.container.Logger()
-	query := `SELECT email, expires_at FROM user_email_login WHERE email = $1 AND authentication_token = $2`
+
+	/* query := `SELECT id, email, expires_at FROM user_email_login WHERE email=$1 AND authentication_token=$2 AND deleted_at IS NULL AND expires_at > NOW()` */
+
+	query := `
+						WITH selected_rows AS (
+	    				SELECT id, email, expires_at FROM user_email_login WHERE email = $1 AND authentication_token = $2 AND deleted_at IS NULL and expires_at > NOW() and used_at IS NULL
+							FOR UPDATE
+						)
+						UPDATE user_email_login
+						SET used_at = NOW()
+						FROM selected_rows
+						WHERE user_email_login.id = selected_rows.id
+						RETURNING selected_rows.id, selected_rows.email, selected_rows.expires_at;`
 
 	loginEmail := auth_models.UserEmailLogin{}
 
-	if err := r.container.DB().Db.QueryRowContext(ctx, query, email, authentication_token).Scan(&loginEmail.Email, &loginEmail.ExpiresAt); err != nil {
+	if err := r.container.DB().Db.QueryRowContext(ctx, query, email, authentication_token).Scan(&loginEmail.ID, &loginEmail.Email, &loginEmail.ExpiresAt); err != nil {
 		logger.Error("Error getting user email login", "error", err)
 		return nil, err
 	}
@@ -49,6 +61,14 @@ func (r *AuthRepository) CreateUserMagicEmail(
 ) (*auth_models.UserEmailLogin, error) {
 	logger := r.container.Logger()
 	newLoginEmail := &auth_models.UserEmailLogin{}
+
+	//Invalidate all past tokens for the user
+	invalidateQuery := `UPDATE user_email_login SET deleted_at = NOW() WHERE email = $1`
+
+	if _, err := r.container.DB().Db.ExecContext(ctx, invalidateQuery, email); err != nil {
+		logger.Error("Error invalidating user email login", "error", err)
+		return nil, err
+	}
 
 	query := `INSERT INTO user_email_login (email) VALUES ($1) RETURNING email, authentication_token`
 
@@ -69,10 +89,10 @@ func (r *AuthRepository) GetAdminUser(
 		Email: email,
 	}
 
-	query := `SELECT id FROM admins WHERE email = $1`
+	query := `SELECT id, email FROM admins WHERE email = $1`
 
 	if err := r.container.DB().Db.QueryRowContext(ctx, query, email).Scan(
-		&user.ID,
+		&user.ID, &user.Email,
 	); err != nil {
 		logger.Error("Error getting admin user", "error", err)
 		return nil, err

@@ -49,17 +49,13 @@ func setCORSConfig(e *echo.Echo) {
 		AllowCredentials:                         true,
 		UnsafeWildcardOriginWithAllowCredentials: true,
 		AllowOrigins:                             []string{"*"},
-		AllowHeaders: []string{
-			echo.HeaderAccessControlAllowHeaders,
-			echo.HeaderContentType,
-			echo.HeaderContentLength,
-			echo.HeaderAcceptEncoding,
-		},
+		AllowHeaders:                             []string{"*"},
 		AllowMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 			http.MethodPut,
 			http.MethodDelete,
+			http.MethodOptions,
 		},
 		MaxAge: 86400,
 	}))

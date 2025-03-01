@@ -1,4 +1,4 @@
-package businesses
+package businesses_models
 
 import "time"
 

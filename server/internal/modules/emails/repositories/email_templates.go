@@ -2,7 +2,6 @@ package emails
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
@@ -32,84 +31,146 @@ func NewEmailTemplateRepository(container *container.Container) *EmailTemplateRe
 
 func (e *EmailTemplateRepository) GetEmailTemplates(ctx context.Context, limit int, cursor int) ([]emails_models.EmailTemplate, error) {
 	return e.BasePagination(ctx, "email_templates", limit, cursor)
-	/* logger := e.container.Logger()
-
-	emailTemplates := []emails_models.EmailTemplate{}
-
-	queryLimit := limit
-	if queryLimit == 0 {
-		queryLimit = 10 // default value
-	}
-
-	var rows *sql.Rows
-	var err error
-
-	if cursor == 0 {
-		rows, err = e.container.DB().Db.QueryContext(ctx, "SELECT id, name, created_at FROM email_templates ORDER BY id DESC LIMIT $1", queryLimit)
-	} else {
-		rows, err = e.container.DB().Db.QueryContext(ctx, "SELECT id, name, created_at FROM email_templates WHERE id < $1 ORDER BY id DESC LIMIT $2", cursor, queryLimit)
-
-	}
-
-	if err != nil {
-		logger.Error("Failed to get email_template pagination", "error", err)
-		return nil, err
-
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		emailTemplate := emails_models.EmailTemplate{}
-		err := rows.Scan(&emailTemplate.ID, &emailTemplate.Name, &emailTemplate.CreatedAt)
-
-		if err != nil {
-			logger.Error("Failed to scan email_template", "error", err)
-			return nil, err
-		}
-		emailTemplates = append(emailTemplates, emailTemplate)
-	}
-
-	return emailTemplates, nil */
 }
 
 func (e *EmailTemplateRepository) GetEmailTemplateByID(id string) (*emails_models.EmailTemplate, error) {
-	return nil, nil
+	logger := e.container.Logger()
+
+	emailTemplate := &emails_models.EmailTemplate{}
+
+	if err := e.container.DB().Db.QueryRow(
+		"SELECT et.id, et.name, et.type, et.subject, et.created_at, et.updated_at, etd.design, etd.html FROM email_templates et INNER JOIN email_templates_data etd ON et.id = etd.id  WHERE et.id = $1",
+		id,
+	).Scan(
+		&emailTemplate.ID,
+		&emailTemplate.Name,
+		&emailTemplate.Type,
+		&emailTemplate.Subject,
+		&emailTemplate.CreatedAt,
+		&emailTemplate.UpdatedAt,
+		&emailTemplate.Design,
+		&emailTemplate.HTML,
+	); err != nil {
+		logger.Error("Failed to get email template by id", "error", err)
+		return nil, err
+	}
+
+	return emailTemplate, nil
 }
 
-func (e *EmailTemplateRepository) CreateEmailTemplate(ctx context.Context, params emails_models.CreateEmailTemplateParams,
+func (e *EmailTemplateRepository) CreateEmailTemplate(
+	ctx context.Context, params emails_models.CreateEmailTemplateParams,
 ) (*emails_models.EmailTemplate, error) {
 	logger := e.container.Logger()
 
 	newEmailTemplate := &emails_models.EmailTemplate{
-		Name:    params.Name,
-		Subject: params.Subject,
-		MetaData: emails_models.EmailTemplateMetadata{
-			Design:  params.Design,
-			HTML:    params.HTML,
-			Type:    "Unlayer",
-			Version: "1",
-		},
+		Type:      params.Type,
+		Name:      params.Name,
+		Subject:   params.Subject,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 
 	logger.Info("Creating email template", "email_template", newEmailTemplate)
 
-	meta_data, _ := json.Marshal(newEmailTemplate.MetaData)
-
 	if err := e.container.DB().Db.QueryRowContext(
 		ctx,
-		"INSERT INTO email_templates (name, subject, created_at, updated_at, meta_data) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+		"INSERT INTO email_templates (name, type, subject, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
 		newEmailTemplate.Name,
+		newEmailTemplate.Type,
 		newEmailTemplate.Subject,
 		newEmailTemplate.CreatedAt,
 		newEmailTemplate.UpdatedAt,
-		meta_data,
 	).Scan(&newEmailTemplate.ID); err != nil {
 		logger.Error("Failed to insert email_template", "error", err)
 		return &emails_models.EmailTemplate{}, err
 	}
 
+	newEmailTemplateData := &emails_models.EmailTemplateData{}
+
+	if err := e.container.DB().Db.QueryRowContext(
+		ctx,
+		"INSERT INTO email_templates_data (email_template_id, design, html) VALUES ($1, $2, $3) RETURNING id",
+		newEmailTemplate.ID,
+		params.Design,
+		params.HTML,
+	).Scan(&newEmailTemplateData.ID); err != nil {
+		logger.Error("Failed to insert email_template_data", "error", err)
+		return &emails_models.EmailTemplate{}, err
+	}
 	return newEmailTemplate, nil
+}
+
+func (e *EmailTemplateRepository) CreateBusinessTemplateEmail(ctx context.Context, params emails_models.CreateBusinessTemplateEmailParams,
+) (*emails_models.BusinessEmailTemplate, error) {
+	logger := e.container.Logger()
+
+	newEmailTemplate := &emails_models.BusinessEmailTemplate{
+		EmailTemplate: emails_models.EmailTemplate{
+			Name:      params.Name,
+			Subject:   params.Subject,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		BusinessID: params.BusinessID,
+	}
+
+	logger.Info("Creating email template", "email_template", newEmailTemplate)
+
+	if err := e.container.DB().Db.QueryRowContext(
+		ctx,
+		"INSERT INTO businesses_email_templates (business_id, name, subject, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+		newEmailTemplate.BusinessID,
+		newEmailTemplate.Name,
+		newEmailTemplate.Subject,
+		newEmailTemplate.CreatedAt,
+		newEmailTemplate.UpdatedAt,
+	).Scan(&newEmailTemplate.ID); err != nil {
+		logger.Error("Failed to insert email_template", "error", err)
+		return &emails_models.BusinessEmailTemplate{}, err
+	}
+
+	newEmailTemplateData := &emails_models.EmailTemplateData{}
+
+	if err := e.container.DB().Db.QueryRowContext(
+		ctx,
+		"INSERT INTO email_templates_data (email_template_id, design, html) VALUES ($1, $2, $3) RETURNING id",
+		newEmailTemplate.ID,
+		params.Design,
+		params.HTML,
+	).Scan(&newEmailTemplateData.ID); err != nil {
+		logger.Error("Failed to insert email_template_data", "error", err)
+		return &emails_models.BusinessEmailTemplate{}, err
+	}
+	return newEmailTemplate, nil
+}
+
+/* Gets the first email template for the category */
+func (e *EmailTemplateRepository) GetTemplateEmail(ctx context.Context, emailType string) (*emails_models.EmailTemplate, error) {
+	logger := e.container.Logger()
+
+	logger.Info("Getting email template", "email_type", emailType)
+
+	emailTemplate := &emails_models.EmailTemplate{}
+
+	if err := e.container.DB().Db.QueryRowContext(
+		ctx,
+		"SELECT et.id, et.name, et.type, et.subject, et.created_at, et.updated_at, etd.design, etd.html FROM email_templates et INNER JOIN email_templates_data etd ON et.id = etd.id  WHERE et.type = $1 ORDER BY et.id LIMIT 1",
+		emailType,
+	).Scan(
+		&emailTemplate.ID,
+		&emailTemplate.Name,
+		&emailTemplate.Type,
+		&emailTemplate.Subject,
+		&emailTemplate.CreatedAt,
+		&emailTemplate.UpdatedAt,
+		&emailTemplate.Design,
+		&emailTemplate.HTML,
+	); err != nil {
+		logger.Error("Failed to get email template by id", "error", err)
+		return nil, err
+	}
+
+	return emailTemplate, nil
+
 }

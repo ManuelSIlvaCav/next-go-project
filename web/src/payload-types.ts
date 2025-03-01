@@ -101,14 +101,6 @@ export interface Tenant {
         id?: string | null;
       }[]
     | null;
-  /**
-   * Used for url paths, example: /tenant-slug/page-slug
-   */
-  slug: string;
-  /**
-   * If checked, logging in is not required.
-   */
-  public?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -555,8 +547,6 @@ export interface TenantsSelect<T extends boolean = true> {
         domain?: T;
         id?: T;
       };
-  slug?: T;
-  public?: T;
   updatedAt?: T;
   createdAt?: T;
 }
