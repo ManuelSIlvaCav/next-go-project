@@ -5,7 +5,7 @@ import (
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/config"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/logger"
-	_ "github.com/jackc/pgx/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib" // Import the pgx driver
 	"github.com/jmoiron/sqlx"
 )
 

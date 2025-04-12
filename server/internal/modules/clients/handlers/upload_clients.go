@@ -41,7 +41,7 @@ func UploadClients(
 			})
 		}
 
-		jobClient := container.JobClient()
+		jobClient := container.JobTasker().JobClient()
 
 		//generate the task to process the upload
 		task, err := client_tasks.NewUploadClientsTask(file.Filename)

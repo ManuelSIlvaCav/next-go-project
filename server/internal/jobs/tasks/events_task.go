@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
 	tasks_events "github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks/events"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/hibiken/asynq"
 )
 
@@ -30,10 +30,10 @@ func NewEventsTask(eventType string, metaData interface{}) (*asynq.Task, error) 
 
 type EventProcessor struct {
 	Container    *container.Container
-	EmailsModule *emails.EmailsModule
+	EmailsModule interfaces.EmailModule
 }
 
-func NewEventProcessor(container *container.Container, emailsModule *emails.EmailsModule,
+func NewEventProcessor(container *container.Container, emailsModule interfaces.EmailModule,
 ) *EventProcessor {
 	return &EventProcessor{Container: container, EmailsModule: emailsModule}
 }
@@ -54,7 +54,7 @@ func (p *EventProcessor) ProcessTask(ctx context.Context, t *asynq.Task) error {
 			Email: payload.Metadata.(map[string]interface{})["email"].(string),
 		}
 
-		tasks_events.CreateUser(ctx, p.Container, p.EmailsModule, params)
+		tasks_events.CreateUser(ctx, p.Container, p.EmailsModule.GetEmailService(), params)
 	}
 
 	return nil

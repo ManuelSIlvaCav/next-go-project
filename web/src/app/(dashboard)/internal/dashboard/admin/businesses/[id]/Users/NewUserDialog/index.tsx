@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import NewUserForm from './new-user-form'
 
-export default function NewUserDialog(props: { businessId: string; jwt: string }) {
+export default function NewUserDialog(props: { businessId: string }) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
@@ -38,7 +38,6 @@ export default function NewUserDialog(props: { businessId: string; jwt: string }
             setOpen(false)
             router.refresh()
           }}
-          jwt={props.jwt}
         />
       </DialogContent>
     </Dialog>

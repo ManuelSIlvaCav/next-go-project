@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useMutation } from '@tanstack/react-query'
 
 import TextInput from '@/components/form/text-input'
-import { WithJwtProps } from '@/components/hoc/withJwt'
+import { useJwt } from '@/components/providers/JwtProvider'
 import { Form } from '@/components/ui/form'
 import { updateBusinessSettings } from '@/lib/actions/update-business-settings'
 import { ApiParams } from '@/lib/types'
@@ -21,10 +21,10 @@ type FormValues = z.infer<typeof FormSchema>
 
 export type SettingsFormProps = {
   businessId: string
-} & WithJwtProps
+}
 
 export default function SettingsForm(props: SettingsFormProps) {
-  const { jwt } = props
+  const { jwt } = useJwt()
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -47,6 +47,7 @@ export default function SettingsForm(props: SettingsFormProps) {
       toast({
         title: 'Error al actualizar la configuración',
         description: error.message,
+        variant: 'destructive',
       })
     },
   })

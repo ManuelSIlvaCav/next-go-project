@@ -18,6 +18,7 @@ const nextConfig = {
       }),
     ],
   },
+  reactStrictMode: false,
 }
 
 export default withPayload(nextConfig)

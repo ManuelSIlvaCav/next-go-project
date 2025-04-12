@@ -1,11 +1,14 @@
 package auth_handlers
 
 import (
+	"context"
 	"net/http"
 
+	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	auth_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/models"
 	auth_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/repository"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
+	emails_tasks "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/tasks"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,10 +20,10 @@ type (
 	}
 )
 
-func Login(container *container.Container,
-	authRepository *auth_repository.AuthRepository) echo.HandlerFunc {
+func Login(container *container.Container, authRepository auth_repository.AuthRepositoryInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		logger := container.Logger()
+		ctx := c.Request().Context()
 
 		var user UserLogin
 
@@ -38,21 +41,31 @@ func Login(container *container.Container,
 		logger.Info("Logging user", "user", user)
 
 		if user.Type == "email-only" {
-
-			createdEmailLogin, err := emailLogin(c, container,
-				authRepository, user.Email)
-
-			if err != nil {
+			/* Validate that the user exists */
+			admin, err := LoginAdmin(ctx, authRepository, user)
+			if err != nil || admin == nil {
+				message := "could not login user"
+				if err != nil {
+					message = err.Message
+				}
 				return c.JSON(http.StatusBadRequest, echo.Map{
-					"error": "could not create email login",
+					"code":  err.Code,
+					"error": message,
 				})
 			}
 
-			/* We send the email for the login */
+			/* Send email via an async tasK */
+			task, emailSendError := emails_tasks.NewSendEmailTask(user.Email)
+			if emailSendError != nil {
+				return c.JSON(http.StatusInternalServerError, echo.Map{
+					"error": "could not create email task",
+				})
+			}
+			container.EnqueueTask(task)
 
 			return c.JSON(http.StatusCreated, echo.Map{
 				"message": "email sent",
-				"email":   createdEmailLogin.Email,
+				"email":   user.Email,
 			})
 		}
 
@@ -62,18 +75,16 @@ func Login(container *container.Container,
 	}
 }
 
-/* Send email with the redirection link which includes the email and authentication_token*/
-func emailLogin(c echo.Context,
-	container *container.Container,
-	authRepository *auth_repository.AuthRepository,
-	email string) (*auth_models.UserEmailLogin, error) {
-	logger := container.Logger()
-	createdEmailLogin, err := authRepository.CreateUserMagicEmail(
-		c.Request().Context(),
-		email,
-	)
-
-	logger.Info("Email login created", "email", createdEmailLogin)
-	return createdEmailLogin, err
-
+func LoginAdmin(ctx context.Context, authRepository auth_repository.AuthRepositoryInterface, params UserLogin) (*auth_models.Admin, *internal_models.HandlerError) {
+	user, err := authRepository.GetAdminUser(ctx, params.Email)
+	if err != nil {
+		// Handle error
+		return nil, err
+	}
+	if user == nil {
+		// Handle user not found
+		return nil, nil
+	}
+	// Handle successful login
+	return user, nil
 }

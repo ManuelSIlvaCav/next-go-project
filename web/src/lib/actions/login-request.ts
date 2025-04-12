@@ -9,10 +9,14 @@ export default async function createLoginRequest(data: { type: string; email: st
     body: JSON.stringify(data),
   })
 
+  if (!resp) {
+    throw new Error('Network error')
+  }
+
   const jsonResponse = await resp.json()
 
   if (!resp.ok || resp.status !== 201) {
-    throw new Error(jsonResponse.message)
+    throw new Error(jsonResponse.error)
   }
 
   return jsonResponse

@@ -37,7 +37,7 @@ func (s *ResendEmailSender) SendEmail(ctx context.Context, email *Email) error {
 	sent, err := s.client.Emails.Send(params)
 
 	if err != nil {
-		logger.Error("Failed to send email", "error", err, "email", email)
+		logger.Error("Failed to send email", "error", err, "email", email.To, "subject", email.Subject, "sent", sent)
 		return err
 	}
 

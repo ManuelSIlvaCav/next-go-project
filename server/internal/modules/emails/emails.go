@@ -1,11 +1,16 @@
 package emails
 
 import (
-	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	emails "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/handlers"
 	emails_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/repositories"
 	emails_service "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/services"
+	emails_tasks "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/tasks"
+
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/router"
+
+	emails_emailsender "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/services/EmailSender"
 	"go.uber.org/fx"
 )
 
@@ -13,64 +18,68 @@ type EmailsModule struct {
 	EmailService            *emails_service.EmailService
 	EmailTemplateRepository *emails_repositories.EmailTemplateRepository
 	container               *container.Container
+	router                  *router.Router
+	authModule              interfaces.AuthModule
 }
 
-func NewEmailsModule(container *container.Container) *EmailsModule {
+type EmailsModuleParams struct {
+	fx.In
+	Container               *container.Container
+	EmailService            *emails_service.EmailService
+	EmailTemplateRepository *emails_repositories.EmailTemplateRepository
+	Router                  *router.Router
+	AuthModule              interfaces.AuthModule
+}
 
-	emailTemplateRepository := emails_repositories.NewEmailTemplateRepository(container)
-
-	return &EmailsModule{
-		EmailService:            emails_service.NewEmailService(container, emailTemplateRepository),
-		container:               container,
-		EmailTemplateRepository: emailTemplateRepository,
+func NewEmailsModule(params EmailsModuleParams) *EmailsModule {
+	emailsModule := EmailsModule{
+		EmailService:            params.EmailService,
+		container:               params.Container,
+		EmailTemplateRepository: params.EmailTemplateRepository,
+		router:                  params.Router,
+		authModule:              params.AuthModule,
 	}
+
+	emailsModule.SetRoutes()
+	emailsModule.SetTasks()
+
+	return &emailsModule
 }
 
 func (l *EmailsModule) GetDomain() string {
 	return "/email_templates"
 }
 
-func (l *EmailsModule) GetHandlers() []internal_models.Route {
-	routes := []internal_models.Route{}
+func (l *EmailsModule) SetRoutes() {
+	group := l.router.MainGroup.Group(l.GetDomain())
 
-	routes = append(routes,
-		internal_models.Route{
-			Method: "POST",
-			Path:   "",
-			Handler: emails.CreateEmailTemplate(l.container,
-				l.EmailTemplateRepository),
-			Description:   "Create an email template",
-			Authenticated: true,
-		},
-		internal_models.Route{
-			Method: "GET",
-			Path:   "",
-			Handler: emails.GetEmailTemplates(l.container,
-				l.EmailTemplateRepository),
-			Description:   "Get all email templates",
-			Authenticated: true,
-		},
-		internal_models.Route{
-			Method: "GET",
-			Path:   "/:email_template_id",
-			Handler: emails.GetEmailTemplate(l.container,
-				l.EmailTemplateRepository),
-			Description:   "Get template email",
-			Authenticated: true,
-		},
-	)
+	group.Use(l.authModule.AuthMiddleware())
 
-	return routes
+	group.Add("POST", "", emails.CreateEmailTemplate(l.container,
+		l.EmailTemplateRepository))
+	group.Add("GET", "", emails.GetEmailTemplates(l.container,
+		l.EmailTemplateRepository))
+	group.Add("GET", "/:email_template_id", emails.GetEmailTemplate(l.container,
+		l.EmailTemplateRepository))
 }
 
-func (l *EmailsModule) GetTasks() []internal_models.Task {
-	tasks := []internal_models.Task{}
-	return tasks
+func (l *EmailsModule) SetTasks() {
+	mux := l.container.JobTasker().Mux()
+	mux.Handle(emails_tasks.TypeSendEmail, emails_tasks.NewSendEmailProcessor(l))
 }
 
-func (l *EmailsModule) GetScheduledJobs() []internal_models.ScheduledJob {
-	jobs := []internal_models.ScheduledJob{}
-	return jobs
+func (l *EmailsModule) GetEmailService() *emails_service.EmailService {
+	return l.EmailService
 }
 
-var Module = fx.Options(fx.Provide(NewEmailsModule))
+var Module = fx.Module("emailsfx",
+	fx.Provide(emails_emailsender.NewResendEmailSender),
+	fx.Provide(emails_service.NewEmailService),
+	fx.Provide(emails_repositories.NewEmailTemplateRepository),
+	fx.Provide(
+		fx.Annotate(
+			NewEmailsModule,
+			fx.As(new(interfaces.EmailModule)),
+		),
+	),
+)

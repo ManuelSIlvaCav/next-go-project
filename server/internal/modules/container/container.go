@@ -1,11 +1,10 @@
 package container
 
 import (
-	"fmt"
-
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/aws_utils"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/config"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/database"
+	jobtasker "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/job_tasker"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/logger"
 	"github.com/hibiken/asynq"
 	"go.uber.org/fx"
@@ -16,7 +15,7 @@ type Container struct {
 	config    *config.Config
 	db        *database.Postgres
 	awsConfig *aws_utils.AwsUtils
-	jobClient *asynq.Client
+	jobtasker *jobtasker.JobTasker
 }
 
 func NewContainer() *Container {
@@ -26,18 +25,14 @@ func NewContainer() *Container {
 	pg := database.NewPostgres(config, logger)
 	awsConfig := aws_utils.NewAwsUtils(config, logger)
 
-	jobClient := asynq.NewClient(asynq.RedisClientOpt{
-		Addr: fmt.Sprintf("%s:%d", config.Redis.Host, config.Redis.Port),
-		//Username: config.Redis.Username,
-		Password: config.Redis.Password,
-	})
+	jobTasker := jobtasker.NewJobTasker(config.Redis.Host, config.Redis.Port, config.Redis.Password)
 
 	return &Container{
 		logger:    logger,
 		config:    config,
 		db:        pg,
-		jobClient: jobClient,
 		awsConfig: awsConfig,
+		jobtasker: jobTasker,
 	}
 }
 
@@ -53,8 +48,20 @@ func (c *Container) DB() *database.Postgres {
 	return c.db
 }
 
-func (c *Container) JobClient() *asynq.Client {
-	return c.jobClient
+func (c *Container) JobTasker() *jobtasker.JobTasker {
+	return c.jobtasker
+}
+
+func (c *Container) EnqueueTask(task *asynq.Task) error {
+	client := c.jobtasker.JobClient()
+
+	info, err := client.Enqueue(task)
+	if err != nil {
+		c.logger.Error("could not enqueue task", "error", err)
+		return err
+	}
+	c.logger.Info("Task enqueued", "taskId", info.ID, "type", info.Type, "queue", info.Queue)
+	return nil
 }
 
 func (c *Container) AwsConfig() *aws_utils.AwsUtils {

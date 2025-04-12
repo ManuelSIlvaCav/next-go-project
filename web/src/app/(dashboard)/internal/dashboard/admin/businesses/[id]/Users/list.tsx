@@ -1,11 +1,14 @@
-import { WithJwtProps } from '@/components/hoc/withJwt'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ApiParams } from '@/lib/types'
+import { cookies } from 'next/headers'
+import { Suspense } from 'react'
 import { Business, columns } from './columns'
 import { DataTable } from './data-table'
 import NewUserDialog from './NewUserDialog'
 
 async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate a delay
     // Fetch data from your API here.
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/v1/businesses/${id}/users`, {
       method: 'GET',
@@ -13,10 +16,6 @@ async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiParams.jwt}`,
       },
-      cache: 'no-store',
-      /* next: {
-        tags: ['businesses-users']
-      } */
     })
     const resp = await response.json()
 
@@ -28,8 +27,6 @@ async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
       email: 'manuel@gmail.com',
       phone: '1111111'
     } */
-    console.log('data', resp)
-
     return resp.data?.length ? resp.data : []
   } catch (error) {
     console.error('Error fetching data', error)
@@ -37,17 +34,22 @@ async function getData(apiParams: ApiParams, id: string): Promise<Business[]> {
   }
 }
 
-export default async function BusinessUsersList(props: WithJwtProps & { id: string }) {
-  const { jwt } = props
-
-  const data = await getData({ jwt }, props.id)
-
+export default async function BusinessUsersList(props: { id: string }) {
   return (
     <div className="flex flex-col container mx-auto py-10 gap-4">
       <div className="flex flex-row justify-end">
-        <NewUserDialog businessId={props.id} jwt={jwt} />
+        <NewUserDialog businessId={props.id} />
       </div>
-      <DataTable columns={columns} data={data} />
+      <Suspense fallback={<Skeleton className="h-[20vh]" />}>
+        <TableData id={props.id} />
+      </Suspense>
     </div>
   )
+}
+
+async function TableData(props: { id: string }) {
+  const cookieStore = await cookies()
+  const jwt = cookieStore.get('jwt')?.value ?? ''
+  const data = await getData({ jwt }, props.id)
+  return <DataTable columns={columns} data={data} />
 }

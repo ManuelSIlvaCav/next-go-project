@@ -1,4 +1,4 @@
-package emails
+package emails_repository
 
 import (
 	"context"

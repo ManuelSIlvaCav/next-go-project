@@ -1,9 +1,6 @@
-import { withJwt } from '@/components/hoc/withJwt'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Box, House, PanelsTopLeft, Settings } from 'lucide-react'
-import { Suspense } from 'react'
 import BusinessSettings from './Settings'
 import BusinessUsersList from './Users/list'
 
@@ -66,9 +63,7 @@ export default function BusinessTabs(props: { id: string }) {
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <TabsContent value="users">
-        <Suspense fallback={<Skeleton className="h-[30vh]" />}>
-          <BusinessUserListWithJwt id={id} />
-        </Suspense>
+        <BusinessUsersList id={id} />
       </TabsContent>
       <TabsContent value="tab-2">
         <p className="p-4 pt-1 text-center text-xs text-muted-foreground">Content for Tab 2</p>
@@ -77,11 +72,8 @@ export default function BusinessTabs(props: { id: string }) {
         <p className="p-4 pt-1 text-center text-xs text-muted-foreground">Content for Tab 3</p>
       </TabsContent>
       <TabsContent value="tab-4">
-        <BusinessSettingsWithJwt businessId={id} />
+        <BusinessSettings businessId={id} />
       </TabsContent>
     </Tabs>
   )
 }
-
-const BusinessUserListWithJwt = withJwt(BusinessUsersList)
-const BusinessSettingsWithJwt = withJwt(BusinessSettings)

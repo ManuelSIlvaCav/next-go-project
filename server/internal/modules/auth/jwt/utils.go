@@ -1,8 +1,6 @@
 package auth_jwt
 
 import (
-	"fmt"
-
 	"time"
 
 	auth_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/models"
@@ -19,10 +17,8 @@ type JwtCustomClaims struct {
 }
 
 type CreateJwtTokenParams struct {
-	FirstName string
-	LastName  string
-	UserID    string
-	AdminID   string
+	UserID  string
+	AdminID string
 }
 
 func GetJWTConfig() echojwt.Config {
@@ -60,7 +56,6 @@ func CreateJwtToken(
 	// Set custom claims
 	claims := &JwtCustomClaims{
 		auth_models.JWTData{
-			Name:           fmt.Sprintf("%s %s", jwtParams.FirstName, jwtParams.LastName),
 			BusinessUserID: jwtParams.UserID,
 		},
 		jwt.RegisteredClaims{

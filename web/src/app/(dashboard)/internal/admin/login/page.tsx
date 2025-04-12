@@ -21,12 +21,19 @@ export default function AdminLogin() {
   })
 
   function onSubmit(data: { email: string }, callbackfn: () => void) {
-    console.log('AdminLogin', data)
     mutation.mutate(
       { type: 'email-only', ...data },
       {
         onSuccess: () => {
           callbackfn()
+        },
+        onError: (error) => {
+          toast({
+            //variant: 'destructive',
+            title: 'Error in login',
+            description: error.message,
+            position: 'top-right',
+          })
         },
       },
     )

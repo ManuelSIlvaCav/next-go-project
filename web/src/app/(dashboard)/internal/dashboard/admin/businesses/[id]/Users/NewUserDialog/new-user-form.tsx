@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useMutation } from '@tanstack/react-query'
 
 import TextInput from '@/components/form/text-input'
-import { WithJwtProps } from '@/components/hoc/withJwt'
+import { useJwt } from '@/components/providers/JwtProvider'
 import { Form } from '@/components/ui/form'
 import { ApiParams } from '@/lib/types'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,7 +23,7 @@ type FormValues = z.infer<typeof FormSchema>
 export type NewUserFormProps = {
   businessId: string
   onSuccess: () => void
-} & WithJwtProps
+}
 
 async function createNewUser(
   apiParams: ApiParams,
@@ -63,7 +63,7 @@ async function createNewUser(
 }
 
 export default function NewUserForm(props: NewUserFormProps) {
-  const { jwt } = props
+  const { jwt } = useJwt()
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof FormSchema>>({

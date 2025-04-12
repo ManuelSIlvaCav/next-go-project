@@ -1,7 +1,7 @@
 'use client'
 
 import TextInput from '@/components/form/text-input'
-import { WithJwtProps } from '@/components/hoc/withJwt'
+import { useJwt } from '@/components/providers/JwtProvider'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
@@ -21,10 +21,11 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
-export type CreateBusinessFormProps = {} & WithJwtProps
+/* export type CreateBusinessFormProps = { 
+} */
 
-export default function CreateBusinessForm(props: CreateBusinessFormProps) {
-  const { jwt } = props
+export default function CreateBusinessForm() {
+  const { jwt } = useJwt()
   const { toast } = useToast()
   const router = useRouter()
 
@@ -34,12 +35,14 @@ export default function CreateBusinessForm(props: CreateBusinessFormProps) {
       toast({
         title: 'Business created',
         description: 'The business has been created successfully',
+        position: 'top-right',
       })
       router.push('/internal/dashboard/admin/businesses')
       router.refresh()
     },
     onError: (error) => {
       toast({
+        variant: 'destructive',
         title: 'Error',
         description: error.message,
       })

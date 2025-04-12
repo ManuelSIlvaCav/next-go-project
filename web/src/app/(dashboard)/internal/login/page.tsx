@@ -6,13 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { Metadata } from 'next'
 import LoginForm from './form'
-
-export const metadata: Metadata = {
-  title: 'Login',
-  description: 'Sign in to your account to continue.',
-}
 
 export default function Login() {
   return (
@@ -24,7 +18,7 @@ export default function Login() {
               <CardTitle>Login</CardTitle>
               <CardDescription>Ingresa tu correo</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col space-y-1.5 px-6">
               <LoginForm ui={'user'} />
             </CardContent>
             <CardFooter className="flex justify-between"></CardFooter>

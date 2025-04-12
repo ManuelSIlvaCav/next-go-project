@@ -28,7 +28,7 @@ func CreateBusinessUserHandler(container *container.Container, businessRepositor
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Internal Server Error"})
 		}
 
-		jobClient := container.JobClient()
+		jobClient := container.JobTasker().JobClient()
 
 		/* Emit event */
 		task, err := tasks.NewEventsTask(

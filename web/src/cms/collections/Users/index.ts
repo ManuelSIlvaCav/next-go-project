@@ -12,6 +12,7 @@ export const Users: CollectionConfig = {
       secure: true,
       //domain: process.env.COOKIE_DOMAIN,
     },
+    loginWithUsername: false,
   },
   admin: {
     useAsTitle: 'email',

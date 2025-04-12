@@ -31,23 +31,30 @@ func MagicLinkAdminLogin(
 
 		logger.Info("Logging admin with redirect", "user", params)
 
-		_, err := authRepository.LoginUserByEmail(
+		_, handlerError := authRepository.LoginUserByEmail(
 			c.Request().Context(),
 			params.Email, params.Token)
 
-		if err != nil {
+		errorMessage := "could not login user"
+
+		if handlerError != nil {
+
+			if handlerError != nil {
+				errorMessage = handlerError.Message
+			}
 			return c.JSON(http.StatusBadRequest, echo.Map{
-				"error": "could not login admin",
+				"code":  handlerError.Code,
+				"error": errorMessage,
 			})
 		}
 
 		/* Now we get the information of the desired User */
-		admin, err := authRepository.GetAdminUser(
+		admin, handlerError := authRepository.GetAdminUser(
 			c.Request().Context(),
 			params.Email,
 		)
 
-		if err != nil {
+		if handlerError != nil {
 			return c.JSON(http.StatusBadRequest, echo.Map{
 				"error": "could not find user",
 			})
@@ -55,10 +62,8 @@ func MagicLinkAdminLogin(
 		}
 
 		jwtParams := auth_jwt.CreateJwtTokenParams{
-			FirstName: "Admin",
-			LastName:  params.Email,
-			UserID:    admin.ID,
-			AdminID:   admin.ID,
+			UserID:  admin.ID,
+			AdminID: admin.ID,
 		}
 
 		// Create token

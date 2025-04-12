@@ -1,6 +1,9 @@
 package internal_models
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/hibiken/asynq"
 	"github.com/labstack/echo/v4"
 )
@@ -25,9 +28,28 @@ type ScheduledJob struct {
 	Expression string // Cron expression <minute> <hour> <day> <month> <weekday>
 }
 
-type IModule interface {
-	GetDomain() string
-	GetHandlers() []Route
-	GetTasks() []Task
-	GetScheduledJobs() []ScheduledJob
+const (
+	AdminNotFound    = 3001
+	MagicLinkExpired = 3002
+)
+
+var ErrorCodesMessage = map[int]string{
+	3001: "Admin not found",
+	3002: "Login code has expired",
+}
+
+type HandlerError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	error
+}
+
+func NewErrorWithCode(code int) *HandlerError {
+	message := ErrorCodesMessage[code]
+	return &HandlerError{
+		Code:    code,
+		Message: message,
+		error:   errors.New(fmt.Sprintf("%d: %s", code, message)),
+	}
+
 }

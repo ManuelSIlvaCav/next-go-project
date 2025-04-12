@@ -29,14 +29,14 @@ func UpdateBusinessSettingsHandler(container *container.Container,
 		/* TODO */
 		/* Add domain into the database for the business */
 
-		res, err := domainService.AddDomainToVercel(params.Subdomain)
+		/* res, err := domainService.AddDomainToVercel(params.Subdomain)
 
 		if err != nil {
 			logger.Error("Failed to add domain to vercel", "error", err)
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Internal Server Error"})
 		}
 
-		logger.Info("Domain added to vercel", "response", res)
+		logger.Info("Domain added to vercel", "response", res) */
 
 		return c.JSON(http.StatusCreated, echo.Map{
 			"message": "Business users created",

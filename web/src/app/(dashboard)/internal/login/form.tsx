@@ -22,7 +22,7 @@ const FormSchema = z.object({
 type LoginFormProps = {
   ui: string
   redirectUrl?: string
-  onSubmit: (data: z.infer<typeof FormSchema>, callbackfn: () => void) => void
+  onSubmit?: (data: z.infer<typeof FormSchema>, callbackfn: () => void) => void
 }
 
 export default function LoginForm(props: LoginFormProps) {
@@ -37,16 +37,12 @@ export default function LoginForm(props: LoginFormProps) {
     function onSubmitCallback() {
       toast({
         title: 'Correo ha sido enviado',
-        description: (
-          <>
-            <div>Hemos enviado un correo para validar tu identidad</div>
-          </>
-        ),
+        description: 'Hemos enviado un correo para validar tu identidad',
+        position: 'top-right',
       })
-      //router.push(redirectURL)
     }
 
-    props.onSubmit(data, onSubmitCallback)
+    props?.onSubmit?.(data, onSubmitCallback)
   }
 
   return (
@@ -61,13 +57,14 @@ export default function LoginForm(props: LoginFormProps) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="johndoer@gmail.com" {...field} />
+                  <div className="flex flex-col">
+                    <Input placeholder="johndoer@gmail.com" {...field} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <Button type="submit">Submit</Button>
         </form>
       </Form>

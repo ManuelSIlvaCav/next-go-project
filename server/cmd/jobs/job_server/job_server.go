@@ -3,10 +3,10 @@ package job_server
 import (
 	"fmt"
 
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/hibiken/asynq"
 )
@@ -15,13 +15,14 @@ type JobServer struct {
 	Container       *container.Container
 	Server          *asynq.Server
 	FilesModule     *files.FilesModule
-	EmailsModule    *emails.EmailsModule
+	EmailsModule    interfaces.EmailModule
 	InternalModules *modules.InternalModule
 }
 
-func NewJobServer(container *container.Container,
+func NewJobServer(
+	container *container.Container,
 	filesModule *files.FilesModule,
-	emailsModule *emails.EmailsModule,
+	emailsModule interfaces.EmailModule,
 	internalModules *modules.InternalModule) *JobServer {
 
 	newJobServer := &JobServer{
@@ -34,7 +35,7 @@ func NewJobServer(container *container.Container,
 	return newJobServer
 }
 
-func (js *JobServer) Run() *asynq.Server {
+func (js *JobServer) Run(mux *asynq.ServeMux) *asynq.Server {
 	logger := js.Container.Logger()
 	config := js.Container.Config()
 
@@ -62,12 +63,6 @@ func (js *JobServer) Run() *asynq.Server {
 	)
 
 	// mux maps a type to a handler
-	mux := asynq.NewServeMux()
-
-	allTasks := js.InternalModules.Tasks()
-	for _, task := range allTasks {
-		mux.Handle(task.Pattern, task.Handler)
-	}
 
 	mux.Handle(tasks.TypeHelloWorld, tasks.NewHelloWorldProcessor(js.Container))
 	mux.Handle(tasks.TypeEvent, tasks.NewEventProcessor(js.Container, js.EmailsModule))

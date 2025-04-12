@@ -2,7 +2,10 @@ package auth_repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
+	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	auth_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 )
@@ -12,6 +15,12 @@ type LoginParams struct {
 	Password string `json:"password" validate:"required" errormgs:"password is required"`
 	/* This represent the login method ex (only email, password, SSO) */
 	LoginMethod string `json:"type" validatge:"required,oneof=email-only password" errormgs:"type is required"`
+}
+
+type AuthRepositoryInterface interface {
+	LoginUserByEmail(ctx context.Context, email string, authentication_token string) (*auth_models.UserEmailLogin, *internal_models.HandlerError)
+	CreateUserMagicEmail(ctx context.Context, email string) (*auth_models.UserEmailLogin, error)
+	GetAdminUser(ctx context.Context, email string) (*auth_models.Admin, *internal_models.HandlerError)
 }
 
 type AuthRepository struct {
@@ -29,10 +38,8 @@ func (r *AuthRepository) LoginUserByEmail(
 	ctx context.Context,
 	email string,
 	authentication_token string,
-) (*auth_models.UserEmailLogin, error) {
+) (*auth_models.UserEmailLogin, *internal_models.HandlerError) {
 	logger := r.container.Logger()
-
-	/* query := `SELECT id, email, expires_at FROM user_email_login WHERE email=$1 AND authentication_token=$2 AND deleted_at IS NULL AND expires_at > NOW()` */
 
 	query := `
 						WITH selected_rows AS (
@@ -48,8 +55,13 @@ func (r *AuthRepository) LoginUserByEmail(
 	loginEmail := auth_models.UserEmailLogin{}
 
 	if err := r.container.DB().Db.QueryRowContext(ctx, query, email, authentication_token).Scan(&loginEmail.ID, &loginEmail.Email, &loginEmail.ExpiresAt); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// Handle no rows error
+			logger.Error("No rows found for admin user", "error", err)
+			return nil, internal_models.NewErrorWithCode(internal_models.MagicLinkExpired)
+		}
 		logger.Error("Error getting user email login", "error", err)
-		return nil, err
+		return nil, internal_models.NewErrorWithCode(internal_models.MagicLinkExpired)
 	}
 
 	return &loginEmail, nil
@@ -83,7 +95,7 @@ func (r *AuthRepository) CreateUserMagicEmail(
 func (r *AuthRepository) GetAdminUser(
 	ctx context.Context,
 	email string,
-) (*auth_models.Admin, error) {
+) (*auth_models.Admin, *internal_models.HandlerError) {
 	logger := r.container.Logger()
 	user := &auth_models.Admin{
 		Email: email,
@@ -91,11 +103,20 @@ func (r *AuthRepository) GetAdminUser(
 
 	query := `SELECT id, email FROM admins WHERE email = $1`
 
-	if err := r.container.DB().Db.QueryRowContext(ctx, query, email).Scan(
+	err := r.container.DB().Db.QueryRowContext(ctx, query, email).Scan(
 		&user.ID, &user.Email,
-	); err != nil {
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// Handle no rows error
+			logger.Error("No rows found for admin user", "error", err)
+			return nil, internal_models.NewErrorWithCode(internal_models.AdminNotFound)
+		}
+
+		// Handle other errors
 		logger.Error("Error getting admin user", "error", err)
-		return nil, err
+		return nil, internal_models.NewErrorWithCode(internal_models.AdminNotFound)
 	}
 
 	return user, nil
