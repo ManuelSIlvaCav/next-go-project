@@ -4,11 +4,13 @@ import type { Page } from '@/payload-types'
 import { CallToActionBlock } from './CallToAction/Component'
 import { CarrouselBlock } from './Carrousel/Component'
 import { ContentBlock } from './Content/Component'
+import { HeaderBlock } from './Header/Component'
 
 const blockComponents = {
   cta: CallToActionBlock,
   content: ContentBlock,
   carousel: CarrouselBlock,
+  header: HeaderBlock,
 }
 
 export const RenderBlocks: React.FC<{

@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"syscall"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/config"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/logger"
@@ -40,6 +41,7 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 
 	if err != nil {
 		p.logger.Error("Failed to connect to database: %v", "error", err)
+		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		return nil, err
 	}
 
@@ -47,6 +49,7 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 
 	if err != nil {
 		p.logger.Fatal("Failed to ping database: %v", "error", err)
+		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		return nil, err
 	}
 
@@ -57,6 +60,8 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 		}
 		p.logger.Info("Database connection closed")
 	}(dbx) */
+
+	//syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 
 	fmt.Println("Connected to database")
 

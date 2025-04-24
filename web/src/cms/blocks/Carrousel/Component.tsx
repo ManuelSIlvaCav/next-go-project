@@ -40,7 +40,7 @@ export const CarrouselBlock: React.FC<CarrouselBlockProps> = (props) => {
 
   return (
     <div className="relative mx-auto mt-5 max-w-full min-h-[30vh]">
-      <Carousel setApi={setCarouselApi} opts={{ loop: true }} className="z-10 ">
+      <Carousel setApi={setCarouselApi} opts={{ loop: true }}>
         <CarouselContent>
           {Array.from(sliderItems).map((item, index) => {
             return (

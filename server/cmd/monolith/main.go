@@ -3,6 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/cmd/jobs/job_server"
 	"github.com/ManuelSIlvaCav/next-go-project/server/cmd/jobs/migration_controller"
@@ -40,16 +45,23 @@ func registerHooks(
 
 			/* Server start */
 			config := container.Config()
+			go func() {
+				logger.Info(fmt.Sprintf("Server started on :%d asd", config.Port))
 
-			logger.Info(fmt.Sprintf("Server started on :%d asd", config.Port))
+				if err := e.Start(fmt.Sprintf(":%d",
+					config.Port)); err != nil && err != http.ErrServerClosed {
+					e.Logger.Fatal("shutting down the server2")
+				}
 
-			go e.Start(fmt.Sprintf(":%d",
-				config.Port))
+			}()
 
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			container := internalModule.Container
+			logger := container.Logger()
+
+			logger.Info("Stopping server")
 			container.DB().Close()
 			return nil
 		},
@@ -59,7 +71,17 @@ func registerHooks(
 
 /* This process will be in charge of handling async tasks like jobs and migrations */
 func main() {
-	fx.New(
+
+	// When this context is canceled, we will gracefully stop the
+	// server.
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	defer cancel()
+
+	// When the server is stopped *not by that context*, but by any
+	// other problems, it will return its error via this.
+	serr := make(chan error, 1)
+
+	app := fx.New(
 		fx.Options(
 			router.Module,
 			modules.Module,
@@ -68,5 +90,26 @@ func main() {
 			fx.Provide(job_server.NewJobServer),
 			fx.Invoke(registerHooks),
 		),
-	).Run()
+	)
+
+	app.Start(ctx)
+	// Wait for either the server to fail, or the context to end.
+	var err error
+	select {
+	case err = <-serr:
+		// Server failed
+		log.Printf("Server error: %v", err)
+	case <-ctx.Done():
+		// Context was canceled
+		log.Println("Received shutdown signal, shutting down gracefully...")
+	}
+
+	shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
+	defer shutdownRelease()
+
+	if err := app.Stop(shutdownCtx); err != nil {
+		log.Fatalf("HTTP shutdown error: %v", err)
+	}
+	log.Println("Graceful shutdown complete.")
+
 }

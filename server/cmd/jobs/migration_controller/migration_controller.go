@@ -37,8 +37,6 @@ func (mc *MigrationController) RunMigrations() error {
 		return err
 	}
 
-	logger.Info("Creating migration instance", "dbURL", dbURL)
-
 	m, err := migrate.NewWithDatabaseInstance(
 		"file:///"+"app/cmd/jobs/migration_controller/migrations/",
 		"postgres", driver)
@@ -52,7 +50,7 @@ func (mc *MigrationController) RunMigrations() error {
 
 	err = m.Up() // or m.Steps(2) if you want to explicitly set the number of migrations to run
 
-	if err != nil {
+	if err != nil && err != migrate.ErrNoChange {
 		logger.Error("Error running migrations: ", err)
 		return err
 	}

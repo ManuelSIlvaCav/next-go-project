@@ -151,7 +151,7 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | CarrouselBlock)[];
+  layout: (CallToActionBlock | ContentBlock | CarrouselBlock | HeaderBlock)[];
   updatedAt: string;
   createdAt: string;
 }
@@ -182,47 +182,7 @@ export interface Media {
       filesize?: number | null;
       filename?: string | null;
     };
-    square?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    small?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    medium?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    large?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    xlarge?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    og?: {
+    card?: {
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -339,6 +299,16 @@ export interface CarrouselBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'carousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeaderBlock".
+ */
+export interface HeaderBlock {
+  position?: ('left' | 'middle' | 'right') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'header';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -465,6 +435,7 @@ export interface PagesSelect<T extends boolean = true> {
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         carousel?: T | CarrouselBlockSelect<T>;
+        header?: T | HeaderBlockSelect<T>;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -536,6 +507,15 @@ export interface CarrouselBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeaderBlock_select".
+ */
+export interface HeaderBlockSelect<T extends boolean = true> {
+  position?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tenants_select".
  */
 export interface TenantsSelect<T extends boolean = true> {
@@ -580,57 +560,7 @@ export interface MediaSelect<T extends boolean = true> {
               filesize?: T;
               filename?: T;
             };
-        square?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        small?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        medium?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        large?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        xlarge?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        og?:
+        card?:
           | T
           | {
               url?: T;

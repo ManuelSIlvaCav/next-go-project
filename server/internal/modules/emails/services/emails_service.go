@@ -76,6 +76,16 @@ func (r *EmailService) SendNewUserEmail(ctx context.Context,
 		return err
 	}
 
+	container := r.Container
+
+	config := container.Config()
+	logger := container.Logger()
+
+	if config.IsDevelopment() {
+		logger.Info("Sending email in development mode", "email", to, "token", userLogin.AuthenticationToken)
+		return nil
+	}
+
 	/* Send the email */
 	r.EmailSender.SendEmail(ctx, &emails_emailsender.Email{
 		To:      to,

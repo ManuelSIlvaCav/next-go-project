@@ -62,6 +62,6 @@ async function createCMSResources(args: {
 
     console.log('User created', { respUserCreate, respLoginUser })
   } catch (error) {
-    console.log(error)
+    console.log('Error createCMSResources', { error })
   }
 }

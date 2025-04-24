@@ -38,34 +38,15 @@ export const Media: CollectionConfig = {
     imageSizes: [
       {
         name: 'thumbnail',
-        width: 300,
+        width: 400,
+        height: 300,
+        position: 'centre',
       },
       {
-        name: 'square',
-        width: 500,
-        height: 500,
-      },
-      {
-        name: 'small',
-        width: 600,
-      },
-      {
-        name: 'medium',
-        width: 900,
-      },
-      {
-        name: 'large',
-        width: 1400,
-      },
-      {
-        name: 'xlarge',
-        width: 1920,
-      },
-      {
-        name: 'og',
-        width: 1200,
-        height: 630,
-        crop: 'center',
+        name: 'card',
+        width: 768,
+        height: 1024,
+        position: 'centre',
       },
     ],
   },

@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { CallToAction } from '@/cms/blocks/CallToAction/config'
 import { CarrouselBlock } from '@/cms/blocks/Carrousel/config'
 import { Content } from '@/cms/blocks/Content/config'
+import { HeaderBlock } from '@/cms/blocks/Header/config'
 import { tenantField } from '@/cms/fields/TenantField'
 import { hero } from '@/cms/FixedBlocks/Heroe/config'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
@@ -79,7 +80,7 @@ export const Pages: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, CarrouselBlock],
+              blocks: [CallToAction, Content, CarrouselBlock, HeaderBlock],
               required: true,
               admin: {
                 //initCollapsed: true,

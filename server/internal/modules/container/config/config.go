@@ -78,7 +78,7 @@ func NewConfig() *Config {
 }
 
 func (c *Config) IsDevelopment() bool {
-	return c.Env == "development"
+	return c.Env == "development" || c.Env == "local"
 }
 
 func (c *Config) IsProduction() bool {

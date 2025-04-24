@@ -11,13 +11,6 @@ export default function AdminLogin() {
 
   const mutation = useMutation({
     mutationFn: createLoginRequest,
-    onSuccess: () => {},
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-      })
-    },
   })
 
   function onSubmit(data: { email: string }, callbackfn: () => void) {
@@ -29,7 +22,7 @@ export default function AdminLogin() {
         },
         onError: (error) => {
           toast({
-            //variant: 'destructive',
+            variant: 'destructive',
             title: 'Error in login',
             description: error.message,
             position: 'top-right',

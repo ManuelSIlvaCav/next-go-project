@@ -58,7 +58,6 @@ type Props = {
 
 export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
-  console.log('RichText', props)
   return (
     <RichTextWithoutBlocks
       converters={jsxConverters}
