@@ -1,0 +1,5 @@
+FROM --platform=linux/amd64 chromedp/headless-shell:latest
+RUN apt-get update --fix-missing && apt-get -y upgrade
+
+ENTRYPOINT [ "/headless-shell/run.sh" ]
+CMD ["--disable-features=LazyFrameLoading", "--disable-features=ScriptStreaming", "--no-process-per-site", "--disable-dev-shm-usage", "--disable-gpu", "--disable-web-security", "--no-first-run", "--disable-setuid-sandbox", "--ignore-certificate-errors", "--no-zygote" ]

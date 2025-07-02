@@ -104,7 +104,10 @@ type MagicLoginParams struct {
 }
 
 /* Important function to modify the html of the current email, useful while sending */
-func (e *EmailService) addLoginMagicLink(ctx context.Context, s string, magicLoginParams MagicLoginParams) (string, error) {
+func (e *EmailService) addLoginMagicLink(
+	ctx context.Context,
+	s string,
+	magicLoginParams MagicLoginParams) (string, error) {
 
 	/* http://localhost:3001/internal/login/redirect?em=manuel@gmail.com&tk=3a2ef644-95eb-4be4-9317-b1c0c4d9487c&ui=admin */
 

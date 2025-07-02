@@ -5,8 +5,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: housespot-server
-    hostname: housespot-server
+    container_name: main-server
+    hostname: main-server
     env_file:
       - .env
     ports:
@@ -25,6 +25,23 @@ services:
       - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
     networks:
       - default
+
+  chromedp:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.scrapper
+    ports:
+      - 9222:9222
+    container_name: chromedp
+    hostname: chromedp
+    volumes:
+      - ./server:/app
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro #
+    networks:
+      - default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    shm_size: 4g
 
   # go-jobs:
   #   build:

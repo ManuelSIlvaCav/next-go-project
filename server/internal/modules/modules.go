@@ -9,7 +9,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings"
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/projects"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/scrapper"
 	"go.uber.org/fx"
 )
 
@@ -17,36 +17,27 @@ type InternalModule struct {
 	Container *container.Container
 }
 
-const (
-	EmailsModuleKey   = "emails"
-	AuthModuleKey     = "auth"
-	BusinessModuleKey = "businesses"
-	ClientModuleKey   = "clients"
-	ListingModuleKey  = "listings"
-	ProjectsModuleKey = "projects"
-)
-
 type AllModulesParams struct {
 	fx.In
 	container        *container.Container
 	filesModule      *files.FilesModule
-	listingModule    *listings.ListingModule
 	clientsModule    *clients.ClientModule
-	projectsModule   *projects.ProjectsModule
 	businessesModule interfaces.BusinessModule
 	authModule       interfaces.AuthModule
 	emailsModule     interfaces.EmailModule
+	listingModule    interfaces.ListingsModule
+	scrapperModule   interfaces.ScrapperModule
 }
 
 func NewInternalModule(
 	container *container.Container,
 	filesModule *files.FilesModule,
-	listingModule *listings.ListingModule,
 	clientsModule *clients.ClientModule,
-	projectsModule *projects.ProjectsModule,
 	businessesModule interfaces.BusinessModule,
 	authModule interfaces.AuthModule,
 	emailsModule interfaces.EmailModule,
+	listingModule interfaces.ListingsModule,
+	scrapperModule interfaces.ScrapperModule,
 ) *InternalModule {
 
 	return &InternalModule{Container: container}
@@ -59,7 +50,7 @@ var Module = fx.Options(
 	listings.Module,
 	clients.Module,
 	emails.Module,
-	projects.Module,
 	businesses.Module,
+	scrapper.Module,
 	fx.Provide(NewInternalModule),
 )

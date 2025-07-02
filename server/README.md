@@ -31,9 +31,23 @@ But it should be handled by the docker image with jobs and migrations
 - migrate v4 for hadling SQL migration https://github.com/golang-migrate/migrate
 - asyncq for jobs scheduling https://github.com/hibiken/asynq?tab=readme-ov-file
 
-## Interesting Findings
+# ToDO
 
-Processing 10k rows csv
+- Scrapper
 
-- No concurrency 55sec
-- with go routines, buffer channel and batch insert 1.3sec
+PetVet
+
+1. Go to Home
+2. Start scrapping KNOWN categories
+3.
+
+- Perros
+  - Alimentos
+    - [Skip Ver Todo]
+    - Secos
+    - Humedos
+    - ...
+  - Farmacos
+  - Juguetes
+- Gatos
+  -

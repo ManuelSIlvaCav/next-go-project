@@ -14,6 +14,8 @@ import { defaultLexical } from './cms/fields/defaultLexical'
 
 import { en } from '@payloadcms/translations/languages/en'
 import { es } from '@payloadcms/translations/languages/es'
+import { Categories } from './cms/collections/Categories'
+import { plugins } from './cms/plugins'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -44,8 +46,8 @@ export default buildConfig({
         {
           label: 'Desktop',
           name: 'desktop',
-          width: 1440,
-          height: 900,
+          width: 1060,
+          height: 800,
         },
       ],
     },
@@ -53,7 +55,7 @@ export default buildConfig({
   routes: {
     admin: '/cms/admin',
   },
-  collections: [Users, Pages, Tenants, Media],
+  collections: [Users, Pages, Tenants, Media, Categories],
   i18n: {
     supportedLanguages: {
       en,
@@ -77,4 +79,6 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+  plugins: [...plugins],
+  cors: '*',
 })

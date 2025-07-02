@@ -1371,6 +1371,11 @@
     sonner "^1.7.0"
     uuid "10.0.0"
 
+"@payloadcms/plugin-nested-docs@3.15.1":
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/@payloadcms/plugin-nested-docs/-/plugin-nested-docs-3.15.1.tgz#a422c71a073284fdac69ae58554a5207b63bacb4"
+  integrity sha512-8vusXHzMeDprzIA4Jja+i/bjncJphbs4gqS2ZYENoU74ZKOEdWJRgwERyEp29mzKceka/sV8TLQ+wmZqrsQlAA==
+
 "@payloadcms/richtext-lexical@3.15.1":
   version "3.15.1"
   resolved "https://registry.yarnpkg.com/@payloadcms/richtext-lexical/-/richtext-lexical-3.15.1.tgz#781436459ca72746443f7f07937c412a15910aa8"

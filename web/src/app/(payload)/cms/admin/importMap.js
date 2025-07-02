@@ -1,3 +1,4 @@
+import { SlugComponent as SlugComponent_c016569e15933a342e6df616791e6f95 } from '@/cms/fields/slug/SlugComponent'
 import { TenantFieldComponent as TenantFieldComponent_9b88ca2b19d2285a0901566cbe9e4c76 } from '@/cms/fields/TenantField/components/Field'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -12,6 +13,7 @@ import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { BeforeLogin as BeforeLogin_97b19c090a9af643cf3d5d423738e725 } from '@/cms/components/BeforeLogin'
 
 export const importMap = {
+  "@/cms/fields/slug/SlugComponent#SlugComponent": SlugComponent_c016569e15933a342e6df616791e6f95,
   "@/cms/fields/TenantField/components/Field#TenantFieldComponent": TenantFieldComponent_9b88ca2b19d2285a0901566cbe9e4c76,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,

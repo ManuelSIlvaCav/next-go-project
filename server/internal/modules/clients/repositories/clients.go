@@ -1,4 +1,4 @@
-package clients
+package clients_repositories
 
 type ClientRepository struct {
 }

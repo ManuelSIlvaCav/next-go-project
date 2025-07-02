@@ -1,46 +1,51 @@
-import type { Access, Where } from "payload";
+import type { Access, Where } from 'payload'
 
-import { parseCookies } from "payload";
+import { parseCookies } from 'payload'
 
-import { getTenantAccessIDs } from "@/utilities/getTenantAccessIDs";
-import { isSuperAdmin } from "../../../access/isSuperAdmin";
+import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
+import { isSuperAdmin } from '../../../access/isSuperAdmin'
 
 export const readAccess: Access = (args) => {
-  const req = args.req;
-  const cookies = parseCookies(req.headers);
-  const superAdmin = isSuperAdmin(args);
-  const selectedTenant = cookies.get("payload-tenant");
-  const tenantAccessIDs = getTenantAccessIDs(req.user);
+  const req = args.req
+  const cookies = parseCookies(req.headers)
+  const superAdmin = isSuperAdmin(args)
+  const selectedTenant = cookies.get('payload-tenant')
+  const tenantAccessIDs = getTenantAccessIDs(req.user)
 
   const publicPageConstraint: Where = {
-    "tenant.public": {
+    'tenant.public': {
       equals: true,
     },
-  };
+  }
+
+  console.log('access', {
+    superAdmin,
+    selectedTenant,
+    tenantAccessIDs,
+  })
+
+  // If no manually selected tenant,
+  // but it is a super admin, give access to all
+  if (superAdmin) {
+    return true
+  }
 
   // If it's a super admin or has access to the selected tenant
   if (
     selectedTenant &&
-    (superAdmin ||
-      tenantAccessIDs.some((id) => id.toString() === selectedTenant))
+    (superAdmin || tenantAccessIDs.some((id) => id.toString() === selectedTenant))
   ) {
     // filter access by selected tenant
     return {
       or: [
         publicPageConstraint,
         {
-          tenant: {
-            equals: selectedTenant,
+          in: {
+            in: tenantAccessIDs,
           },
         },
       ],
-    };
-  }
-
-  // If no manually selected tenant,
-  // but it is a super admin, give access to all
-  if (superAdmin) {
-    return true;
+    }
   }
 
   // If not super admin,
@@ -56,9 +61,9 @@ export const readAccess: Access = (args) => {
           },
         },
       ],
-    };
+    }
   }
 
   // Allow access to public pages
-  return publicPageConstraint;
-};
+  return publicPageConstraint
+}

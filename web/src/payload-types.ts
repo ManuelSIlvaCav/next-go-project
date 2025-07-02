@@ -15,6 +15,7 @@ export interface Config {
     pages: Page;
     tenants: Tenant;
     media: Media;
+    categories: Category;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -25,6 +26,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -112,6 +114,7 @@ export interface Page {
   id: number;
   title?: string | null;
   slug?: string | null;
+  slugLock?: boolean | null;
   tenant?: (number | null) | Tenant;
   hero: {
     type: 'none' | 'highImpact' | 'lowImpact';
@@ -306,9 +309,37 @@ export interface CarrouselBlock {
  */
 export interface HeaderBlock {
   position?: ('left' | 'middle' | 'right') | null;
+  navigationItems: {
+    isCategory?: boolean | null;
+    categories?: (number | null) | Category;
+    title?: string | null;
+    id?: string | null;
+  }[];
   id?: string | null;
   blockName?: string | null;
   blockType: 'header';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  description?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  parent?: (number | null) | Category;
+  breadcrumbs?:
+    | {
+        doc?: (number | null) | Category;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -332,6 +363,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -406,6 +441,7 @@ export interface UsersSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  slugLock?: T;
   tenant?: T;
   hero?:
     | T
@@ -511,6 +547,14 @@ export interface CarrouselBlockSelect<T extends boolean = true> {
  */
 export interface HeaderBlockSelect<T extends boolean = true> {
   position?: T;
+  navigationItems?:
+    | T
+    | {
+        isCategory?: T;
+        categories?: T;
+        title?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -571,6 +615,27 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  slug?: T;
+  slugLock?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,5 +1,9 @@
 # Go Version
-FROM golang:1.21-rc-alpine3.17
+FROM golang:1.24.4-alpine3.22
+
+
+# Update Alpine packages to reduce vulnerabilities
+RUN apk update && apk upgrade
 
 # Environment variables which CompileDaemon requires to run
 ENV PROJECT_DIR=/app \

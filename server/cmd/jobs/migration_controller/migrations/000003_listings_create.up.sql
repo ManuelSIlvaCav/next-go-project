@@ -1,24 +1,45 @@
 
+CREATE TABLE IF NOT EXISTS categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(100),
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
+    parent_id UUID REFERENCES categories(id) ON DELETE CASCADE,
+    slug VARCHAR(100) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE or REPLACE FUNCTION category_sub_or_leaf(id_in uuid)
+  RETURNS text
+  language sql 
+  strict 
+as $$ 
+    select case when exists (select null
+                               from categories
+                               where parent_id = id_in 
+                            )   
+                then 'nested_category'
+                else 'leaf_category'
+             end  ;
+$$;
 
 CREATE TABLE IF NOT EXISTS listings (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(100) NOT NULL,
     description VARCHAR(100) NOT NULL,
     price DECIMAL(12, 2) NOT NULL,
     price_unit VARCHAR(10) NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
+    category_id UUID REFERENCES categories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS listings_details(
     id SERIAL PRIMARY KEY,
-    listing_id SERIAL REFERENCES listings(id) ON DELETE CASCADE,
-    bedrooms INT,
-    bathrooms INT,
-    surface_total DECIMAL(12, 2),
-    surface_living DECIMAL(12, 2),
-    surface_scale VARCHAR(10),
-    has_garage BOOLEAN,
-    garage_identifier VARCHAR(10),
-    has_parking BOOLEAN
+    listing_id UUID REFERENCES listings(id) ON DELETE CASCADE,
+    website_url VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL
 );

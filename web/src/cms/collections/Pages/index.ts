@@ -4,6 +4,7 @@ import { CallToAction } from '@/cms/blocks/CallToAction/config'
 import { CarrouselBlock } from '@/cms/blocks/Carrousel/config'
 import { Content } from '@/cms/blocks/Content/config'
 import { HeaderBlock } from '@/cms/blocks/Header/config'
+import { slugField } from '@/cms/fields/slug'
 import { tenantField } from '@/cms/fields/TenantField'
 import { hero } from '@/cms/FixedBlocks/Heroe/config'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
@@ -60,16 +61,7 @@ export const Pages: CollectionConfig = {
       name: 'title',
       type: 'text',
     },
-    {
-      name: 'slug',
-      type: 'text',
-      defaultValue: 'home',
-      hooks: {
-        /* We insert the tenant field based on the user who is operating */
-        //beforeValidate: [ensureUniqueSlug],
-      },
-      index: true,
-    },
+    ...slugField(),
     tenantField,
     {
       type: 'tabs',

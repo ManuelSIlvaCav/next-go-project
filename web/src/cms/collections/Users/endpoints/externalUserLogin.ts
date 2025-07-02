@@ -21,7 +21,7 @@ export const externalUsersLogin: Endpoint = {
 
     const { password, businessId, email, isAdmin = false } = data
 
-    console.log('External login', req)
+    console.log('External login', { email, password, isAdmin, businessId, req })
 
     if (!email || !password) {
       throw new APIError('Email and Password are required for login.', 400, null, true)
@@ -136,7 +136,7 @@ export const externalUsersLogin: Endpoint = {
       }
     }
 
-    throw new APIError('Unable to login with the provided username and password.', 400, null, true)
+    throw new APIError('Something unexpected happened', 400, null, true)
   },
 }
 

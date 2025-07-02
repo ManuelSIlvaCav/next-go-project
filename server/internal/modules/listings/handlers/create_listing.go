@@ -1,14 +1,17 @@
-package listings
+package listings_handlers
 
 import (
-	"fmt"
+	"net/http"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
-	listings "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings/models"
+	listings_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings/repositories"
+	listing_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings/services"
 	"github.com/labstack/echo/v4"
 )
 
-func CreateListing(container *container.Container) echo.HandlerFunc {
+func CreateListing(
+	container *container.Container,
+	listingService listing_services.ListingServiceInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		logger := container.Logger()
 
@@ -16,31 +19,22 @@ func CreateListing(container *container.Container) echo.HandlerFunc {
 			"Create listing handler", "path", c.Path(), "method",
 			c.Request().Method)
 
-		listing := listings.Listing{
-			Title:       "Listing",
-			Description: "Description",
-			Price:       5990,
-			PriceUnit:   "CLP",
-			Address:     "Address",
-			UserID:      123,
+		params := listings_repositories.CreateListingParams{}
+
+		if err := c.Bind(&params); err != nil {
+			logger.Error("Failed to bind create listing", "error", err)
+			return c.JSON(http.StatusBadRequest, echo.Map{"error": "Bad Request - Invalid parameters"})
 		}
 
-		if err := c.Bind(&listing); err != nil {
-			logger.Error("Failed to bind listing", "error", err)
-			return c.String(400, "Failed to bind listing")
+		listing, err := listingService.CreateListing(c.Request().Context(), &params)
+
+		if err != nil {
+			logger.Error("Failed to create listing", "error", err)
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Internal Server Error"})
 		}
 
-		if _, err := container.DB().Db.NamedExecContext(
-			c.Request().Context(),
-			"INSERT INTO listings (title, description, price, price_unit, user_id ) VALUES (:title, :description, :price, :price_unit, :user_id)",
-			listing,
-		); err != nil {
-			logger.Error("Failed to insert listing", "error", err)
-			return c.String(500, fmt.Sprintf("Failed to insert listing: %s", err))
-		}
+		logger.Info("Listing created", "listing", "listing")
 
-		logger.Info("Listing created", "listing", listing)
-
-		return c.String(200, "Hello, World!")
+		return c.JSON(http.StatusCreated, echo.Map{"data": listing})
 	}
 }

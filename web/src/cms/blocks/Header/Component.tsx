@@ -8,15 +8,18 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils'
+import { Category as CategoryProps, HeaderBlock as HeaderBlockProps } from '@/payload-types'
 import Link from 'next/link'
 import React from 'react'
 
-export const HeaderBlock: React.FC<any> = (props) => {
-  const { position } = props
+export const HeaderBlock: React.FC<HeaderBlockProps> = (props) => {
+  const { position, navigationItems } = props
+
+  console.log('HeaderBlock', props)
 
   return (
     <div className="flex flex-row justify-end">
-      <NavigationMenuComponent />
+      <NavigationMenuComponent items={navigationItems} />
     </div>
   )
 }
@@ -58,10 +61,53 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ]
 
-function NavigationMenuComponent() {
+function NavigationMenuComponent(props: {
+  items: {
+    title: string
+    categories?: (number | null) | CategoryProps
+    id?: string | null
+  }[]
+}) {
+  const { items } = props
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
+        {items?.length &&
+          items.map((item) => {
+            console.log('item', item)
+            if (Array.isArray(item.categories) && item.categories.length > 0) {
+              return (
+                <NavigationMenuItem key={item.id}>
+                  <NavigationMenuTrigger className="text-lg">{item.title}</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      {item.categories.map((category) => {
+                        return (
+                          <ListItem
+                            key={category.id}
+                            title={category.title}
+                            href={`/categories/${category.id}`}
+                          >
+                            {category.description}
+                          </ListItem>
+                        )
+                      })}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              )
+            }
+            return (
+              <NavigationMenuItem key={item.id}>
+                <Link href={''} legacyBehavior passHref>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'text-lg')}>
+                    {item.title}
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            )
+          })}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-lg">Getting started</NavigationMenuTrigger>
           <NavigationMenuContent>

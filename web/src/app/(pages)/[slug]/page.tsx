@@ -2,7 +2,6 @@ import configPromise from '@payload-config'
 import { draftMode, headers } from 'next/headers'
 import { getPayload } from 'payload'
 
-import { RenderHero } from '@/cms/FixedBlocks/Heroe/RenderHero'
 import { RenderBlocks } from '@/cms/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/cms/components/LivePreviewListener'
 import type { Page as PageType } from '@/payload-types'
@@ -68,14 +67,14 @@ export default async function Page({ params: paramsPromise }: Args) {
   console.log('poage', { page, domain, draft })
 
   return (
-    <article className="pt-16 pb-24">
+    <article className="">
       <PageClient />
       Page Client
       {` ${slug}, ${url}, ${draft}`}
       {/* Allows redirects for valid pages too */}
       {/*  <PayloadRedirects disableNotFound url={url} /> */}
       {draft && <LivePreviewListener />}
-      <RenderHero {...hero} />
+      {/* <RenderHero {...hero} /> */}
       <RenderBlocks blocks={layout} />
     </article>
   )
@@ -124,12 +123,14 @@ const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: s
       and: [
         {
           slug: {
-            equals: slug === 'reserved' ? '' : slug,
+            equals: slug,
           },
         },
       ],
     },
   })
+
+  console.log('result', { result, slug, domain })
 
   return result.docs?.[0] || null
 })

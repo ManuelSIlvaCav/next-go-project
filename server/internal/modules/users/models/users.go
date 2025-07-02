@@ -1,4 +1,4 @@
-package users
+package users_model
 
 type Contact struct {
 	UserID int    `json:"user_id"`
