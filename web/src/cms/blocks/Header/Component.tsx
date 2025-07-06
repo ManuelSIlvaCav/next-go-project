@@ -13,13 +13,23 @@ import Link from 'next/link'
 import React from 'react'
 
 export const HeaderBlock: React.FC<HeaderBlockProps> = (props) => {
-  const { position, navigationItems } = props
+  const { navigationItems } = props
 
   console.log('HeaderBlock', props)
 
   return (
     <div className="flex flex-row justify-end">
-      <NavigationMenuComponent items={navigationItems} />
+      <NavigationMenuComponent
+        items={
+          navigationItems
+            ?.filter((item) => typeof item.title === 'string' && item.title)
+            .map(({ title, categories, id }) => ({
+              title: title as string,
+              categories,
+              id,
+            })) || []
+        }
+      />
     </div>
   )
 }
@@ -114,7 +124,7 @@ function NavigationMenuComponent(props: {
             <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
-                  <a
+                  <Link
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     href="/"
                   >
@@ -122,7 +132,7 @@ function NavigationMenuComponent(props: {
                     <p className="text-sm leading-tight text-muted-foreground">
                       Beautifully designed components built with Radix UI and Tailwind CSS.
                     </p>
-                  </a>
+                  </Link>
                 </NavigationMenuLink>
               </li>
               <ListItem href="/docs" title="Introduction">

@@ -31,3 +31,8 @@ server/jobs
 
 .infracost
 .terraform
+
+app/*
+ai-initiatives/*
+
+*.png
