@@ -31,23 +31,8 @@ But it should be handled by the docker image with jobs and migrations
 - migrate v4 for hadling SQL migration https://github.com/golang-migrate/migrate
 - asyncq for jobs scheduling https://github.com/hibiken/asynq?tab=readme-ov-file
 
-# ToDO
+## ToDO
 
-- Scrapper
+1. Make a deployment of everything and test things out
 
-PetVet
-
-1. Go to Home
-2. Start scrapping KNOWN categories
-3.
-
-- Perros
-  - Alimentos
-    - [Skip Ver Todo]
-    - Secos
-    - Humedos
-    - ...
-  - Farmacos
-  - Juguetes
-- Gatos
-  -
+2.

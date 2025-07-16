@@ -17,48 +17,13 @@ locals {
   ecr_repository_name = "project_x_demo"
 }
 
-import {
-  to = aws_ecr_repository.ecr
-  id = local.ecr_repository_name
-}
 
-resource "aws_ecr_repository" "ecr" {
-  name                 = local.ecr_repository_name
-  force_delete         = false
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
-resource "aws_ecr_lifecycle_policy" "main" {
-  repository = aws_ecr_repository.ecr.name
-
-  policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "keep last 10 images"
-      action = {
-        type = "expire"
-      }
-      selection = {
-        tagStatus   = "any"
-        countType   = "imageCountMoreThan"
-        countNumber = 10
-      }
-    }]
-  })
-}
-
-
-/* module "ecr" {
-  source      = "../../modules/ecr"
-  environment = local.environment
-  service_name = local.service_name
+module "ecr" {
+  source              = "../../modules/ecr"
+  environment         = local.environment
+  service_name        = local.service_name
   ecr_repository_name = local.service_name
-} 
- */
+}
 
 module "natgateway" {
   source                  = "../../modules/natgateway"
@@ -75,11 +40,9 @@ module "vpc" {
   availability_zone_names = local.availability_zone_names
   public_subnets          = local.public_subnets
   private_subnets         = local.private_subnets
-  internet_gateway_id     = module.natgateway.internet_gateway_id 
-  nat_gateway_ids         = module.natgateway.nat_gateway_ids     
+  internet_gateway_id     = module.natgateway.internet_gateway_id
+  nat_gateway_ids         = module.natgateway.nat_gateway_ids
 }
-
-
 
 module "rds" {
   source                 = "../../modules/rds"
@@ -97,6 +60,7 @@ module "apprunner" {
   source             = "../../modules/apprunner"
   environment        = local.environment
   service_name       = local.service_name
-  ecr_repository_url = aws_ecr_repository.ecr.repository_url //module.ecr.ecr_repository_url
+  ecr_repository_url = module.ecr.ecr_repository_url
+  //module.ecr.ecr_repository_url
 }
 

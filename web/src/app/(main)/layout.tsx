@@ -1,11 +1,10 @@
-import NavBar from '@/components/nav-bar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import clsx from 'clsx'
 import type { Metadata } from 'next'
 import '../globals.css'
-import { fredoka, latto } from './(dashboard)/dashboard/fonts'
 import InnerClientInit from './inner-client-init'
+import { fredoka, latto } from './internal/dashboard/fonts'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -26,7 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar />
+          {/* <NavBar /> */}
           <InnerClientInit>{children}</InnerClientInit>
           <Toaster />
         </ThemeProvider>

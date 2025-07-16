@@ -51,18 +51,6 @@ export default function PerrosPage() {
         </div>
       </div>
 
-      {/* Hero */}
-      <div className="bg-gradient-to-r from-primary to-blue-600 py-8 dark:from-purple-900 dark:to-blue-900">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            🐕 Productos para Perros
-          </h1>
-          <p className="text-lg text-white/90">
-            Todo lo que tu perro necesita para estar feliz y saludable
-          </p>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Categories Grid */}

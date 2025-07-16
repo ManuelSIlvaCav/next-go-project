@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/antchfx/htmlquery"
+	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/kb"
 )
@@ -35,7 +36,6 @@ func scrapeProducts(ctx context.Context, categories []PetVetCategory) error {
 			}
 		} else {
 			// Not a leaf category, recurse into subcategories
-			category.SubCategories = category.SubCategories[1:2]
 			err := scrapeProducts(ctx, category.SubCategories)
 			if err != nil {
 				return err
@@ -55,25 +55,105 @@ func scrapeProductsForCategory(ctx context.Context, category PetVetCategory) err
 
 	var productsHTML string
 	var res []string
-	var htmlContent string
+	//var htmlContent string
+
+	var timestamp int
 
 	err := chromedp.Run(ctx,
+		// Set realistic browser headers and properties to avoid detection
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			// Set user agent to latest Chrome
+			return chromedp.Evaluate(`
+				Object.defineProperty(navigator, 'userAgent', {
+					get: () => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+				});
+				Object.defineProperty(navigator, 'webdriver', {
+					get: () => undefined
+				});
+				Object.defineProperty(navigator, 'plugins', {
+					get: () => [1, 2, 3, 4, 5]
+				});
+				Object.defineProperty(navigator, 'languages', {
+					get: () => ['en-US', 'en']
+				});
+				// Remove headless indicators
+				delete navigator.__proto__.webdriver;
+
+				Object.defineProperty(screen, 'width', {get: () => 1920});
+				Object.defineProperty(screen, 'height', {get: () => 1080});
+				Object.defineProperty(screen, 'availWidth', {get: () => 1920});
+				Object.defineProperty(screen, 'availHeight', {get: () => 1040});
+				Object.defineProperty(screen, 'colorDepth', {get: () => 24});
+				Object.defineProperty(screen, 'pixelDepth', {get: () => 24});
+			`, nil).Do(ctx)
+		}),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			_, err := page.AddScriptToEvaluateOnNewDocument(`
+				__fired__ = null; 
+				
+				window.addEventListener('load', (e) => {
+					__fired__ = Date.now();
+					console.log('Page loaded at:', __fired__);
+				});
+			`).Do(ctx)
+			return err
+		}),
+
+		chromedp.Navigate(category.URL),
 
 		chromedp.ActionFunc(func(ctx context.Context) error {
-			// Set user agent
-			return chromedp.Evaluate(`navigator.userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"`, nil).Do(ctx)
+			index := 0
+			for {
+				var readyState string
+				if err := chromedp.Evaluate(`document.readyState`, &readyState).Do(ctx); err != nil {
+					log.Printf("Error evaluating document.readyState: %v", err)
+					return err
+				}
+				log.Printf("document.readyState: %s", readyState)
+				if readyState == "complete" || index > 5 {
+					break
+				}
+				time.Sleep(10 * time.Second)
+				index++
+			}
+			return nil
 		}),
-		enableLifeCycleEvents(),
-		navigateAndWaitFor(category.URL, "networkIdle"),
-		chromedp.Sleep(10*time.Second),
-		chromedp.WaitReady("body", chromedp.ByQuery),
-		chromedp.WaitReady("//*[@id='shopify-section-header']",
+		chromedp.Poll("__fired__", &timestamp, chromedp.WithPollingInterval(time.Second), chromedp.WithPollingTimeout(0)),
+		/* chromedp.WaitReady("body", chromedp.ByQuery), */
+
+		chromedp.WaitReady("//div[@id='shopify-block-AcFpIVmN0czFVWWZYT__10249797228608187657']/script",
 			chromedp.BySearch),
-		chromedp.OuterHTML("//*[@id='shopify-section-header']//div[@class='main-nav__wrapper']//ul[@class='menu center']",
-			&htmlContent,
-			chromedp.BySearch),
-		chromedp.Evaluate("Object.keys(window)", &res),
-		chromedp.Sleep(7*time.Second),
+
+		chromedp.Sleep(30*time.Second), // Wait for the page to load completely
+
+		chromedp.Evaluate("Object.keys(window.frames)", &res),
+
+		/*  */
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			log.Printf("Frames keys in window: %v", res)
+			index := 0
+			for {
+				var usfObject interface{}
+
+				// Check for USF object and log available window properties
+				if err := chromedp.Evaluate(`window.usf`, &usfObject).Do(ctx); err != nil {
+					log.Printf("Error evaluating window.usf: %v", err)
+				}
+
+				log.Printf("USF Object: %v", usfObject)
+
+				if usfObject != nil || index > 6 {
+					break
+				}
+
+				time.Sleep(10 * time.Second)
+				index++
+			}
+			return nil
+		}),
+
+		chromedp.Sleep(30*time.Second),
+
 		chromedp.WaitReady("//*[@id='shopify-section-collection-template']",
 			chromedp.BySearch),
 		chromedp.WaitReady("//div[@id='usf_container']",
@@ -89,26 +169,6 @@ func scrapeProductsForCategory(ctx context.Context, category PetVetCategory) err
 			return nil
 		}),
 
-		/* chromedp.KeyEvent(kb.End),
-		chromedp.Sleep(10*time.Second),
-
-		chromedp.ActionFunc(scrollPage), */
-
-		/* chromedp.ComputedStyle() */
-		chromedp.Sleep(1*time.Minute),
-		/* waitForShopifyAndUSFScripts(), */
-
-		/* chromedp.WaitVisible("div.usf-skeleton-container",
-			chromedp.ByQuery),
-		chromedp.WaitReady("div.usf-skeleton-container",
-			chromedp.BySearch),
-
-		chromedp.WaitReady("//div[contains(@class, 'usf-sr-container') and contains(@class, 'usf-no-facets')]",
-			chromedp.BySearch),
-		chromedp.WaitVisible("//div[contains(@class, 'usf-sr-container') and contains(@class, 'usf-no-facets')]",
-			chromedp.BySearch), */
-		waitForProductsToLoad(),
-		chromedp.Sleep(1*time.Minute),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// Capture browser console errors and take a screenshot
 			var buf []byte
@@ -132,6 +192,9 @@ func scrapeProductsForCategory(ctx context.Context, category PetVetCategory) err
 			&productsHTML,
 			chromedp.BySearch),
 	)
+
+	log.Print(timestamp)
+
 	if err != nil {
 		log.Printf("Error navigating to category URL %s: %v", category.URL, err)
 		return err
@@ -270,4 +333,28 @@ func scrollPage(ctx context.Context) error {
 		time.Sleep(10 * time.Second)
 	}
 	return nil
+}
+
+// createRealisticContext creates a Chrome context that better mimics a real browser
+func createRealisticContext() (context.Context, context.CancelFunc) {
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("headless", true), // You can set this to false for debugging
+		chromedp.Flag("disable-gpu", false),
+		chromedp.Flag("disable-dev-shm-usage", true),
+		chromedp.Flag("disable-background-timer-throttling", false),
+		chromedp.Flag("disable-backgrounding-occluded-windows", false),
+		chromedp.Flag("disable-renderer-backgrounding", false),
+		chromedp.Flag("disable-features", "TranslateUI"),
+		chromedp.Flag("disable-ipc-flooding-protection", true),
+		chromedp.Flag("disable-blink-features", "AutomationControlled"),
+		chromedp.Flag("exclude-switches", "enable-automation"),
+		chromedp.Flag("disable-extensions", false),
+		chromedp.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"),
+		chromedp.WindowSize(1920, 1080),
+	)
+
+	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
+	ctx, _ := chromedp.NewContext(allocCtx, chromedp.WithLogf(log.Printf))
+
+	return ctx, cancel
 }

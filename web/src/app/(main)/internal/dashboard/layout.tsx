@@ -9,7 +9,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
   const cookieStore = await cookies()
 
   if (!cookieStore?.get('jwt')) {
-    redirect('/internal/login')
+    redirect('/internal/admin/login')
   }
 
   return (

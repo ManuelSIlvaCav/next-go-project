@@ -49,6 +49,68 @@ func (p *PetVetService) Scrape() error {
 	)
 	defer cancel()
 
+	categories := ScrapCategories(ctx)
+
+	log.Println("Scraping Products from PetVet")
+	categories = categories[3:4] // We only want the fourth category for now
+
+	err := scrapeProducts(ctx, categories)
+	if err != nil {
+		log.Printf("Error scraping products: %v", err)
+		return err
+	}
+
+	return nil
+}
+
+func (p *PetVetService) ScrapTest() error {
+	connectCtx, connectCancel := context.WithTimeout(context.Background(), 60*time.Minute)
+	defer connectCancel()
+
+	dockerURL := "ws://127.0.0.1:9222"
+	remoteCtx, cancel := chromedp.NewRemoteAllocator(
+		connectCtx,
+		dockerURL,
+	)
+	defer cancel()
+
+	ctx, cancel := chromedp.NewContext(remoteCtx,
+		chromedp.WithLogf(log.Printf),
+		chromedp.WithDebugf(log.Printf),
+		chromedp.WithErrorf(log.Printf),
+	)
+	defer cancel()
+
+	categories := []PetVetCategory{
+		{
+			Name: "Gatos",
+			URL:  "https://www.petvet.cl/collections/gatos",
+			SubCategories: []PetVetCategory{
+				{
+					Name: "Arenas",
+					URL:  "https://www.petvet.cl/collections/arenas",
+					SubCategories: []PetVetCategory{
+						{
+							Name:          "Angora",
+							URL:           "https://www.petvet.cl/collections/arenas-angora",
+							SubCategories: []PetVetCategory{},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	err := scrapeProducts(ctx, categories)
+	if err != nil {
+		log.Printf("Error scraping products: %v", err)
+		return err
+	}
+
+	return nil
+}
+
+func ScrapCategories(ctx context.Context) []PetVetCategory {
 	categories := navigateToHomeAndGetCategories(ctx)
 
 	if len(categories) == 0 {
@@ -67,15 +129,5 @@ func (p *PetVetService) Scrape() error {
 		}
 	}
 	TraverseCategories(categories)
-
-	log.Println("Scraping Products from PetVet")
-	categories = categories[3:4] // We only want the fourth category for now
-
-	err := scrapeProducts(ctx, categories)
-	if err != nil {
-		log.Printf("Error scraping products: %v", err)
-		return err
-	}
-
-	return nil
+	return categories
 }

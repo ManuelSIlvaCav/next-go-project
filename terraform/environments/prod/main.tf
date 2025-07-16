@@ -5,9 +5,11 @@ locals {
 }
 
 module "vpc" {
-  source      = "../../modules/vpc"
-  vpc_cidr    = "172.17.0.0/16"
-  environment = local.environment
+  source              = "../../modules/vpc"
+  vpc_cidr            = "172.17.0.0/16"
+  environment         = local.environment
+  internet_gateway_id = module.vpc.internet_gateway_id
+  nat_gateway_ids     = module.vpc.nat_gateway_ids
 }
 
 module "alb" {
@@ -17,8 +19,8 @@ module "alb" {
 }
 
 module "ecr" {
-  source      = "../../modules/ecr"
-  environment = local.environment
+  source       = "../../modules/ecr"
+  environment  = local.environment
   service_name = local.service_name
 }
 

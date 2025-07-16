@@ -10,8 +10,6 @@ import {
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React from 'react'
 
 interface SubCategory {
   id: string
@@ -140,12 +138,6 @@ interface PetNavigationMenuProps {
 }
 
 export default function PetNavigationMenu({ className }: PetNavigationMenuProps) {
-  const router = useRouter()
-
-  const handleNavigation = (href: string) => {
-    router.push(href)
-  }
-
   return (
     <div
       className={cn(
@@ -153,38 +145,38 @@ export default function PetNavigationMenu({ className }: PetNavigationMenuProps)
         className,
       )}
     >
-      <div className="max-w-7xl mx-auto px-4">
-        <NavigationMenu className="mx-auto">
-          <NavigationMenuList className="space-x-0">
-            {NAVIGATION_CATEGORIES.map((category) => (
-              <NavigationMenuItem key={category.id}>
-                <NavigationMenuTrigger
-                  className={cn(
-                    'h-12 px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-gray-50',
-                    'dark:text-zinc-200 dark:hover:text-primary dark:hover:bg-zinc-800',
-                    'data-[state=open]:text-primary data-[state=open]:bg-gray-50',
-                    'dark:data-[state=open]:text-primary dark:data-[state=open]:bg-zinc-800',
-                  )}
-                >
-                  {category.name}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="w-full md:w-[400px] lg:w-[500px]">
-                  <div className="p-4">
-                    <div className="grid gap-3">
-                      <Link
-                        href={category.href}
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                      >
-                        <div className="text-sm font-medium leading-none text-primary">
-                          Ver todo en {category.name}
-                        </div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          Explora toda nuestra selección de {category.name.toLowerCase()}
-                        </p>
-                      </Link>
-                      <div className="grid grid-cols-2 gap-2">
-                        {category.subcategories.map((subcategory) => (
-                          <NavigationMenuLink key={subcategory.id} asChild>
+      <NavigationMenu className="mx-auto">
+        <NavigationMenuList className="space-x-0">
+          {NAVIGATION_CATEGORIES.map((category) => (
+            <NavigationMenuItem key={category.id}>
+              <NavigationMenuTrigger
+                className={cn(
+                  'h-12 px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-gray-50',
+                  'dark:text-zinc-200 dark:hover:text-primary dark:hover:bg-zinc-800',
+                  'data-[state=open]:text-primary data-[state=open]:bg-gray-50',
+                  'dark:data-[state=open]:text-primary dark:data-[state=open]:bg-zinc-800',
+                )}
+              >
+                {category.name}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="md:w-[400px] lg:w-[500px] p-4">
+                  <div className="">
+                    <Link
+                      href={category.href}
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none text-primary">
+                        Ver todo en {category.name}
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Explora toda nuestra selección de {category.name.toLowerCase()}
+                      </p>
+                    </Link>
+                    <ul className="grid grid-cols-2 gap-2">
+                      {category.subcategories.map((subcategory) => (
+                        <li key={subcategory.id}>
+                          <NavigationMenuLink asChild>
                             <Link
                               href={subcategory.href}
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -199,49 +191,16 @@ export default function PetNavigationMenu({ className }: PetNavigationMenuProps)
                               )}
                             </Link>
                           </NavigationMenuLink>
-                        ))}
-                      </div>
-                    </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          ))}
+        </NavigationMenuList>
+      </NavigationMenu>
     </div>
   )
 }
-
-// Component for listing subcategories in a grid layout
-interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
-  title: string
-  href: string
-  children?: React.ReactNode
-}
-
-const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(
-  ({ className, title, children, href, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <Link
-            ref={ref}
-            href={href}
-            className={cn(
-              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-              className,
-            )}
-            {...props}
-          >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-          </Link>
-        </NavigationMenuLink>
-      </li>
-    )
-  },
-)
-ListItem.displayName = 'ListItem'
-
-export { ListItem }

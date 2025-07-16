@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
-import { ChevronRight, Menu, X } from 'lucide-react'
+import { ChevronRight, Menu } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -159,14 +159,6 @@ export default function MobileSidebarNavigation({ className }: MobileSidebarNavi
           <SheetHeader className="p-4 border-b border-gray-200 dark:border-zinc-700">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-lg font-bold text-primary">PetVet</SheetTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="h-6 w-6"
-              >
-                <X className="h-4 w-4" />
-              </Button>
             </div>
           </SheetHeader>
 

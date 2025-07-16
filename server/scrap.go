@@ -8,7 +8,7 @@ import (
 
 func main() {
 	petVetService := services_pet_vet.NewPetVetService()
-	err := petVetService.Scrape()
+	err := petVetService.ScrapTest()
 	if err != nil {
 		log.Fatalf("Error scraping PetVet: %v", err)
 	}
