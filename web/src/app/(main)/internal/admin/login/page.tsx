@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import createLoginRequest from '@/lib/actions/login-request'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import LoginForm from '../../dashboard/login/form'
+import LoginForm from '../../login/form'
 
 export default function AdminLogin() {
   const mutation = useMutation({

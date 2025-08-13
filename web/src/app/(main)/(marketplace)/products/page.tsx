@@ -57,19 +57,12 @@ export default function MarketplaceProductsPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 overflow-x-hidden">
       {/* Desktop Navigation Menu */}
       <div>
-        <div className="bg-white dark:bg-zinc-900 shadow-sm">
+        <div className="bg-white dark:bg-zinc-900 shadow-xs md:hidden">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center justify-between h-16">
               {/* Logo */}
               <div className="flex items-center space-x-4">
                 <MobileSidebarNavigation />
-              </div>
-
-              {/* Search and other header items can go here */}
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600 dark:text-zinc-400">
-                  Buscar productos...
-                </span>
               </div>
             </div>
           </div>

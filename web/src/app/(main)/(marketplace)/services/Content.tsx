@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import PetServiceListings from '../ListingsComponent/PetServiceListings'
+import PetServiceListings from '../ListingsComponent/pet-service-listing'
 import MainSearchComponent from '../MainSearchComponent/MainSearch'
 
 interface SearchData {
@@ -37,11 +37,11 @@ export default function ServicePageContent() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section with Search */}
-      <div className="bg-gradient-to-r from-primary to-blue-600 py-12 dark:from-purple-900 dark:to-blue-900">
+      <div className="bg-linear-to-r from-primary to-blue-600 py-12 dark:from-purple-900 dark:to-blue-900">
         <div className="container mx-auto px-4">
           <MainSearchComponent
             onSearch={handleSearch}
-            className="bg-white/95 backdrop-blur-sm dark:bg-gray-800/90"
+            className="bg-white/95 backdrop-blur-xs dark:bg-gray-800/90"
           />
         </div>
       </div>

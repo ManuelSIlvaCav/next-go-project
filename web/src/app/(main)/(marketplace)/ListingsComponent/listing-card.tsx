@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { mockListings } from './PetServiceListings'
+import { mockListings } from './pet-service-listing'
 
 interface ListingCardProps {
   listing: (typeof mockListings)[0]
@@ -127,7 +127,7 @@ export default function ListingCard({ listing, onContact, onFavorite }: ListingC
 
           {/* Location */}
           <div className="flex items-start space-x-1 mb-3">
-            <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
+            <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400 mt-0.5 shrink-0" />
             <div className="text-sm text-gray-600 dark:text-gray-300">
               <div className="font-medium">{listing.location}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">

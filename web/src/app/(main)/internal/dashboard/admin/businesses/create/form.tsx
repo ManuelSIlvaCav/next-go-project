@@ -78,7 +78,7 @@ export default function CreateBusinessForm() {
           />
 
           <div>
-            <Button type="submit" className="!mt-0 w-full" disabled={form.formState.isSubmitting}>
+            <Button type="submit" className="mt-0! w-full" disabled={form.formState.isSubmitting}>
               Crear
             </Button>
           </div>

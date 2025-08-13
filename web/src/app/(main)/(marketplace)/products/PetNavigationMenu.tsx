@@ -164,9 +164,9 @@ export default function PetNavigationMenu({ className }: PetNavigationMenuProps)
                   <div className="">
                     <Link
                       href={category.href}
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
-                      <div className="text-sm font-medium leading-none text-primary">
+                      <div className="font-fredoka text-sm font-medium leading-none text-primary">
                         Ver todo en {category.name}
                       </div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -179,9 +179,9 @@ export default function PetNavigationMenu({ className }: PetNavigationMenuProps)
                           <NavigationMenuLink asChild>
                             <Link
                               href={subcategory.href}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                              className=" block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                             >
-                              <div className="text-sm font-medium leading-none">
+                              <div className="font-fredoka text-sm font-medium leading-none">
                                 {subcategory.name}
                               </div>
                               {subcategory.count && (

@@ -20,7 +20,7 @@ export default function PerrosPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-900">
       {/* Header */}
-      <div className="bg-white dark:bg-zinc-900 shadow-sm">
+      <div className="bg-white dark:bg-zinc-900 shadow-xs">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">

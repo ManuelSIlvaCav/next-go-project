@@ -220,7 +220,7 @@ export default function ProductsListings({
           </Select>
 
           {/* View Mode Buttons */}
-          <div className="flex items-center border border-gray-200 rounded-lg dark:border-zinc-700 flex-shrink-0">
+          <div className="flex items-center border border-gray-200 rounded-lg dark:border-zinc-700 shrink-0">
             <Button
               variant="ghost"
               size="sm"

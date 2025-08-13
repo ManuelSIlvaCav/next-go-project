@@ -31,8 +31,7 @@ But it should be handled by the docker image with jobs and migrations
 - migrate v4 for hadling SQL migration https://github.com/golang-migrate/migrate
 - asyncq for jobs scheduling https://github.com/hibiken/asynq?tab=readme-ov-file
 
-## ToDO
+# References
 
-1. Make a deployment of everything and test things out
-
-2.
+https://stackoverflow.com/questions/59847325/how-to-design-a-relational-model-for-double-entry-accounting-with-job-costing
+Accounting setup https://stackoverflow.com/questions/59432964/relational-data-model-for-double-entry-accounting/59465148#59465148

@@ -61,7 +61,7 @@ export default function ProductCard({
     >
       {/* Sale/Offer Badge */}
       {product.isOnSale && (
-        <div className="absolute top-2 left-2 z-15">
+        <div className="absolute top-2 left-2 z-2">
           <Badge className="bg-purple-500 text-white font-semibold px-2 py-1 text-xs hover:bg-purple-600">
             Oferta
           </Badge>
@@ -72,7 +72,7 @@ export default function ProductCard({
       <Button
         variant="ghost"
         size="sm"
-        className="absolute top-2 right-2 z-12 h-8 w-8 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-800/80 dark:hover:bg-zinc-800"
+        className="absolute top-2 right-2 z-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-800/80 dark:hover:bg-zinc-800"
         onClick={handleToggleFavorite}
       >
         <Heart
@@ -119,7 +119,7 @@ export default function ProductCard({
           </div>
 
           {/* Product Name */}
-          <h3 className="font-medium text-gray-900 dark:text-zinc-100 line-clamp-2 text-sm leading-5 min-h-[2.5rem]">
+          <h3 className="font-medium text-gray-900 dark:text-zinc-100 line-clamp-2 text-sm leading-5 min-h-10">
             {product.name}
           </h3>
 

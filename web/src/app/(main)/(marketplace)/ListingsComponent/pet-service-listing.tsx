@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import ListingCard from './ListingCard'
+import ListingCard from './listing-card'
 
 // Mock data for pet service providers
 export const mockListings = [

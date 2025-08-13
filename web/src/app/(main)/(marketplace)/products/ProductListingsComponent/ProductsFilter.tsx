@@ -293,7 +293,7 @@ export default function ProductsFilter({
   return (
     <>
       {/* Desktop Filter Sidebar */}
-      <div className={cn('hidden lg:block w-80 flex-shrink-0', className)}>
+      <div className={cn('hidden lg:block w-80 shrink-0', className)}>
         <div className="sticky top-4">
           <FilterContent
             filters={filters}

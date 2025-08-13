@@ -183,7 +183,7 @@ export default function CreateProjectPage() {
                       <div className="flex items-center gap-x-3 mt-2 mb-2">
                         <label
                           htmlFor="Products"
-                          className={`text-sm text-[7E8DA0] cursor-pointer focus:outline-none focus:underline ${
+                          className={`text-sm text-[7E8DA0] cursor-pointer focus:outline-hidden focus:underline ${
                             form.formState.errors.topologies && "text-red-500"
                           }`}
                           tabIndex={0}
@@ -198,7 +198,7 @@ export default function CreateProjectPage() {
               )}
             />
           </div>
-          <Button type="submit" className="!mt-0 w-full">
+          <Button type="submit" className="mt-0! w-full">
             Add
           </Button>
         </form>
