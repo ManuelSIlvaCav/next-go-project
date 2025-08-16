@@ -67,7 +67,8 @@ var Module = fx.Module("authfx",
 		),
 	),
 	fx.Invoke(func(
-		authModule interfaces.AuthModule, businessModule interfaces.BusinessModule) {
+		authModule interfaces.AuthModule,
+		businessModule interfaces.BusinessModule) {
 		authModule.SetModules(businessModule)
 	}),
 )

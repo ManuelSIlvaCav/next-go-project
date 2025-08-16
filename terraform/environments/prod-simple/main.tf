@@ -14,7 +14,7 @@ locals {
   postgres_port          = 5432
 
   // ECR existing repo
-  ecr_repository_name = "project_x_demo"
+  ecr_repository_name = "petza"
 }
 
 
@@ -61,6 +61,5 @@ module "apprunner" {
   environment        = local.environment
   service_name       = local.service_name
   ecr_repository_url = module.ecr.ecr_repository_url
-  //module.ecr.ecr_repository_url
 }
 

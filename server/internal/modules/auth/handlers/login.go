@@ -54,8 +54,9 @@ func Login(container *container.Container, authRepository auth_repository.AuthRe
 				})
 			}
 
-			/* Send email via an async tasK */
-			task, emailSendError := emails_tasks.NewSendEmailTask(user.Email)
+			/* Send email via an async task */
+			redirectURL := "http://localhost:3001/internal/login/redirect"
+			task, emailSendError := emails_tasks.NewSendEmailTask(user.Email, redirectURL)
 			if emailSendError != nil {
 				return c.JSON(http.StatusInternalServerError, echo.Map{
 					"error": "could not create email task",
@@ -82,9 +83,8 @@ func LoginAdmin(ctx context.Context, authRepository auth_repository.AuthReposito
 		return nil, err
 	}
 	if user == nil {
-		// Handle user not found
 		return nil, nil
 	}
-	// Handle successful login
+
 	return user, nil
 }

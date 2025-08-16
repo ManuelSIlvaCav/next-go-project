@@ -1,10 +1,31 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import createLoginRequest from '@/lib/actions/login-request'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import LoginForm from '../../login/form'
+
+async function createLoginRequest(data: { type: string; email: string }) {
+  const resp = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/v1/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+
+  if (!resp) {
+    throw new Error('Network error')
+  }
+
+  const jsonResponse = await resp.json()
+
+  if (!resp.ok || resp.status !== 201) {
+    throw new Error(jsonResponse.error)
+  }
+
+  return jsonResponse
+}
 
 export default function AdminLogin() {
   const mutation = useMutation({

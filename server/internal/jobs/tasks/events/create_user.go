@@ -12,7 +12,8 @@ type CreateUserParams struct {
 
 func CreateUser(ctx context.Context, container *container.Container, emailService *emails_service.EmailService, params CreateUserParams) {
 	/* Send an email */
-	err := emailService.SendNewUserEmail(ctx, params.Email)
+	redirectURL := "http://localhost:3001/internal/login/redirect"
+	err := emailService.SendNewUserEmail(ctx, params.Email, redirectURL)
 
 	if err != nil {
 		container.Logger().Error("Failed to send email", "error", err)

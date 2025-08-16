@@ -43,7 +43,7 @@ resource "aws_db_parameter_group" "postgres" {
 resource "aws_db_instance" "postgres_db" {
   identifier = var.postgres_identifier
 
-  allocated_storage = 5
+  allocated_storage = 20
   storage_type      = "gp2"
   engine            = "postgres"
   engine_version    = "16.3"

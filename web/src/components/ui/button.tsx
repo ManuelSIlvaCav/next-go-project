@@ -9,13 +9,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90',
-        destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
+        default:
+          'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90',
+        destructive:
+          'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 dark:bg-destructive dark:text-destructive-foreground dark:hover:bg-destructive/90',
         outline:
-          'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
+        secondary:
+          'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700',
+        ghost:
+          'hover:bg-accent hover:text-accent-foreground dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
+        link: 'text-primary underline-offset-4 hover:underline dark:text-primary dark:hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2',

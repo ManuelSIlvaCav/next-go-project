@@ -34,33 +34,6 @@ CREATE TABLE IF NOT EXISTS businesses_users (
 
 CREATE INDEX IF NOT EXISTS idx_businesses_users_email ON businesses_users(email);
 
-CREATE TABLE IF NOT EXISTS roles (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    description VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS securables (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    description VARCHAR(255) 
-);
-
-CREATE TABLE IF NOT EXISTS role_securables (
-    role_id INT NOT NULL,
-    securable_id INT NOT NULL,
-    PRIMARY KEY (role_id, securable_id),
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-    FOREIGN KEY (securable_id) REFERENCES securables(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS business_user_roles (
-    business_user_id INT NOT NULL,
-    role_id INT NOT NULL,
-    PRIMARY KEY (business_user_id, role_id),
-    FOREIGN KEY (business_user_id) REFERENCES businesses_users(id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
-);
 
 CREATE TABLE IF NOT EXISTS user_email_login (
     id SERIAL PRIMARY KEY,
@@ -71,3 +44,4 @@ CREATE TABLE IF NOT EXISTS user_email_login (
     used_at TIMESTAMP,
     deleted_at TIMESTAMP
 )
+

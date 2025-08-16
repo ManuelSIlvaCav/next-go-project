@@ -1,7 +1,7 @@
 ## Creates an ECS Cluster
 
 resource "aws_ecs_cluster" "default" {
-  name = "${var.service_name}_ECS_Service_${var.environment}"
+  name = "${var.service_name}_cluster"
 
   lifecycle {
     create_before_destroy = true
@@ -10,9 +10,8 @@ resource "aws_ecs_cluster" "default" {
 
 
 ## Creates an ECS Service running on Fargate
-
-resource "aws_ecs_service" "service" {
-  name                               = "${var.service_name}_ECS_Service_${var.environment}"
+resource "aws_ecs_service" "default_service" {
+  name                               = "${var.service_name}_service"
   cluster                            = aws_ecs_cluster.default.id
   task_definition                    = aws_ecs_task_definition.default.arn
   desired_count                      = var.ecs_task_desired_count
@@ -38,8 +37,8 @@ resource "aws_ecs_service" "service" {
 }
 
 ## Creates ECS Task Definition
-resource "aws_ecs_task_definition" "default" {
-  family                   = "${var.service_name}-task"
+resource "aws_ecs_task_definition" "default_definition" {
+  family                   = "${var.service_name}_task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn

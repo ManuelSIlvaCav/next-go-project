@@ -35,3 +35,16 @@ But it should be handled by the docker image with jobs and migrations
 
 https://stackoverflow.com/questions/59847325/how-to-design-a-relational-model-for-double-entry-accounting-with-job-costing
 Accounting setup https://stackoverflow.com/questions/59432964/relational-data-model-for-double-entry-accounting/59465148#59465148
+
+# Examples accounting Marketplace
+
+- Customer buys 100$
+  Ledger Revenue 600
+  Merchant Fee MF
+  Debit MerchantAccount / Credit Rev Ledger
+  AccTrx [600] [Timestamp] [CR] [MF] [Merchant Acc] [100]
+  AccTrx [MerchantAcc] [TS] [CR] []
+
+- Customer returns 100$
+  Debit Rev Ledger / Credit MerchantAccount
+  AccTrx [MerchantAcc] [Timestamp] [CR] [600] [100*fee]

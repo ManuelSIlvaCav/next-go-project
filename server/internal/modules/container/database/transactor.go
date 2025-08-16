@@ -1,0 +1,80 @@
+package database
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/jmoiron/sqlx"
+)
+
+func NewTransactor(
+	db *sqlx.DB,
+	nestedTransactionStrategy nestedTransactionsStrategy) (*Transactor, DBGetter) {
+	sqlDBGetter := func(ctx context.Context) sqlxDB {
+		if tx := txFromContext(ctx); tx != nil {
+			return tx
+		}
+
+		return db
+	}
+
+	dbGetter := func(ctx context.Context) DB {
+		if tx := txFromContext(ctx); tx != nil {
+			fmt.Println("Using transaction from context")
+			return tx
+		}
+
+		fmt.Println("Using database connection")
+		return db
+	}
+
+	return &Transactor{
+		sqlDBGetter,
+		nestedTransactionStrategy,
+	}, dbGetter
+}
+
+type (
+	sqlxDBGetter               func(context.Context) sqlxDB
+	nestedTransactionsStrategy func(sqlxDB, *sqlx.Tx) (sqlxDB, sqlxTx)
+)
+
+type Transactor struct {
+	sqlxDBGetter
+	nestedTransactionsStrategy
+}
+
+func (t *Transactor) WithinTransaction(ctx context.Context, txFunc func(context.Context) error) error {
+	currentDB := t.sqlxDBGetter(ctx)
+
+	tx, err := currentDB.BeginTxx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+
+	newDB, currentTX := t.nestedTransactionsStrategy(currentDB, tx)
+
+	defer func() {
+		fmt.Println("Rolling back transaction")
+		err = currentTX.Rollback() // If rollback fails, there's nothing to do, the transaction will expire by itself
+		if err != nil {
+			fmt.Printf("failed to rollback transaction: %v\n", err)
+		}
+	}()
+	txCtx := txToContext(ctx, newDB)
+
+	if err := txFunc(txCtx); err != nil {
+		fmt.Printf("Transaction failed: %v\n", err)
+		return err
+	}
+
+	if err := currentTX.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+func IsWithinTransaction(ctx context.Context) bool {
+	return ctx.Value(transactorKey{}) != nil
+}

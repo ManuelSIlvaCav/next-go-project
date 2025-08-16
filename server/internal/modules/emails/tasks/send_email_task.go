@@ -9,12 +9,14 @@ import (
 )
 
 type SendEmailPayload struct {
-	To string `json:"email"`
+	To          string `json:"email"`
+	RedirectURL string `json:"redirect_url"`
 }
 
-func NewSendEmailTask(email string) (*asynq.Task, error) {
+func NewSendEmailTask(email string, redirectURL string) (*asynq.Task, error) {
 	payload, err := json.Marshal(SendEmailPayload{
-		To: email,
+		To:          email,
+		RedirectURL: redirectURL,
 	})
 	if err != nil {
 		return nil, err
@@ -40,7 +42,7 @@ func (p *SendEmailProcessor) ProcessTask(ctx context.Context, t *asynq.Task) err
 
 	emailService := p.EmailModule.GetEmailService()
 
-	if err := emailService.SendNewUserEmail(ctx, payload.To); err != nil {
+	if err := emailService.SendNewUserEmail(ctx, payload.To, payload.RedirectURL); err != nil {
 		return err
 	}
 

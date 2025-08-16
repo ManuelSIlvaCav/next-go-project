@@ -50,13 +50,16 @@ func (r *EmailService) SendEmail(ctx context.Context,
 	return nil
 }
 
-func (r *EmailService) SendNewUserEmail(ctx context.Context,
-	to string) error {
-	emailTemplate, err := r.Repository.GetTemplateEmail(ctx, "user_created")
+func (r *EmailService) SendNewUserEmail(
+	ctx context.Context,
+	to string,
+	redirectURL string,
+) error {
 
-	if err != nil {
-		return err
-	}
+	container := r.Container
+
+	config := container.Config()
+	logger := container.Logger()
 
 	/* Create the login token */
 	userLogin, err := r.AuthRepository.CreateUserMagicEmail(ctx, to)
@@ -65,25 +68,30 @@ func (r *EmailService) SendNewUserEmail(ctx context.Context,
 		return err
 	}
 
-	/* Add the login link to the email */
-	newHtml, err := r.addLoginMagicLink(ctx, emailTemplate.HTML, MagicLoginParams{
-		Email: to,
-		Token: userLogin.AuthenticationToken,
-		UI:    "admin",
-	})
+	magicLinkParams := MagicLoginParams{
+		Email:       to,
+		Token:       userLogin.AuthenticationToken,
+		UI:          "admin",
+		RedirectURL: redirectURL,
+	}
+
+	if config.IsDevelopment() {
+		redirectLink := createRedirectLink(magicLinkParams)
+		logger.Info("Sending email in development mode", "email", to, "token", userLogin.AuthenticationToken, "redirect_link", redirectLink)
+		return nil
+	}
+
+	emailTemplate, err := r.Repository.GetTemplateEmail(ctx, "user_created")
 
 	if err != nil {
 		return err
 	}
 
-	container := r.Container
+	/* Add the login link to the email */
+	newHtml, err := r.addLoginMagicLink(ctx, emailTemplate.HTML, magicLinkParams)
 
-	config := container.Config()
-	logger := container.Logger()
-
-	if config.IsDevelopment() {
-		logger.Info("Sending email in development mode", "email", to, "token", userLogin.AuthenticationToken)
-		return nil
+	if err != nil {
+		return err
 	}
 
 	/* Send the email */
@@ -98,9 +106,10 @@ func (r *EmailService) SendNewUserEmail(ctx context.Context,
 }
 
 type MagicLoginParams struct {
-	Email string
-	Token string
-	UI    string
+	Email       string
+	Token       string
+	UI          string
+	RedirectURL string
 }
 
 /* Important function to modify the html of the current email, useful while sending */
@@ -108,19 +117,6 @@ func (e *EmailService) addLoginMagicLink(
 	ctx context.Context,
 	s string,
 	magicLoginParams MagicLoginParams) (string, error) {
-
-	/* http://localhost:3001/internal/login/redirect?em=manuel@gmail.com&tk=3a2ef644-95eb-4be4-9317-b1c0c4d9487c&ui=admin */
-
-	/* <domain>/internal/login/redirect?em&tk&ui */
-
-	domain := "http://localhost:3001/internal/login/redirect"
-	// domain := "https://jobspring.co.uk/internal/login/redirect"
-	em := magicLoginParams.Email
-	tk := magicLoginParams.Token
-	ui := magicLoginParams.UI
-
-	// ui := magicLoginParams.UI
-	finalStringUrl := domain + "?em=" + em + "&tk=" + tk + "&ui=" + ui
 
 	logger := e.Container.Logger()
 
@@ -130,6 +126,8 @@ func (e *EmailService) addLoginMagicLink(
 		logger.Error("Failed to parse html", "error", err)
 		return "", err
 	}
+
+	finalStringUrl := createRedirectLink(magicLoginParams)
 
 	n := htmlquery.FindOne(doc, "//*[contains(text(),'{{login}}')]")
 
@@ -147,4 +145,21 @@ func (e *EmailService) addLoginMagicLink(
 	n.Data = "Login"
 
 	return htmlquery.OutputHTML(doc, true), nil
+}
+
+func createRedirectLink(magicLoginParams MagicLoginParams) string {
+	/* http://localhost:3001/internal/login/redirect?em=manuel@gmail.com&tk=3a2ef644-95eb-4be4-9317-b1c0c4d9487c&ui=admin */
+
+	/* <domain>/internal/login/redirect?em&tk&ui */
+
+	domain := magicLoginParams.RedirectURL
+	// domain := "https://jobspring.co.uk/internal/login/redirect"
+	em := magicLoginParams.Email
+	tk := magicLoginParams.Token
+	ui := magicLoginParams.UI
+
+	// ui := magicLoginParams.UI
+	finalStringUrl := domain + "?em=" + em + "&tk=" + tk + "&ui=" + ui
+
+	return finalStringUrl
 }

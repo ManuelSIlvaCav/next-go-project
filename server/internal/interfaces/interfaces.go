@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	accounting_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/accounting/repositories"
 	businesses_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	clients_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/repositories"
 
@@ -36,4 +37,9 @@ type BusinessModule interface {
 
 type ClientsModule interface {
 	GetClientRepository() *clients_repositories.ClientRepository
+}
+
+type AccountingModule interface {
+	GetAccountingRepository() *accounting_repositories.AccountsRepository
+	GetTransactionsRepository() *accounting_repositories.TransactionsRepository
 }

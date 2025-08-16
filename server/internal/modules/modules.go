@@ -2,6 +2,7 @@ package modules
 
 import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/accounting"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients"
@@ -27,6 +28,7 @@ type AllModulesParams struct {
 	emailsModule     interfaces.EmailModule
 	listingModule    interfaces.ListingsModule
 	scrapperModule   interfaces.ScrapperModule
+	accountingModule interfaces.AccountingModule
 }
 
 func NewInternalModule(
@@ -38,6 +40,7 @@ func NewInternalModule(
 	emailsModule interfaces.EmailModule,
 	listingModule interfaces.ListingsModule,
 	scrapperModule interfaces.ScrapperModule,
+	accountingModule interfaces.AccountingModule,
 ) *InternalModule {
 
 	return &InternalModule{Container: container}
@@ -52,5 +55,6 @@ var Module = fx.Options(
 	emails.Module,
 	businesses.Module,
 	scrapper.Module,
+	accounting.Module,
 	fx.Provide(NewInternalModule),
 )
