@@ -8,6 +8,7 @@ import { Form } from '@/components/ui/form'
 import createBusinessRequest from '@/lib/actions/create-business'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { Loader2Icon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -56,8 +57,11 @@ export default function CreateBusinessForm() {
   })
 
   const onSubmit = async (values: FormValues) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     mutation.mutate({ apiParams: { jwt }, ...values })
   }
+
+  const formAvailable = form.formState.isSubmitting || form.formState.isSubmitSuccessful
 
   return (
     <Card className="w-full max-w-md p-4">
@@ -78,8 +82,15 @@ export default function CreateBusinessForm() {
           />
 
           <div>
-            <Button type="submit" className="mt-0! w-full" disabled={form.formState.isSubmitting}>
-              Crear
+            <Button type="submit" className="mt-0! w-full" disabled={formAvailable}>
+              {formAvailable ? (
+                <>
+                  <Loader2Icon className="animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                'Crear'
+              )}
             </Button>
           </div>
         </form>

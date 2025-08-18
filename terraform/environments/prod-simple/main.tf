@@ -22,7 +22,7 @@ module "ecr" {
   source              = "../../modules/ecr"
   environment         = local.environment
   service_name        = local.service_name
-  ecr_repository_name = local.service_name
+  ecr_repository_name = local.ecr_repository_name
 }
 
 module "natgateway" {

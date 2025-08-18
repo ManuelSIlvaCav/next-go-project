@@ -28,6 +28,7 @@ export default function MagicLink({
     if (data?.data) {
       push('/internal/dashboard')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(data)])
 
   return (

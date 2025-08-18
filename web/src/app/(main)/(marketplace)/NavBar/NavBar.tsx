@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import AccountMenu from './account-menu'
 import AddressSelector from './address-selector'
 import NavBarMobileMenu from './mobile-menu'
 import SearchBar from './search-bar'
-import ShoppingCart from './shopping-cart'
+import ShoppingCart from './ShoppingCart/shopping-cart'
 
 interface NavBarProps {
   className?: string
@@ -21,9 +22,11 @@ export default function NavBar({ className }: NavBarProps) {
             <div className="flex">
               <NavBarMobileMenu />
               <div className="flex items-center">
-                <div className="text-4xl font-bold text-white font-fredoka">
-                  Pet<span className="text-primary">za</span>
-                </div>
+                <Link href="/">
+                  <div className="text-4xl font-bold text-white font-fredoka">
+                    Pet<span className="text-primary">za</span>
+                  </div>
+                </Link>
               </div>
             </div>
             <div className="hidden md:flex flex-row pl-4 w-7xl items-center">

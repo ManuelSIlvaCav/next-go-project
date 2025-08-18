@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"syscall"
+	"time"
 
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/config"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container/logger"
@@ -45,27 +46,32 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	err = dbx.Ping()
+	// Note: this block uses time.Sleep, make sure to add "time" to the imports.
+	maxRetries := 3
+	backoff := 1 * time.Second
 
-	if err != nil {
-		p.logger.Fatal("Failed to ping database: %v", "error", err)
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		err = dbx.Ping()
+		if err == nil {
+			p.logger.Info("Connected to database")
+			return dbx, nil
+		}
+
+		p.logger.Error("Failed to ping database (attempt %d/%d): %v", "attempt", attempt, "max", maxRetries, "error", err)
+
+		if attempt < maxRetries {
+			time.Sleep(backoff)
+			backoff *= 2
+			continue
+		}
+
+		// final failure: kill the server
+		p.logger.Fatal("Failed to ping database after %d attempts: %v", "attempts", maxRetries, "error", err)
 		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		return nil, err
 	}
 
-	/* defer func(db *sqlx.DB) {
-		err := db.Close()
-		if err != nil {
-			p.logger.Error("Failed to close database connection: %v", "error", err)
-		}
-		p.logger.Info("Database connection closed")
-	}(dbx) */
-
-	//syscall.Kill(syscall.Getpid(), syscall.SIGINT)
-
-	fmt.Println("Connected to database")
-
-	return dbx, nil
+	return nil, err
 }
 
 func (p *Postgres) Close() *sqlx.DB {

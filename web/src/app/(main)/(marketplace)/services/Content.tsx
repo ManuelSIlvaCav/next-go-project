@@ -1,8 +1,8 @@
 'use client'
 
+import MainServiceSearchComponent from '@/components/MainServiceSearchComponent/MainSearch'
 import { useState } from 'react'
 import PetServiceListings from '../ListingsComponent/pet-service-listing'
-import MainSearchComponent from '../MainSearchComponent/MainSearch'
 
 interface SearchData {
   service: string
@@ -39,7 +39,7 @@ export default function ServicePageContent() {
       {/* Hero Section with Search */}
       <div className="bg-linear-to-r from-primary to-blue-600 py-12 dark:from-purple-900 dark:to-blue-900">
         <div className="container mx-auto px-4">
-          <MainSearchComponent
+          <MainServiceSearchComponent
             onSearch={handleSearch}
             className="bg-white/95 backdrop-blur-xs dark:bg-gray-800/90"
           />

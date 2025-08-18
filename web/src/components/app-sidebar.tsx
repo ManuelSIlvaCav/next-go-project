@@ -17,7 +17,6 @@ import {
   ChartLine,
   ChevronDown,
   HousePlus,
-  Layers,
   MailPlus,
   Settings,
   Users,
@@ -26,6 +25,7 @@ import {
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { ColorModeToggle } from './color-mode-toogle'
 import { Collapsible, CollapsibleContent } from './ui/collapsible'
 
 const items = [
@@ -49,11 +49,11 @@ const items = [
     url: '/internal/dashboard/users',
     icon: BookUser,
   },
-  {
+  /* {
     title: 'CMS',
     url: '/internal/dashboard/cms',
     icon: Layers,
-  },
+  }, */
   /* {
     title: "Emails",
     url: "/internal/dashboard/emails",
@@ -179,7 +179,9 @@ export function AppSidebar() {
           <SideBarAdminGroup />
         </Suspense>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <ColorModeToggle />
+      </SidebarFooter>
     </Sidebar>
   )
 }

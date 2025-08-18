@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import AddressField from '../address-input/AddressField'
 import LocationInput from './LocationInput'
 
 // Define the service types for pet care
@@ -36,17 +37,17 @@ interface SearchData {
   dateTo: Date | undefined
 }
 
-interface MainSearchComponentProps {
+interface MainServiceSearchComponentProps {
   onSearch?: (data: SearchData) => void
   defaultService?: string
   className?: string
 }
 
-export default function MainSearchComponent({
+export default function MainServiceSearchComponent({
   onSearch,
   defaultService,
   className,
-}: MainSearchComponentProps) {
+}: MainServiceSearchComponentProps) {
   const [service, setService] = useState<string>(defaultService || '')
 
   const [dateFrom, setDateFrom] = useState<Date | undefined>()
@@ -109,6 +110,7 @@ export default function MainSearchComponent({
         </div>
         {/* Location Input */}
         <LocationInput />
+        <AddressField className="" />
 
         {/* From Date */}
         <div className="space-y-2">
