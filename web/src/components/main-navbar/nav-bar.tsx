@@ -4,7 +4,7 @@ import AccountMenu from './account-menu'
 import AddressSelector from './address-selector'
 import NavBarMobileMenu from './mobile-menu'
 import SearchBar from './search-bar'
-import ShoppingCart from './ShoppingCart/shopping-cart'
+import ShoppingCart from './shopping-cart/shopping-cart'
 
 interface NavBarProps {
   className?: string

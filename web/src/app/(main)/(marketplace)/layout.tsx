@@ -1,4 +1,4 @@
-import NavBar from '@/app/(main)/(marketplace)/NavBar/NavBar'
+import NavBar from '@/components/main-navbar/nav-bar'
 
 export default function MarketplaceLayout({ children }: { children: React.ReactNode }) {
   return (

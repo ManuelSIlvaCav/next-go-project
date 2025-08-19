@@ -1,6 +1,6 @@
 'use client'
 
-import MainServiceSearchComponent from '@/components/MainServiceSearchComponent/MainSearch'
+import MainServiceSearchComponent from '@/components/main-service-search-component/MainSearch'
 import { useState } from 'react'
 import PetServiceListings from '../ListingsComponent/pet-service-listing'
 

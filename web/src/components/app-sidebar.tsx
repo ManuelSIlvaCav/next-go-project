@@ -16,7 +16,6 @@ import {
   BookUser,
   ChartLine,
   ChevronDown,
-  HousePlus,
   MailPlus,
   Settings,
   Users,
@@ -33,11 +32,6 @@ const items = [
     title: 'Dashboard',
     url: '/internal/dashboard',
     icon: ChartLine,
-  },
-  {
-    title: 'Proyectos',
-    url: '/internal/dashboard/projects',
-    icon: HousePlus,
   },
   {
     title: 'Clientes',
