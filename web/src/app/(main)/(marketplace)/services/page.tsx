@@ -1,4 +1,4 @@
-import ServicePageContent from './Content'
+import ServicePageContent from './content'
 
 export default function MarketplaceServicePage() {
   return (

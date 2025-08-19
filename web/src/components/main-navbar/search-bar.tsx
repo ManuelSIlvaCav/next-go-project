@@ -47,7 +47,7 @@ export default function SearchBar() {
         {/* Search Button */}
         <Button
           onClick={handleSearch}
-          className="bg-orange-400 hover:bg-orange-500 text-gray-900 px-4 rounded-r-md h-10 rounded-l-none"
+          className="bg-complement hover:bg-complement-alt2 text-gray-900 px-4 rounded-r-md h-10 rounded-l-none"
         >
           <Search className="h-4 w-4" />
         </Button>

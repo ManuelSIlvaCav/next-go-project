@@ -17,6 +17,8 @@ const buttonVariants = cva(
           'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
         secondary:
           'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700',
+        complementary:
+          'bg-complement text-complement-foreground shadow-xs hover:bg-complement/80 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700',
         ghost:
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
         link: 'text-primary underline-offset-4 hover:underline dark:text-primary dark:hover:underline',
@@ -45,7 +47,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props} />
     )
   },
 )

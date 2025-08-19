@@ -6,7 +6,7 @@ export default function AccountMenu() {
     <div>
       <Button
         variant="ghost"
-        className="hidden md:flex flex-col items-start text-white hover:bg-gray-800 h-auto py-1 px-2"
+        className="hidden md:flex flex-col items-start text-white hover:bg-secondary h-auto py-1 px-2"
       >
         <span className="text-xs text-gray-300">Hola, Inicia sesión</span>
         <div className="flex items-center space-x-1">
@@ -14,8 +14,9 @@ export default function AccountMenu() {
           <ChevronDown className="h-3 w-3" />
         </div>
       </Button>
-      <Button variant="ghost" size="sm" className="md:hidden text-white hover:bg-gray-800">
-        <User className="h-5 w-5" />
+      {/* mobile Icon */}
+      <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-secondary">
+        <User className="h-[1.2rem] w-[1.2rem]" />
       </Button>
     </div>
   )

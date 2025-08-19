@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { ColorModeToggle } from '../color-mode-toogle'
 import AccountMenu from './account-menu'
 import AddressSelector from './address-selector'
 import NavBarMobileMenu from './mobile-menu'
@@ -14,7 +15,7 @@ export default function NavBar({ className }: NavBarProps) {
   return (
     <div className={cn(className)}>
       {/* Main Navbar */}
-      <div className="bg-linear-to-r from-secondary to-secondary-second  dark:from-purple-900 dark:to-blue-900 py-4 md:py-4 px-4">
+      <div className="bg-secondary dark:bg-purple-950 py-4 md:py-4 px-4">
         {/* Mobile do 2 rows 1. Menu/Logo ---- Account/Card */}
         {/* Desktop do  2 rows 1. all 2. only categories*/}
         <div className="flex flex-col gap-4 md: pt-2">
@@ -33,7 +34,10 @@ export default function NavBar({ className }: NavBarProps) {
               <AddressSelector />
               <SearchBar />
             </div>
-            <div className="flex">
+            <div className="flex items-center gap-2">
+              <div>
+                <ColorModeToggle />
+              </div>
               <AccountMenu />
               <ShoppingCart />
             </div>

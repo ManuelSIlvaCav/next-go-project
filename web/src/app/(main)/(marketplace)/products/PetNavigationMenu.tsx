@@ -145,7 +145,7 @@ export default function PetNavigationMenu({ className }: PetNavigationMenuProps)
         className,
       )}
     >
-      <NavigationMenu className="mx-auto">
+      <NavigationMenu className="z-20 mx-auto" viewport={false}>
         <NavigationMenuList className="space-x-0">
           {NAVIGATION_CATEGORIES.map((category) => (
             <NavigationMenuItem key={category.id}>
@@ -161,40 +161,38 @@ export default function PetNavigationMenu({ className }: PetNavigationMenuProps)
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="md:w-[400px] lg:w-[500px] p-4">
-                  <div className="">
-                    <Link
-                      href={category.href}
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="font-fredoka text-sm font-medium leading-none text-primary">
-                        Ver todo en {category.name}
-                      </div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Explora toda nuestra selección de {category.name.toLowerCase()}
-                      </p>
-                    </Link>
-                    <ul className="grid grid-cols-2 gap-2">
-                      {category.subcategories.map((subcategory) => (
-                        <li key={subcategory.id}>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href={subcategory.href}
-                              className=" block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              <div className="font-fredoka text-sm font-medium leading-none">
-                                {subcategory.name}
-                              </div>
-                              {subcategory.count && (
-                                <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
-                                  {subcategory.count} productos
-                                </p>
-                              )}
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <Link
+                    href={category.href}
+                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  >
+                    <div className="font-fredoka text-sm font-medium leading-none text-primary">
+                      Ver todo en {category.name}
+                    </div>
+                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                      Explora toda nuestra selección de {category.name.toLowerCase()}
+                    </p>
+                  </Link>
+                  <ul className="grid md:grid-cols-2 gap-2">
+                    {category.subcategories.map((subcategory) => (
+                      <li key={subcategory.id}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href={subcategory.href}
+                            className=" block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="font-fredoka text-sm font-medium leading-none">
+                              {subcategory.name}
+                            </div>
+                            {subcategory.count && (
+                              <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                                {subcategory.count} productos
+                              </p>
+                            )}
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
