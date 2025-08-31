@@ -35,7 +35,7 @@ func (p *PetVetService) Scrape() error {
 	connectCtx, connectCancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer connectCancel()
 
-	dockerURL := "ws://127.0.0.1:9222"
+	dockerURL := "ws://chromedp:9222"
 	remoteCtx, cancel := chromedp.NewRemoteAllocator(
 		connectCtx,
 		dockerURL,

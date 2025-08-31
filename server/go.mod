@@ -1,6 +1,6 @@
 module github.com/ManuelSIlvaCav/next-go-project/server
 
-go 1.24.4
+go 1.25
 
 require (
 	github.com/antchfx/htmlquery v1.3.4

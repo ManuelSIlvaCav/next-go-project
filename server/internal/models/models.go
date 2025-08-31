@@ -1,7 +1,6 @@
 package internal_models
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/hibiken/asynq"
@@ -29,13 +28,15 @@ type ScheduledJob struct {
 }
 
 const (
-	AdminNotFound    = 3001
-	MagicLinkExpired = 3002
+	AdminNotFoundError    = 3001
+	MagicLinkExpiredError = 3002
+	PolicyFormatError     = 4000
 )
 
 var ErrorCodesMessage = map[int]string{
 	3001: "Admin not found",
 	3002: "Login code has expired",
+	4000: "Invalid policy format",
 }
 
 type HandlerError struct {
@@ -49,7 +50,7 @@ func NewErrorWithCode(code int) *HandlerError {
 	return &HandlerError{
 		Code:    code,
 		Message: message,
-		error:   errors.New(fmt.Sprintf("%d: %s", code, message)),
+		error:   fmt.Errorf("%d: %s", code, message),
 	}
 
 }

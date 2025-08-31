@@ -107,21 +107,27 @@ interface CategoryCardProps {
   }
 }
 
+interface CategoryCarouselProps {
+  title: string
+  categories: typeof servicesCategories
+  showNow?: boolean
+}
+
 function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link href={category.href} className="group block">
-      <Card className="w-40 h-40 overflow-hidden hover:shadow-lg transition-all duration-200 group-hover:scale-105">
+      <Card className="w-32 h-32 sm:w-40 sm:h-40 overflow-hidden hover:shadow-lg transition-all duration-200 group-hover:scale-105 dark:bg-gray-800 dark:border-gray-700">
         <CardContent className="p-0 h-full relative">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10" />
           <Image
             src={category.image}
             alt={category.title}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 160px, 160px"
+            sizes="(max-width: 640px) 128px, 160px"
           />
-          <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
-            <h3 className="text-white text-sm font-semibold text-center leading-tight">
+          <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 z-20">
+            <h3 className="text-white text-xs sm:text-sm font-semibold text-center leading-tight">
               {category.title}
             </h3>
           </div>
@@ -131,26 +137,23 @@ function CategoryCard({ category }: CategoryCardProps) {
   )
 }
 
-interface CategoryCarouselProps {
-  title: string
-  categories: typeof servicesCategories
-  showNow?: boolean
-}
-
 function CategoryCarousel({ title, categories, showNow = false }: CategoryCarouselProps) {
   return (
-    <div className="mb-12">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+    <div className="mb-8 sm:mb-12">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
         {showNow && (
-          <Button variant="link" className="text-blue-600 hover:text-blue-800">
+          <Button
+            variant="link"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm sm:text-base"
+          >
             Shop now
           </Button>
         )}
       </div>
 
       <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex w-max space-x-4 p-1">
+        <div className="flex w-max space-x-3 sm:space-x-4 p-1">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
@@ -160,26 +163,31 @@ function CategoryCarousel({ title, categories, showNow = false }: CategoryCarous
     </div>
   )
 }
-
 export default function MarketplacePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">Everything Your Pet Needs</h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-3 sm:mb-4">
+              Everything Your Pet Needs
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-blue-100">
               From professional services to premium products
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3"
+              >
                 Browse Services
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-blue-600"
+                className="text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 border-white text-white hover:bg-white hover:text-blue-600"
               >
                 Shop Products
               </Button>
@@ -189,7 +197,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Services Section */}
         <CategoryCarousel
           title="Professional Pet Services"
@@ -205,30 +213,38 @@ export default function MarketplacePage() {
         />
 
         {/* Additional Info Section */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mt-12">
-          <div className="grid md:grid-cols-3 gap-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8 mt-8 sm:mt-12">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🐕</span>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <span className="text-xl sm:text-2xl">🐕</span>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Professional Care</h3>
-              <p className="text-gray-600">Connect with certified pet professionals in your area</p>
+              <h3 className="text-base sm:text-lg font-semibold mb-2 dark:text-white">
+                Professional Care
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                Connect with certified pet professionals in your area
+              </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🛍️</span>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <span className="text-xl sm:text-2xl">🛍️</span>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Quality Products</h3>
-              <p className="text-gray-600">
+              <h3 className="text-base sm:text-lg font-semibold mb-2 dark:text-white">
+                Quality Products
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                 Premium pet products from trusted brands and local suppliers
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🚚</span>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <span className="text-xl sm:text-2xl">🚚</span>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Fast Delivery</h3>
-              <p className="text-gray-600">
+              <h3 className="text-base sm:text-lg font-semibold mb-2 dark:text-white">
+                Fast Delivery
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                 Same-day delivery available for most products and services
               </p>
             </div>

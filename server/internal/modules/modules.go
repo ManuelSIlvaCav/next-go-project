@@ -9,41 +9,51 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings"
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/scrapper"
 	"go.uber.org/fx"
 )
 
 type InternalModule struct {
-	Container *container.Container
+	Container        *container.Container
+	FilesModule      *files.FilesModule
+	BusinessesModule interfaces.BusinessModule
+	AuthModule       interfaces.AuthModule
+	EmailsModule     interfaces.EmailModule
+	ListingModule    interfaces.ListingsModule
+	AccountingModule interfaces.AccountingModule
+	InsuranceModule  interfaces.InsuranceModule
+	ClientsModule    interfaces.ClientsModule
 }
 
 type AllModulesParams struct {
 	fx.In
-	container        *container.Container
-	filesModule      *files.FilesModule
-	clientsModule    *clients.ClientModule
-	businessesModule interfaces.BusinessModule
-	authModule       interfaces.AuthModule
-	emailsModule     interfaces.EmailModule
-	listingModule    interfaces.ListingsModule
-	scrapperModule   interfaces.ScrapperModule
-	accountingModule interfaces.AccountingModule
+	Container        *container.Container
+	FilesModule      *files.FilesModule
+	BusinessesModule interfaces.BusinessModule
+	AuthModule       interfaces.AuthModule
+	EmailsModule     interfaces.EmailModule
+	ListingModule    interfaces.ListingsModule
+	AccountingModule interfaces.AccountingModule
+	InsuranceModule  interfaces.InsuranceModule
+	ClientsModule    interfaces.ClientsModule
 }
 
 func NewInternalModule(
-	container *container.Container,
-	filesModule *files.FilesModule,
-	clientsModule *clients.ClientModule,
-	businessesModule interfaces.BusinessModule,
-	authModule interfaces.AuthModule,
-	emailsModule interfaces.EmailModule,
-	listingModule interfaces.ListingsModule,
-	scrapperModule interfaces.ScrapperModule,
-	accountingModule interfaces.AccountingModule,
+	params AllModulesParams,
 ) *InternalModule {
 
-	return &InternalModule{Container: container}
+	return &InternalModule{
+		Container:        params.Container,
+		FilesModule:      params.FilesModule,
+		BusinessesModule: params.BusinessesModule,
+		AuthModule:       params.AuthModule,
+		EmailsModule:     params.EmailsModule,
+		ListingModule:    params.ListingModule,
+		AccountingModule: params.AccountingModule,
+		InsuranceModule:  params.InsuranceModule,
+		ClientsModule:    params.ClientsModule,
+	}
 }
 
 var Module = fx.Options(
@@ -54,7 +64,7 @@ var Module = fx.Options(
 	clients.Module,
 	emails.Module,
 	businesses.Module,
-	scrapper.Module,
 	accounting.Module,
+	insurance.Module,
 	fx.Provide(NewInternalModule),
 )

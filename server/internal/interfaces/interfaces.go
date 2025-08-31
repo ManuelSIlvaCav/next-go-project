@@ -4,6 +4,7 @@ import (
 	accounting_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/accounting/repositories"
 	businesses_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	clients_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/repositories"
+	insurance_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance/repositories"
 
 	emails_service "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/services"
 	"github.com/labstack/echo/v4"
@@ -42,4 +43,8 @@ type ClientsModule interface {
 type AccountingModule interface {
 	GetAccountingRepository() *accounting_repositories.AccountsRepository
 	GetTransactionsRepository() *accounting_repositories.TransactionsRepository
+}
+
+type InsuranceModule interface {
+	GetPolicyRepository() *insurance_repository.PolicyRepository
 }

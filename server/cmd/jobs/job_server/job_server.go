@@ -21,14 +21,10 @@ type JobServer struct {
 
 func NewJobServer(
 	container *container.Container,
-	filesModule *files.FilesModule,
-	emailsModule interfaces.EmailModule,
 	internalModules *modules.InternalModule) *JobServer {
 
 	newJobServer := &JobServer{
 		Container:       container,
-		FilesModule:     filesModule,
-		EmailsModule:    emailsModule,
 		InternalModules: internalModules,
 	}
 
@@ -65,9 +61,7 @@ func (js *JobServer) Run(mux *asynq.ServeMux) *asynq.Server {
 	// mux maps a type to a handler
 
 	mux.Handle(tasks.TypeHelloWorld, tasks.NewHelloWorldProcessor(js.Container))
-	mux.Handle(tasks.TypeEvent, tasks.NewEventProcessor(js.Container, js.EmailsModule))
-
-	/* mux.Handle(tasks.TypeUploadClients, tasks.NewUploadClientsProcessor(js.Container, js.FilesModule)) */
+	mux.Handle(tasks.TypeEvent, tasks.NewEventProcessor(js.Container, js.InternalModules.EmailsModule))
 
 	go srv.Run(mux)
 

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import MobileSidebarNavigation from '../MobileSidebarNavigation'
-import PetNavigationMenu from '../PetNavigationMenu'
+import PetNavigationMenu from '../pet-navigation-menu'
 
 export default function PerrosPage() {
   const dogCategories = [

@@ -1,5 +1,5 @@
 # Go Version
-FROM golang:1.24.4-alpine3.22
+FROM golang:1.25-alpine
 
 
 # Update Alpine packages to reduce vulnerabilities

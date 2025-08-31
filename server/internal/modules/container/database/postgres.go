@@ -48,7 +48,7 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 
 	// Note: this block uses time.Sleep, make sure to add "time" to the imports.
 	maxRetries := 3
-	backoff := 1 * time.Second
+	backoff := 15 * time.Second
 
 	for attempt := 1; attempt <= maxRetries; attempt++ {
 		err = dbx.Ping()

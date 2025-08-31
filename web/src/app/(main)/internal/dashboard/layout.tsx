@@ -18,10 +18,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         <JwtProvider initialJwt={cookieStore?.get?.('jwt')?.value as string}>
           <SidebarProvider className="">
             <AppSidebar />
-            <div>
-              {/* <SidebarTrigger /> */}
-              {children}
-            </div>
+            {children}
           </SidebarProvider>
         </JwtProvider>
       </CMSAuthProvider>

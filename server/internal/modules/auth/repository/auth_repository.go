@@ -58,10 +58,10 @@ func (r *AuthRepository) LoginUserByEmail(
 		if errors.Is(err, sql.ErrNoRows) {
 			// Handle no rows error
 			logger.Error("No rows found for admin user", "error", err)
-			return nil, internal_models.NewErrorWithCode(internal_models.MagicLinkExpired)
+			return nil, internal_models.NewErrorWithCode(internal_models.MagicLinkExpiredError)
 		}
 		logger.Error("Error getting user email login", "error", err)
-		return nil, internal_models.NewErrorWithCode(internal_models.MagicLinkExpired)
+		return nil, internal_models.NewErrorWithCode(internal_models.MagicLinkExpiredError)
 	}
 
 	return &loginEmail, nil
@@ -111,12 +111,12 @@ func (r *AuthRepository) GetAdminUser(
 		if errors.Is(err, sql.ErrNoRows) {
 			// Handle no rows error
 			logger.Error("No rows found for admin user", "error", err)
-			return nil, internal_models.NewErrorWithCode(internal_models.AdminNotFound)
+			return nil, internal_models.NewErrorWithCode(internal_models.AdminNotFoundError)
 		}
 
 		// Handle other errors
 		logger.Error("Error getting admin user", "error", err)
-		return nil, internal_models.NewErrorWithCode(internal_models.AdminNotFound)
+		return nil, internal_models.NewErrorWithCode(internal_models.AdminNotFoundError)
 	}
 
 	return user, nil

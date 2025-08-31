@@ -18,6 +18,7 @@ import {
   ChevronDown,
   MailPlus,
   Settings,
+  Shield,
   Users,
   WorkflowIcon,
 } from 'lucide-react'
@@ -32,6 +33,11 @@ const items = [
     title: 'Dashboard',
     url: '/internal/dashboard',
     icon: ChartLine,
+  },
+  {
+    title: 'Insurance Plans',
+    url: '/internal/dashboard/insurance',
+    icon: Shield,
   },
   {
     title: 'Clientes',
@@ -174,7 +180,9 @@ export function AppSidebar() {
         </Suspense>
       </SidebarContent>
       <SidebarFooter>
-        <ColorModeToggle />
+        <div className="flex justify-end">
+          <ColorModeToggle />
+        </div>
       </SidebarFooter>
     </Sidebar>
   )

@@ -82,6 +82,7 @@ func (r *Router) initializeRouter(
 	e *echo.Echo,
 ) {
 	setCORSConfig(e)
+	e.Use(middleware.Recover())
 	//setErrorController(e, container)
 	//setHealthController(e, container)
 	//Set the main group

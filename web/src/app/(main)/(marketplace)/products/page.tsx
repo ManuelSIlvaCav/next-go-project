@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import MobileSidebarNavigation from './MobileSidebarNavigation'
-import PetNavigationMenu from './PetNavigationMenu'
+
 import ProductsFilter from './ProductListingsComponent/ProductsFilter'
 import ProductsListings from './ProductListingsComponent/ProductsListings'
 
@@ -66,9 +66,6 @@ export default function MarketplaceProductsPage() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="hidden md:block">
-          <PetNavigationMenu />
         </div>
       </div>
 

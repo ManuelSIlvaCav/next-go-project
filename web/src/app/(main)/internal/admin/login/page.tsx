@@ -14,14 +14,19 @@ async function createLoginRequest(data: { type: string; email: string }) {
     body: JSON.stringify(data),
   })
 
-  if (!resp) {
-    throw new Error('Network error')
+  if (!resp?.ok) {
+    throw new Error('Error de conexión')
+  }
+
+  if (resp.status !== 201) {
+    console.log('resp', { resp, api: process.env.NEXT_PUBLIC_API_PATH })
+    throw new Error('Error en la solicitud')
   }
 
   const jsonResponse = await resp.json()
 
-  if (!resp.ok || resp.status !== 201) {
-    throw new Error(jsonResponse.error)
+  if (!jsonResponse) {
+    throw new Error('Invalid response')
   }
 
   return jsonResponse
