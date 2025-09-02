@@ -26,3 +26,6 @@ Read the values of the aws credential file
 To set a different user
 
 > export AWS_PROFILE=oikoflow-integration-user
+
+# ToDo 
+- Add infrastructure with appunner, dbs and aws
