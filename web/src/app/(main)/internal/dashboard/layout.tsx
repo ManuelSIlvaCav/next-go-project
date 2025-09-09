@@ -1,4 +1,4 @@
-import CMSAuthProvider from '@/cms/providers/Auth'
+
 import { AppSidebar } from '@/components/app-sidebar'
 import JwtProvider from '@/components/providers/JwtProvider'
 import { SidebarProvider } from '@/components/ui/sidebar'
@@ -14,14 +14,12 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <div className="max-w-full w-screen">
-      <CMSAuthProvider>
-        <JwtProvider initialJwt={cookieStore?.get?.('jwt')?.value as string}>
+      <JwtProvider initialJwt={cookieStore?.get?.('jwt')?.value as string}>
           <SidebarProvider className="">
             <AppSidebar />
             {children}
           </SidebarProvider>
         </JwtProvider>
-      </CMSAuthProvider>
     </div>
   )
 }
