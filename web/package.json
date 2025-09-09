@@ -8,20 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf .next",
-    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
-    "generate:schema": "payload-graphql generate:schema",
-    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types"
+    "clean": "rm -rf .next"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
-    "@payloadcms/db-mongodb": "3.15.1",
-    "@payloadcms/db-sqlite": "3.15.1",
-    "@payloadcms/live-preview-react": "3.15.1",
-    "@payloadcms/next": "3.15.1",
-    "@payloadcms/plugin-nested-docs": "3.15.1",
-    "@payloadcms/richtext-lexical": "3.15.1",
-    "@payloadcms/ui": "3.15.1",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-collapsible": "^1.1.2",
@@ -47,11 +37,9 @@
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
-    "graphql": "^16.8.2",
     "lucide-react": "^0.540.0",
     "next": "15.4.6",
     "next-themes": "^0.4.6",
-    "payload": "3.15.1",
     "react": "19.0.0",
     "react-day-picker": "^9.9.0",
     "react-dom": "19.0.0",
@@ -67,7 +55,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@payloadcms/graphql": "latest",
     "@swc/core": "^1.6.13",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^20",
