@@ -20,7 +20,7 @@ const buttonVariants = cva(
         complementary:
           'bg-complement text-complement-foreground shadow-xs hover:bg-complement/80 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700',
         ghost:
-          'hover:bg-accent hover:text-accent-foreground dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
+          'hover:bg-accent hover:text-accent-foreground dark:hover:bg-zinc-800 dark:hover:text-zinc-100 focus-visible:ring-0 dark:focus-visible:ring-0',
         link: 'text-primary underline-offset-4 hover:underline dark:text-primary dark:hover:underline',
       },
       size: {

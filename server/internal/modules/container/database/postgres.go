@@ -57,7 +57,7 @@ func (p *Postgres) connect(dbUrl string) (*sqlx.DB, error) {
 			return dbx, nil
 		}
 
-		p.logger.Error("Failed to ping database (attempt %d/%d): %v", "attempt", attempt, "max", maxRetries, "error", err)
+		p.logger.Error("Failed to ping database (attempt %d/%d): %v", "attempt", attempt, "max", maxRetries, "error", err, "dbUrl", dbUrl)
 
 		if attempt < maxRetries {
 			time.Sleep(backoff)

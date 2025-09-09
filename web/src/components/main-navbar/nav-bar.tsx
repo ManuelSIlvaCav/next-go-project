@@ -1,10 +1,7 @@
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { ColorModeToggle } from '../color-mode-toogle'
 import AccountMenu from './account-menu'
 import AddressSelector from './address-selector'
-import NavBarMobileMenu from './mobile-menu'
-import SearchBar from './search-bar'
 import ShoppingCart from './shopping-cart/shopping-cart'
 
 interface NavBarProps {
@@ -21,7 +18,7 @@ export default function NavBar({ className }: NavBarProps) {
         <div className="flex flex-col gap-4 md: pt-2">
           <div className="flex flex-row justify-between md: px-4">
             <div className="flex">
-              <NavBarMobileMenu />
+              
               <div className="flex items-center">
                 <Link href="/">
                   <div className="text-4xl font-bold text-white font-fredoka">
@@ -32,19 +29,16 @@ export default function NavBar({ className }: NavBarProps) {
             </div>
             <div className="hidden md:flex flex-row pl-4 w-7xl items-center">
               <AddressSelector />
-              <SearchBar />
+              {/* <SearchBar /> */}
             </div>
-            <div className="flex items-center gap-2">
-              <div>
-                <ColorModeToggle />
-              </div>
+                        <div className="flex items-center gap-2">
               <AccountMenu />
               <ShoppingCart />
             </div>
           </div>
           <div className="flex flex-row md:hidden">
             <AddressSelector />
-            <SearchBar />
+            {/* <SearchBar /> */}
           </div>
         </div>
       </div>

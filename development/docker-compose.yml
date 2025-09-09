@@ -1,0 +1,152 @@
+services:
+  go-server:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    container_name: main-server
+    hostname: main-server
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
+    restart: on-failure
+    volumes:
+      - ../server:/app
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
+    networks:
+      - default
+
+  postgresdb:
+    image: arm64v8/postgres:17-trixie
+    container_name: postgres_db
+    hostname: postgres_db
+    expose:
+      - 5432
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - 5432:5432
+    restart: on-failure
+    volumes:
+      - ./docker/pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+
+  redis:
+    container_name: "redis"
+    hostname: redis
+    image: arm64v8/redis #redis:alpine
+    env_file:
+      - .env
+    # Specify the redis.conf file to use and add a password.
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    expose:
+      - ${REDIS_PORT}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./docker/data/:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - default
+
+  # chromedp:
+  #   build:
+  #     context: ../server
+  #     dockerfile: Dockerfile.scrapper
+  #   ports:
+  #     - 9222:9222
+  #   container_name: chromedp
+  #   hostname: chromedp
+  #   volumes:
+  #     - ../server:/app
+  #     - $HOME/.aws/credentials:/root/.aws/credentials:ro #
+  #   networks:
+  #     - default
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   shm_size: 4g
+# go-jobs:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile.jobs
+  #   container_name: housespot-jobs
+  #   hostname: housespot-jobs
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - 4000:4000
+  #   depends_on:
+  #     postgresdb:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   restart: on-failure
+  #   volumes:
+  #     - ./server:/app
+  #     - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
+  #   networks:
+  #     - default
+
+  # asynqmon:
+  #   image: hibiken/asynqmon:latest
+  #   ports:
+  #     - 8080:8080
+  #   #entrypoint: ["./asynqmon", "--redis-addr=redis:6379"]
+  #   entrypoint:
+  #     [
+  #       "./asynqmon",
+  #       "--redis-url=redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}",
+  #     ]
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     #go-jobs:
+  #     #   condition: service_started
+  #   networks:
+  #     - default
+
+  # go-server.db.migrations:
+  #   depends_on:
+  #     postgresdb:
+  #       condition: service_healthy
+  #   image: go-server.db.migrations
+  #   build:
+  #     context: ./server/db/
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   restart: on-failure
+  #   command: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable up"
+
+volumes:
+  pg_data:
+    driver: local
+
+networks:
+  default:

@@ -1,23 +1,195 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
-import { ChevronDown, User } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ColorModeToggle } from '@/components/color-mode-toogle'
+import { ChevronDown, User, UserCircle, LogIn, UserPlus } from 'lucide-react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function AccountMenu() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const router = useRouter()
+
+  const handleSignInClick = () => {
+    if (isOpen) {
+      // If dropdown is already open, navigate to login
+      router.push('/login')
+    }
+    setIsOpen(false)
+  }
+
+  const handleRegisterClick = () => {
+    router.push('/register')
+    setIsOpen(false)
+  }
+
   return (
-    <div>
-      <Button
-        variant="ghost"
-        className="hidden md:flex flex-col items-start text-white hover:bg-secondary h-auto py-1 px-2"
-      >
-        <span className="text-xs text-gray-300">Hola, Inicia sesión</span>
-        <div className="flex items-center space-x-1">
-          <span className="text-sm font-medium">Cuenta</span>
-          <ChevronDown className="h-3 w-3" />
-        </div>
-      </Button>
-      {/* mobile Icon */}
-      <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-secondary">
-        <User className="h-[1.2rem] w-[1.2rem]" />
-      </Button>
-    </div>
+    <>
+      {/* Desktop Version */}
+      <div className="hidden md:block">
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex flex-col items-start text-white h-auto py-1 px-2 hover:bg-primary dark:hover:bg-primary"
+            >
+              <span className="text-xs text-gray-300">Hola, Inicia sesión</span>
+              <div className="flex items-center space-x-1">
+                <span className="text-sm font-medium text-white">Cuenta</span>
+                <ChevronDown className="h-3 w-3" />
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          
+          <DropdownMenuContent 
+            className="w-72 bg-white dark:bg-purple-950 border-secondary dark:border-purple-800"
+            align="end"
+            sideOffset={8}
+            alignOffset={0}
+            avoidCollisions={true}
+            collisionPadding={8}
+          >
+            {/* Header */}
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-purple-800">
+              <h3 className="text-lg font-bold text-secondary dark:text-white">
+                Mi Cuenta
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Inicia sesión para acceder a todas las funciones
+              </p>
+            </div>
+
+            {/* Sign In Button */}
+            <div className="p-4 space-y-3">
+              <Button 
+                onClick={handleSignInClick}
+                className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                Iniciar Sesión
+              </Button>
+              
+              <Button 
+                onClick={handleRegisterClick}
+                variant="outline"
+                className="w-full border-primary text-primary hover:bg-primary hover:text-white font-medium py-2.5 rounded-lg transition-colors"
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Registrarse
+              </Button>
+            </div>
+
+            <DropdownMenuSeparator className="bg-gray-200 dark:bg-purple-800" />
+
+            {/* Settings */}
+            <div className="p-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-purple-900/50 border border-gray-200 dark:border-purple-800">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Tema
+                </span>
+                <ColorModeToggle />
+              </div>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Mobile Version */}
+      <div className="block md:hidden">
+        <DropdownMenu open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-white hover:bg-secondary [&_svg]:size-8 relative overflow-hidden "
+            >
+              <div className="relative">
+                {/* User icon with fade out animation when open */}
+                <User 
+                  className={`transition-all duration-300 ease-in-out ${
+                    isMobileOpen 
+                      ? 'opacity-0 scale-75 rotate-180' 
+                      : 'opacity-100 scale-100 rotate-0'
+                  }`}
+                />
+                
+                {/* UserCircle icon with fade in animation when open */}
+                <UserCircle 
+                  className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+                    isMobileOpen 
+                      ? 'opacity-100 scale-100 rotate-0' 
+                      : 'opacity-0 scale-75 rotate-180'
+                  }`}
+                />
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          
+          <DropdownMenuContent 
+            className="w-72 bg-white dark:bg-purple-950 border-secondary dark:border-purple-800"
+            align="end"
+            sideOffset={8}
+            avoidCollisions={true}
+            collisionPadding={8}
+          >
+            {/* Header */}
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-purple-800">
+              <h3 className="text-lg font-bold text-secondary dark:text-white">
+                Mi Cuenta
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Inicia sesión para acceder a todas las funciones
+              </p>
+            </div>
+
+            {/* Sign In Button */}
+            <div className="p-4 space-y-3">
+              <Button 
+                onClick={() => {
+                  router.push('/login')
+                  setIsMobileOpen(false)
+                }}
+                className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                Iniciar Sesión
+              </Button>
+              
+              <Button 
+                onClick={() => {
+                  router.push('/register')
+                  setIsMobileOpen(false)
+                }}
+                variant="outline"
+                className="w-full border-primary text-primary hover:bg-primary hover:text-white font-medium py-2.5 rounded-lg transition-colors"
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Registrarse
+              </Button>
+            </div>
+
+            <DropdownMenuSeparator className="bg-gray-200 dark:bg-purple-800" />
+
+            {/* Settings */}
+            <div className="p-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-purple-900/50 border border-gray-200 dark:border-purple-800">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Tema
+                </span>
+                <ColorModeToggle />
+              </div>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </>
   )
 }
