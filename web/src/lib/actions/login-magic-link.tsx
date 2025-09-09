@@ -1,6 +1,5 @@
 'use server'
 
-import { rest } from '@/cms/providers/rest'
 import { cookies } from 'next/headers'
 
 export default async function loginMagicLink(data: {
@@ -33,12 +32,6 @@ export default async function loginMagicLink(data: {
     return { error: jsonData.error ?? 'An error occurred' }
   }
 
-  await createCMSResources({
-    email: data.email,
-    roles: data.adminLogin ? ['super-admin'] : ['user'],
-    password: data.email,
-  })
-
   const cookieStore = await cookies()
   cookieStore.set('jwt', jsonData.access_token, {
     expires: new Date(jsonData.expires_at),
@@ -49,19 +42,3 @@ export default async function loginMagicLink(data: {
   return { error: null, data: jsonData }
 }
 
-async function createCMSResources(args: {
-  email: string
-  roles: string[]
-  password: string
-  tenants?: string[]
-}) {
-  try {
-    const respUserCreate = await rest(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, args)
-
-    const respLoginUser = await rest(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/login`, args)
-
-    console.log('User created', { respUserCreate, respLoginUser })
-  } catch (error) {
-    console.log('Error createCMSResources', { error })
-  }
-}

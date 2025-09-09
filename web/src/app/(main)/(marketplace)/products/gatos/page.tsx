@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import MobileSidebarNavigation from '../MobileSidebarNavigation'
-import PetNavigationMenu from '../pet-navigation-menu'
+import {PetNavigationMenu} from '@/components/pet-navigation-menu'
 
 export default function GatosPage() {
   const catCategories = [
