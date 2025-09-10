@@ -19,8 +19,8 @@ ENV ENV="prod"
 #Gotta add all the env variables needed and defined in .env 
 
 COPY --from=builder /app/server .
+COPY --from=builder /app/cmd/jobs/migration_controller/migrations ./app/cmd/jobs/migration_controller/migrations
 
-EXPOSE 3001
+EXPOSE 3000
 
-#ENTRYPOINT ["/app/cmd/api"]
 ENTRYPOINT ["/app/server"]

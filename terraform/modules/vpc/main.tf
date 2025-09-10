@@ -19,7 +19,7 @@ resource "aws_subnet" "public" {
   availability_zone       = var.availability_zone_names[count.index]
   map_public_ip_on_launch = true
   tags = {
-    Name = "PublicSubnet_${count.index}_${var.environment}",
+    Name = "public_subnet_${count.index}_${var.environment}",
     Terraform   = "true"
   }
 }
@@ -31,7 +31,7 @@ resource "aws_route_table" "public" {
     gateway_id = var.internet_gateway_id != null ? var.internet_gateway_id : null
   }
   tags = {
-    Name = "PublicRouteTable_${var.environment}",
+    Name = "public_route_table_${var.environment}",
     Terraform   = "true"
   }
 }
@@ -65,7 +65,8 @@ resource "aws_subnet" "private" {
 
 
   tags = {
-    Name = "PrivateSubnet_${count.index}_${var.environment}"
+    Name = "private_subnet_${count.index}_${var.environment}",
+    Terraform   = "true"
   }
 }
 
@@ -85,7 +86,8 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "PrivateRouteTable_${count.index}_${var.environment}"
+    Name = "private_route_table_${count.index}_${var.environment}",
+    Terraform   = "true"
   }
 }
 

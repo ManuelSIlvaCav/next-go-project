@@ -4,7 +4,7 @@ resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = var.vpc_main_id
 
   tags = {
-    Name = "IGW_${var.environment}",
+    Name = "igw_${var.environment}",
     Terraform = "true"
   }
 }
@@ -16,7 +16,7 @@ resource "aws_eip" "nat_gateway" {
   count  = var.enable_nat_gateway ? length(var.availability_zone_names) : 0
   domain = "vpc"
   tags = {
-    Name = "EIP_${count.index}_${var.environment}"
+    Name = "eip_${count.index}_${var.environment}"
   }
 
 }
@@ -28,7 +28,7 @@ resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.nat_gateway[count.index].id
 
   tags = {
-    Name = "NATGateway_${count.index}_${var.environment}"
+    Name = "nat_gateway_${count.index}_${var.environment}"
   }
 }
 

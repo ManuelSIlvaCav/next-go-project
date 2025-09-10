@@ -79,7 +79,11 @@ resource "aws_ecs_task_definition" "default_definition" {
         },
         {
           name  = "POSTGRES_PORT"
-          value = var.postgres_db_port
+          value = "${var.postgres_db_port}"
+        },
+        {
+          name  = "PORT"
+          value = tostring(var.container_port)
         }
       ],
       logConfiguration = {
@@ -93,10 +97,6 @@ resource "aws_ecs_task_definition" "default_definition" {
     }
   ])
 }
-
-
-
-
 ## --------- IAM Roles for ECS Task Execution and Task Definition ---------
 
 

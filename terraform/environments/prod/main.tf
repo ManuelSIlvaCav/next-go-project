@@ -29,6 +29,8 @@ module "natgateway-instance" {
   public_subnets_ids      = module.vpc.public_subnet_ids
   vpc_cidr = local.vpc_cidr
   private_route_table_ids = module.vpc.private_route_table_ids
+
+  ssh_key_name            = "petza-ssh-key-1"
 }
 
 module "natgateway" {
@@ -36,7 +38,7 @@ module "natgateway" {
   environment             = local.environment
   vpc_main_id             = module.vpc.vpc_id
   public_subnets_ids      = module.vpc.public_subnet_ids
-  enable_nat_gateway = false
+  enable_nat_gateway      = false
 }
 
 module "vpc" {
@@ -90,6 +92,7 @@ module "rds" {
   
   private_subnet_ids     = module.vpc.private_subnet_ids
   ecs_sg_id              = module.security-groups.ecs_security_group_id
+  bastion_sg_id          = module.natgateway-instance.nat_instance_sg_id
 }
 
 module "ecs" {

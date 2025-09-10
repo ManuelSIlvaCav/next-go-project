@@ -30,10 +30,11 @@ data "aws_ami" "latest_amazon_linux" {
 
 # Create the NAT instance in the public subnet
 resource "aws_instance" "nat_ec2_instance" {
-    instance_type = "t4g.nano"  # ARM-based instance for cost optimization
-    ami           = data.aws_ami.latest_amazon_linux.id
-    subnet_id     = var.public_subnets_ids[0]
-    
+    instance_type           = "t4g.nano"  # ARM-based instance for cost optimization
+    ami                     = data.aws_ami.latest_amazon_linux.id
+    subnet_id               = var.public_subnets_ids[0]
+    key_name                = var.ssh_key_name
+
     # Bootstrap script to configure NAT functionality
     user_data = <<-EOF
 #!/bin/bash
@@ -62,6 +63,14 @@ resource "aws_security_group" "nat_ec2_sg" {
     name        = "self-managed-nat-ec2-sg"
     description = "Security group of Self-Managed NAT EC2 Instance"
     vpc_id      = var.vpc_main_id
+
+    # Allow SSH access from within the VPC
+    ingress {
+        from_port   = 22
+        to_port     = 22
+        protocol    = "tcp"
+        cidr_blocks = [var.vpc_cidr]
+    }
 
     # Allow all TCP traffic from within the VPC
     ingress {

@@ -23,3 +23,8 @@ variable "vpc_cidr" {
 variable "private_route_table_ids" {
   type = list(string)
 }
+
+# Bastion functionality - SSH key name
+variable "ssh_key_name" {
+  type = string
+}

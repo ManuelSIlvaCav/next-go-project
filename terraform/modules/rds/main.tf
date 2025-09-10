@@ -8,7 +8,10 @@ resource "aws_security_group" "rds_security_group" {
     from_port       = 5432
     to_port         = 5432
     cidr_blocks     = ["0.0.0.0/0"]
-    security_groups = flatten([var.ecs_sg_id != null ? [var.ecs_sg_id] : []])
+    security_groups = flatten([
+      var.ecs_sg_id != null ? [var.ecs_sg_id] : [],
+      var.bastion_sg_id != null ? [var.bastion_sg_id] : []
+    ])
   }
 
   egress {
@@ -25,7 +28,7 @@ resource "aws_security_group" "rds_security_group" {
 }
 
 resource "aws_db_subnet_group" "rds" {
-  name        = "private-subnet-group"
+  name        = "${var.service_name}_private_subnet_group"
   description = "Private Subnet Group"
   subnet_ids  = var.private_subnet_ids
 
@@ -80,7 +83,7 @@ resource "aws_db_instance" "postgres_db" {
   db_subnet_group_name = aws_db_subnet_group.rds.id
   vpc_security_group_ids = [aws_security_group.rds_security_group.id]
 
-  publicly_accessible  = true
+  publicly_accessible  = false
   skip_final_snapshot  = true
   tags = {
     Terraform   = "true"
