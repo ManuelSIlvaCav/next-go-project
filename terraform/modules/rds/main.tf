@@ -21,10 +21,15 @@ resource "aws_db_subnet_group" "rds" {
   name        = "private-subnet-group"
   description = "Private Subnet Group"
   subnet_ids  = var.private_subnet_ids
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.environment
+  }
 }
 
 resource "aws_db_parameter_group" "postgres" {
-  name        = "default-postgres16"
+  name        = "${var.postgres_identifier}-postgres16"
   family      = "postgres16"
   description = "Custom Parameter Group for Postgres 16"
   parameter {
@@ -36,6 +41,11 @@ resource "aws_db_parameter_group" "postgres" {
     name         = "log_statement"
     value        = "all"
     apply_method = "pending-reboot"
+  }
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.environment
   }
 
 }
@@ -60,4 +70,9 @@ resource "aws_db_instance" "postgres_db" {
   db_subnet_group_name = aws_db_subnet_group.rds.id
 
   vpc_security_group_ids = [aws_security_group.rds_security_group.id]
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.environment
+  }
 }

@@ -3,7 +3,8 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
-    Name = "MainVPC_${var.environment}"
+    Name = "MainVPC_${var.environment}",
+    Terraform   = "true"
   }
 }
 
@@ -18,7 +19,8 @@ resource "aws_subnet" "public" {
   availability_zone       = var.availability_zone_names[count.index]
   map_public_ip_on_launch = true
   tags = {
-    Name = "PublicSubnet_${count.index}_${var.environment}"
+    Name = "PublicSubnet_${count.index}_${var.environment}",
+    Terraform   = "true"
   }
 }
 
@@ -29,7 +31,8 @@ resource "aws_route_table" "public" {
     gateway_id = var.internet_gateway_id != null ? var.internet_gateway_id : null
   }
   tags = {
-    Name = "PublicRouteTable_${var.environment}"
+    Name = "PublicRouteTable_${var.environment}",
+    Terraform   = "true"
   }
 }
 
@@ -73,9 +76,12 @@ resource "aws_route_table" "private" {
   count  = length(var.availability_zone_names)
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = var.nat_gateway_ids != null ? var.nat_gateway_ids[0] : null /* var.nat_gateway_ids != null ? var.nat_gateway_ids[count.index] : null */ //We will use only 1 NAT gateway
+  dynamic route {
+    for_each = var.nat_gateway_ids != null ? [var.nat_gateway_ids[0]] : []
+    content {
+      cidr_block     = "0.0.0.0/0"
+      nat_gateway_id = route.value
+    }
   }
 
   tags = {

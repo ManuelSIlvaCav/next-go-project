@@ -15,7 +15,11 @@ variable "public_subnets_ids" {
   type    = list(string)
 }
 
-variable "enable_nat_gateway" {
-  type    = bool
-  default = true
+variable "vpc_cidr" {
+  type    = string
+  default = "172.17.0.0/16"
+}
+
+variable "private_route_table_ids" {
+  type = list(string)
 }
