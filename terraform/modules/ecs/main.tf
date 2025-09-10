@@ -8,7 +8,6 @@ resource "aws_ecs_cluster" "default" {
   }
 }
 
-
 ## Creates an ECS Service running on Fargate
 resource "aws_ecs_service" "default_service" {
   name                               = "${var.service_name}_service"
@@ -26,7 +25,7 @@ resource "aws_ecs_service" "default_service" {
   }
 
   network_configuration {
-    security_groups  = [aws_security_group.ecs_sg.id, var.alb_security_group_id]
+    security_groups  = [var.ecs_sg_id, var.alb_security_group_id]
     subnets          = var.private_subnet_ids
     assign_public_ip = false
   }
@@ -42,7 +41,7 @@ resource "aws_ecs_task_definition" "default_definition" {
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn            = aws_iam_role.ecs_task_iam_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   cpu                      = var.cpu_units
   memory                   = var.memory
@@ -60,7 +59,29 @@ resource "aws_ecs_task_definition" "default_definition" {
           hostPort      = var.container_port
           protocol      = "tcp"
         }
-      ]
+      ],
+      environment = [
+        {
+          name  = "POSTGRES_USER"
+          value = var.postgres_user_name
+        },
+        {
+          name  = "POSTGRES_PASSWORD"
+          value = var.postgres_db_password
+        },
+        {
+          name  = "POSTGRES_DB"
+          value = var.postgres_db_name
+        },
+        {
+          name  = "POSTGRES_HOST"
+          value = var.postgres_db_host
+        },
+        {
+          name  = "POSTGRES_PORT"
+          value = var.postgres_db_port
+        }
+      ],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -73,32 +94,6 @@ resource "aws_ecs_task_definition" "default_definition" {
   ])
 }
 
-## Security Group for ECS Task Container Instances (managed by Fargate)
-
-resource "aws_security_group" "ecs_sg" {
-  name        = "${var.service_name}_ecs_sg_${var.environment}"
-  description = "Security group for ECS task running on Fargate"
-  vpc_id      = var.vpc_id
-  revoke_rules_on_delete      = true
-
-  ingress {
-    description     = "Allow ingress traffic from ALB on HTTP only"
-    from_port       = var.container_port
-    to_port         = var.container_port
-    protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
-    self            = true
-  }
-
-  egress {
-    description                 = "Allow outbound traffic from ECS"
-    from_port                   = 0
-    to_port                     = 0
-    protocol                    = -1
-    cidr_blocks                 = ["0.0.0.0/0"]
-    self                        = true
-  }
-}
 
 
 
@@ -108,7 +103,7 @@ resource "aws_security_group" "ecs_sg" {
 ## IAM Role for ECS Task execution
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.service_name}_ECS_TaskExecutionRole_${var.environment}"
+  name               = "${var.service_name}_ecs_task_execution_role_${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.task_assume_role_policy.json
 }
 
@@ -128,11 +123,15 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_iam_role" "ecs_task_iam_role" {
-  name               = "${var.service_name}_ECS_TaskIAMRole_${var.environment}"
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "${var.service_name}_ecs_task_role_${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.task_assume_role_policy.json
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_role_policy_rds" {
+    role                  = aws_iam_role.ecs_task_role.name
+    policy_arn            = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+}
 
 
 ## --------- Other -------

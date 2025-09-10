@@ -1,4 +1,6 @@
 resource "aws_security_group" "rds_security_group" {
+  name        = "rds_sg"
+  description = "enable postgre access on port 5432"
   vpc_id = var.vpc_id
 
   ingress {
@@ -15,6 +17,11 @@ resource "aws_security_group" "rds_security_group" {
     to_port     = 65535
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.environment
+  }
 }
 
 resource "aws_db_subnet_group" "rds" {
@@ -28,7 +35,7 @@ resource "aws_db_subnet_group" "rds" {
   }
 }
 
-resource "aws_db_parameter_group" "postgres" {
+resource "aws_db_parameter_group" "postgres_pm" {
   name        = "${var.postgres_identifier}-postgres16"
   family      = "postgres16"
   description = "Custom Parameter Group for Postgres 16"
@@ -41,6 +48,11 @@ resource "aws_db_parameter_group" "postgres" {
     name         = "log_statement"
     value        = "all"
     apply_method = "pending-reboot"
+  }
+
+  parameter {
+    name  = "rds.force_ssl"
+    value = "0"
   }
 
   tags = {
@@ -62,15 +74,14 @@ resource "aws_db_instance" "postgres_db" {
   username = var.postgres_user_name
   password = var.postgres_db_password
   port     = var.postgres_port
+  db_name  = var.postgres_db_name
 
-  publicly_accessible  = true
-  parameter_group_name = aws_db_parameter_group.postgres.name
-  skip_final_snapshot  = true
-
+  parameter_group_name = aws_db_parameter_group.postgres_pm.name
   db_subnet_group_name = aws_db_subnet_group.rds.id
-
   vpc_security_group_ids = [aws_security_group.rds_security_group.id]
 
+  publicly_accessible  = true
+  skip_final_snapshot  = true
   tags = {
     Terraform   = "true"
     Environment = var.environment

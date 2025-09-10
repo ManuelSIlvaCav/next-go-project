@@ -75,8 +75,35 @@ variable "alb_target_group_arn" {
   type = string
 }
 
+variable "ecs_sg_id" {
+  type = string
+}
+
 
 ## ECR related variables
 variable "ecr_repository_url" {
   type = string
+}
+
+
+# PostgreSQL related variables
+variable "postgres_db_name" {
+  type    = string
+}
+
+variable "postgres_user_name" {
+  type    = string
+}
+
+variable "postgres_db_password" {
+  type    = string
+}
+
+variable "postgres_db_host" {
+  type    = string
+}
+
+variable "postgres_db_port" {
+  type    = string
+  default = "5432"
 }

@@ -23,7 +23,7 @@ variable "postgres_user_name" {
   type = string
 }
 
-variable "postgres_user_password" {
+variable "postgres_db_name" {
   type = string
 }
 
@@ -33,4 +33,5 @@ variable "postgres_db_password" {
 
 variable "postgres_port" {
   type = number
+  default = 5432
 }

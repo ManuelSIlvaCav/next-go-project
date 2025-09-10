@@ -20,7 +20,7 @@ services:
     restart: on-failure
     volumes:
       - ../server:/app
-      - $HOME/.aws/credentials:/root/.aws/credentials:ro # for aws credentials
+      - ./docker/.aws:/$HOME/.aws:ro # for aws credentials
     networks:
       - default
 

@@ -19,14 +19,14 @@ resource "aws_alb_target_group" "service_target_group" {
   target_type          = "ip"
 
   health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    interval            = 60
-    matcher             = var.healthcheck_matcher
-    path                = var.healthcheck_endpoint
-    port                = "traffic-port"
-    protocol            = "HTTP"
-    timeout             = 30
+       path                  = "/health"
+      protocol              = "HTTP"
+      matcher               = "200"
+      port                  = "traffic-port"
+      healthy_threshold     = 2
+      unhealthy_threshold   = 2
+      timeout               = 15
+      interval              = 30
   }
 
   depends_on = [aws_alb.alb]

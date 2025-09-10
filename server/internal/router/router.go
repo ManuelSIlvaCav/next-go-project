@@ -18,26 +18,19 @@ type Router struct {
 
 func NewRouter(
 	e *echo.Echo,
-	//authModule *auth.AuthModule,
 	container *container.Container,
-	//internalModules *modules.InternalModule,
 ) *Router {
 	router := &Router{}
 	router.initializeRouter(e)
 
+	e.Add("GET", "/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{
+			"status": "ok",
+		})
+	})
+
 	logger := container.Logger()
 	logger.Info("Router initialized")
-
-	/* modules := internalModule.Modules
-
-	for _, module := range modules {
-		domain := module.GetDomain()
-		handlers := module.GetHandlers()
-
-		logger.Info("Registering module", "domain", domain)
-
-		router.RegisterRoutes(domain, handlers)
-	} */
 
 	return router
 }
@@ -85,8 +78,7 @@ func (r *Router) initializeRouter(
 	e.Use(middleware.Recover())
 	//setErrorController(e, container)
 	//setHealthController(e, container)
-	//Set the main group
-
+	//Set the main group\
 	r.MainGroup = e.Group("/api/v1")
 }
 

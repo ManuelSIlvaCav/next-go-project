@@ -10,13 +10,15 @@ locals {
 
    // RDS
   postgres_identifier    = "next-go-project-db"
-  postgres_db_password   = "postgres"
-  postgres_user_name     = "postgres"
-  postgres_user_password = "postgres"
   postgres_port          = 5432
+  postgres_db_name       = "petza"
 
   // ECR existing repo
   ecr_repository_name = "petza"
+}
+
+module "secret-manager" {
+  source      = "../../modules/secret-manager"
 }
 
 module "natgateway-instance" {
@@ -53,6 +55,18 @@ module "alb" {
   source            = "../../modules/alb"
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
+  
+  container_port    = 4000
+}
+
+module "security-groups" {
+  source                = "../../modules/security-groups"
+  environment           = local.environment
+  service_name          = local.service_name
+
+  vpc_id                = module.vpc.vpc_id
+  alb_security_group_id = module.alb.alb_security_group_id
+  container_port        = 4000
 }
 
 module "ecr" {
@@ -62,6 +76,22 @@ module "ecr" {
   ecr_repository_name = local.ecr_repository_name
 }
 
+module "rds" {
+  source                 = "../../modules/rds"
+  environment            = local.environment
+  vpc_id                 = module.vpc.vpc_id
+
+  postgres_identifier    = local.postgres_identifier
+  postgres_user_name     = module.secret-manager.generated_username
+  postgres_db_password   = module.secret-manager.generated_password
+
+  postgres_port          = local.postgres_port
+  postgres_db_name       = local.postgres_db_name
+  
+  private_subnet_ids     = module.vpc.private_subnet_ids
+  ecs_sg_id              = module.security-groups.ecs_security_group_id
+}
+
 module "ecs" {
   source                = "../../modules/ecs"
   vpc_id                = module.vpc.vpc_id
@@ -69,21 +99,16 @@ module "ecs" {
 
   alb_security_group_id = module.alb.alb_security_group_id
   alb_target_group_arn  = module.alb.alb_target_group_arn
+  ecs_sg_id             = module.security-groups.ecs_security_group_id
 
   ecr_repository_url    = module.ecr.ecr_repository_url
 
-  depends_on = [ module.alb, module.ecr ]
-}
+  container_port        = 4000
 
+  postgres_db_host      = module.rds.postgres_endpoint
+  postgres_user_name    = module.secret-manager.generated_username
+  postgres_db_password  = module.secret-manager.generated_password
+  postgres_db_name      = local.postgres_db_name
+  postgres_db_port      = "${local.postgres_port}"
 
-module "rds" {
-  source                 = "../../modules/rds"
-  environment            = local.environment
-  vpc_id                 = module.vpc.vpc_id
-  postgres_identifier    = local.postgres_identifier
-  postgres_user_name     = local.postgres_user_name
-  postgres_user_password = local.postgres_user_password
-  postgres_db_password   = local.postgres_db_password
-  postgres_port          = local.postgres_port
-  private_subnet_ids     = module.vpc.private_subnet_ids
 }
