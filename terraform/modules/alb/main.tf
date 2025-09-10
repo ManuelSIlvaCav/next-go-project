@@ -38,9 +38,10 @@ resource "aws_alb_target_group" "service_target_group" {
 ## SG for ALB
 
 resource "aws_security_group" "alb" {
-  name        = "${var.service_name}_ALB_SecurityGroup_${var.environment}"
+  name        = "${var.service_name}_alb_sg_${var.environment}"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
+  revoke_rules_on_delete      = true
   tags = {
     Terraform   = "true"
   }
@@ -51,7 +52,25 @@ resource "aws_security_group" "alb" {
     to_port     = 0
     protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
+    self        = true
+  }
 
+  ingress {
+    from_port                   = 443
+    to_port                     = 443
+    protocol                    = "TCP"
+    description                 = "Allow https inbound traffic from internet"
+    cidr_blocks                 = ["0.0.0.0/0"]
+    self                        = true
+  }
+
+  ingress {
+    from_port                   = 80
+    to_port                     = 80
+    protocol                    = "TCP"
+    description                 = "Allow http inbound traffic from internet"
+    cidr_blocks                 = ["0.0.0.0/0"]
+    self                        = true
   }
 
 }

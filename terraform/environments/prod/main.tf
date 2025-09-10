@@ -72,7 +72,7 @@ module "ecs" {
 
   ecr_repository_url    = module.ecr.ecr_repository_url
 
-  depends_on = [ module.alb ]
+  depends_on = [ module.alb, module.ecr ]
 }
 
 

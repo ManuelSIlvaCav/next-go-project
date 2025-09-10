@@ -26,8 +26,8 @@ resource "aws_ecs_service" "default_service" {
   }
 
   network_configuration {
-    security_groups  = [aws_security_group.ecs_container_instance.id]
-    subnets          = var.private_subnet_ids 
+    security_groups  = [aws_security_group.ecs_sg.id, var.alb_security_group_id]
+    subnets          = var.private_subnet_ids
     assign_public_ip = false
   }
 
@@ -43,6 +43,7 @@ resource "aws_ecs_task_definition" "default_definition" {
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_iam_role.arn
+
   cpu                      = var.cpu_units
   memory                   = var.memory
 
@@ -74,10 +75,11 @@ resource "aws_ecs_task_definition" "default_definition" {
 
 ## Security Group for ECS Task Container Instances (managed by Fargate)
 
-resource "aws_security_group" "ecs_container_instance" {
-  name        = "${var.service_name}_ECS_Task_SecurityGroup_${var.environment}"
+resource "aws_security_group" "ecs_sg" {
+  name        = "${var.service_name}_ecs_sg_${var.environment}"
   description = "Security group for ECS task running on Fargate"
   vpc_id      = var.vpc_id
+  revoke_rules_on_delete      = true
 
   ingress {
     description     = "Allow ingress traffic from ALB on HTTP only"
@@ -85,14 +87,16 @@ resource "aws_security_group" "ecs_container_instance" {
     to_port         = var.container_port
     protocol        = "tcp"
     security_groups = [var.alb_security_group_id]
+    self            = true
   }
 
   egress {
-    description = "Allow all egress traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
+    description                 = "Allow outbound traffic from ECS"
+    from_port                   = 0
+    to_port                     = 0
+    protocol                    = -1
+    cidr_blocks                 = ["0.0.0.0/0"]
+    self                        = true
   }
 }
 
