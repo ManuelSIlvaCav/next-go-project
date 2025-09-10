@@ -13,7 +13,7 @@ resource "aws_ecs_cluster" "default" {
 resource "aws_ecs_service" "default_service" {
   name                               = "${var.service_name}_service"
   cluster                            = aws_ecs_cluster.default.id
-  task_definition                    = aws_ecs_task_definition.default.arn
+  task_definition                    = aws_ecs_task_definition.default_definition.arn
   desired_count                      = var.ecs_task_desired_count
   deployment_minimum_healthy_percent = var.ecs_task_deployment_minimum_healthy_percent
   deployment_maximum_percent         = var.ecs_task_deployment_maximum_percent
@@ -27,7 +27,7 @@ resource "aws_ecs_service" "default_service" {
 
   network_configuration {
     security_groups  = [aws_security_group.ecs_container_instance.id]
-    subnets          = var.private_subnet_ids //aws_subnet.private.*.id
+    subnets          = var.private_subnet_ids 
     assign_public_ip = false
   }
 
@@ -49,7 +49,7 @@ resource "aws_ecs_task_definition" "default_definition" {
   container_definitions = jsonencode([
     {
       name      = var.service_name
-      image     = "${aws_ecr_repository.ecr.repository_url}:${var.tag}"
+      image     = "${var.ecr_repository_url}:${var.tag}"
       cpu       = var.cpu_units
       memory    = var.memory
       essential = true

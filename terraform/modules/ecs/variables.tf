@@ -15,7 +15,7 @@ variable "ecs_task_desired_count" {
 
 variable "ecs_task_deployment_minimum_healthy_percent" {
   type    = number
-  default = 100
+  default = 50
 }
 
 variable "ecs_task_deployment_maximum_percent" {
@@ -30,13 +30,13 @@ variable "container_port" {
 
 
 variable "cpu_units" {
-  type    = string
-  default = "256"
+  type    = number
+  default = 256
 }
 
 variable "memory" {
-  type    = string
-  default = "512"
+  type    = number
+  default = 512
 }
 
 variable "ecr_container_hash" {
@@ -56,6 +56,7 @@ variable "tag" {
 
 ## Imported from other modules
 
+## VPC related variables
 variable "vpc_id" {
   type = string
 }
@@ -64,10 +65,18 @@ variable "private_subnet_ids" {
   type = list(string)
 }
 
+## New variables for ALB integration
+
 variable "alb_security_group_id" {
   type = string
 }
 
 variable "alb_target_group_arn" {
+  type = string
+}
+
+
+## ECR related variables
+variable "ecr_repository_url" {
   type = string
 }

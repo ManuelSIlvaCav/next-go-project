@@ -1,7 +1,6 @@
 # Go Version
 FROM golang:1.25-alpine
 
-
 # Update Alpine packages to reduce vulnerabilities
 RUN apk update && apk upgrade
 
