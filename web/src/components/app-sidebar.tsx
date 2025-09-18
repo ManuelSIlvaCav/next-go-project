@@ -21,6 +21,7 @@ import {
   Shield,
   Users,
   WorkflowIcon,
+  Layers2
 } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
@@ -99,6 +100,15 @@ const adminItems = [
   },
 ]
 
+const cmsItems = [
+  {
+    title: "Categorias",
+    url: "/internal/dashboard/cms/categories",
+    icon: Layers2,
+  }
+]
+
+
 function SideBarMainGroup() {
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -113,6 +123,37 @@ function SideBarMainGroup() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </CollapsibleContent>
+      </SidebarGroup>
+    </Collapsible>
+  )
+}
+
+function SidebarContentManagement() {
+  return (
+    <Collapsible defaultOpen className="group/collapsible">
+      <SidebarGroup>
+        <SidebarGroupLabel asChild>
+          <CollapsibleTrigger>
+            CMS
+            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+          </CollapsibleTrigger>
+        </SidebarGroupLabel>
+        <CollapsibleContent>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {cmsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link href={item.url}>
@@ -175,6 +216,7 @@ export function AppSidebar() {
       <SidebarHeader />
       <SidebarContent>
         <SideBarMainGroup />
+        <SidebarContentManagement />
         <Suspense fallback={<div></div>}>
           <SideBarAdminGroup />
         </Suspense>

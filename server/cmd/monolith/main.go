@@ -39,7 +39,7 @@ func registerHooks(
 
 			migrationController.RunMigrations()
 
-			jobServer.Run(container.JobTasker().Mux())
+			/* jobServer.Run(container.JobTasker().Mux()) */
 
 			logger.Info("Jobs server started")
 

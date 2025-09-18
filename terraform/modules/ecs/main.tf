@@ -60,6 +60,16 @@ resource "aws_ecs_task_definition" "default_definition" {
           protocol      = "tcp"
         }
       ],
+      healthCheck = {
+        command: [
+          "CMD",
+          "curl -f http://localhost:${var.container_port}/health | grep -q 'ok' || exit 1"
+        ],
+        interval = 30
+        retries  = 3
+        timeout  = 5,
+        startPeriod = 30
+      }
       environment = [
         {
           name  = "POSTGRES_USER"

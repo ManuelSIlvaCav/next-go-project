@@ -2,7 +2,7 @@
 
 import MainServiceSearchComponent from '@/components/main-service-search-component/MainSearch'
 import { useState } from 'react'
-import PetServiceListings from '../ListingsComponent/pet-service-listing'
+import PetServiceListings from './ListingsComponent/pet-service-listing'
 
 interface SearchData {
   service: string

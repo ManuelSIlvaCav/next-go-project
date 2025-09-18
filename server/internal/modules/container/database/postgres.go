@@ -23,7 +23,6 @@ func NewPostgres(config *config.Config, logger logger.Logger) *Postgres {
 		logger: logger,
 	}
 
-	logger.Info("Postgres config: %v", "config", config.Postgres)
 	dbURL := newPostgres.GetConnectionString(config)
 
 	sqlx, _ := newPostgres.connect(dbURL)

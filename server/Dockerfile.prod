@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine as builder
+FROM golang:1.25-alpine AS builder
 
 ENV GO111MODULE=on
 
@@ -19,7 +19,7 @@ ENV ENV="prod"
 #Gotta add all the env variables needed and defined in .env 
 
 COPY --from=builder /app/server .
-COPY --from=builder /app/cmd/jobs/migration_controller/migrations ./app/cmd/jobs/migration_controller/migrations
+COPY --from=builder /app/cmd/jobs/migration_controller/migrations ./cmd/jobs/migration_controller/migrations
 
 EXPOSE 3000
 

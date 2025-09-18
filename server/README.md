@@ -36,6 +36,13 @@ But it should be handled by the docker image with jobs and migrations
 https://stackoverflow.com/questions/59847325/how-to-design-a-relational-model-for-double-entry-accounting-with-job-costing
 Accounting setup https://stackoverflow.com/questions/59432964/relational-data-model-for-double-entry-accounting/59465148#59465148
 
+
+# Testing production image
+
+> docker build -f Dockerfile.prod --tag 'next-go-server-prod' .
+
+> docker run --env-file ../development/.env --network=next-go-project-network --detach next-go-server-prod
+
 # Examples accounting Marketplace
 
 - Customer buys 100$

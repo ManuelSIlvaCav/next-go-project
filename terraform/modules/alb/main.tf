@@ -11,7 +11,7 @@ resource "aws_alb" "alb" {
 ## Creates the Target Group for our service
 
 resource "aws_alb_target_group" "service_target_group" {
-  name                 = "${var.service_name}-TargetGroup-${var.environment}"
+  name                 = "${var.service_name}-tg-${var.environment}"
   port                 = var.container_port
   protocol             = "HTTP"
   vpc_id               = var.vpc_id
@@ -19,12 +19,10 @@ resource "aws_alb_target_group" "service_target_group" {
   target_type          = "ip"
 
   health_check {
-       path                  = "/health"
+      path                  = "/health"
       protocol              = "HTTP"
       matcher               = "200"
       port                  = "traffic-port"
-      healthy_threshold     = 2
-      unhealthy_threshold   = 2
       timeout               = 15
       interval              = 30
   }
@@ -59,7 +57,7 @@ resource "aws_security_group" "alb" {
     from_port                   = 443
     to_port                     = 443
     protocol                    = "TCP"
-    description                 = "Allow https inbound traffic from internet"
+    description                 = "Allow https inbound traffic from internet HTTPS"
     cidr_blocks                 = ["0.0.0.0/0"]
     self                        = true
   }
@@ -68,7 +66,7 @@ resource "aws_security_group" "alb" {
     from_port                   = 80
     to_port                     = 80
     protocol                    = "TCP"
-    description                 = "Allow http inbound traffic from internet"
+    description                 = "Allow http inbound traffic from internet HTTP"
     cidr_blocks                 = ["0.0.0.0/0"]
     self                        = true
   }

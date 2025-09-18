@@ -3,7 +3,7 @@ locals {
   environment  = "prod"
   service_name = "next-go-project"
 
-  availability_zone_names = ["eu-west-1a", "eu-west-1b"]
+  availability_zone_names = ["eu-west-1a"]//["eu-west-1a", "eu-west-1b"]
   public_subnets          = ["172.17.0.0/19", "172.17.32.0/19"]
   private_subnets         = ["172.17.96.0/19", "172.17.128.0/19"]
   vpc_cidr                = "172.17.0.0/16"

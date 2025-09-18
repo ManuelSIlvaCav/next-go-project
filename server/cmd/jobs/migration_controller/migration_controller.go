@@ -38,8 +38,9 @@ func (mc *MigrationController) RunMigrations() error {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file:///"+"app/cmd/jobs/migration_controller/migrations/",
-		"postgres", driver)
+		"file://"+"/app/cmd/jobs/migration_controller/migrations/",
+		"postgres",
+		driver)
 
 	if err != nil {
 		logger.Error("Error creating migration instance: ", err)
