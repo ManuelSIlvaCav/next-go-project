@@ -1,10 +1,13 @@
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 
-@custom-variant dark (&:is(.dark *));
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-background: hsl(var(--background));
+  --color-darksecondary: hsl(var(--secondary));
+
   --color-foreground: hsl(var(--foreground));
 
   --color-card: hsl(var(--card));
@@ -19,9 +22,9 @@
 
   --color-primary-foreground: hsl(var(--primary-foreground));
 
-  --color-secondary: #363c7d;
-  --color-secondary-second: #565b99;
-  --color-secondary-third: #8286b7;
+  --color-secondary: #363C7D;
+  --color-secondary-second: #565B99;
+  --color-secondary-third: #8286B7;
 
   --color-complement: #ffb572;
   --color-complement-alt: #ffc997;
@@ -141,7 +144,7 @@
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    --color-secondary: #291c34;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;

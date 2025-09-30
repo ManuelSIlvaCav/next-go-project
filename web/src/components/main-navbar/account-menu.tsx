@@ -1,17 +1,16 @@
 'use client'
 
+import { ColorModeToggle } from '@/components/color-mode-toogle'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ColorModeToggle } from '@/components/color-mode-toogle'
-import { ChevronDown, User, UserCircle, LogIn, UserPlus } from 'lucide-react'
-import { useState } from 'react'
+import { ChevronDown, LogIn, User, UserCircle, UserPlus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false)
@@ -19,10 +18,7 @@ export default function AccountMenu() {
   const router = useRouter()
 
   const handleSignInClick = () => {
-    if (isOpen) {
-      // If dropdown is already open, navigate to login
-      router.push('/login')
-    }
+    router.push('/login')
     setIsOpen(false)
   }
 
@@ -35,21 +31,30 @@ export default function AccountMenu() {
     <>
       {/* Desktop Version */}
       <div className="hidden md:block">
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenu
+          open={isOpen}
+          onOpenChange={(openStatus) => {
+            setIsOpen(openStatus)
+          }}
+        >
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex flex-col items-start text-white h-auto py-1 px-2 hover:bg-primary dark:hover:bg-primary"
+              className="flex flex-col items-start text-white h-auto py-1 px-2 hover:bg-white group dark:hover:bg-primary"
             >
-              <span className="text-xs text-gray-300">Hola, Inicia sesión</span>
+              <span className="text-xs text-gray-300 group-hover:text-primary dark:group-hover:text-white">
+                Hola, Inicia sesión
+              </span>
               <div className="flex items-center space-x-1">
-                <span className="text-sm font-medium text-white">Cuenta</span>
-                <ChevronDown className="h-3 w-3" />
+                <span className="text-sm font-medium text-white group-hover:text-primary dark:group-hover:text-white">
+                  Cuenta
+                </span>
+                <ChevronDown className="h-3 w-3 group-hover:text-primary dark:group-hover:text-white" />
               </div>
             </Button>
           </DropdownMenuTrigger>
-          
-          <DropdownMenuContent 
+
+          <DropdownMenuContent
             className="w-72 bg-white dark:bg-purple-950 border-secondary dark:border-purple-800"
             align="end"
             sideOffset={8}
@@ -59,9 +64,7 @@ export default function AccountMenu() {
           >
             {/* Header */}
             <div className="px-4 py-3 border-b border-gray-200 dark:border-purple-800">
-              <h3 className="text-lg font-bold text-secondary dark:text-white">
-                Mi Cuenta
-              </h3>
+              <h3 className="text-lg font-bold text-secondary dark:text-white">Mi Cuenta</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Inicia sesión para acceder a todas las funciones
               </p>
@@ -69,15 +72,15 @@ export default function AccountMenu() {
 
             {/* Sign In Button */}
             <div className="p-4 space-y-3">
-              <Button 
+              <Button
                 onClick={handleSignInClick}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
               >
                 <LogIn className="h-4 w-4 mr-2" />
                 Iniciar Sesión
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={handleRegisterClick}
                 variant="outline"
                 className="w-full border-primary text-primary hover:bg-primary hover:text-white font-medium py-2.5 rounded-lg transition-colors"
@@ -92,9 +95,7 @@ export default function AccountMenu() {
             {/* Settings */}
             <div className="p-4">
               <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-purple-900/50 border border-gray-200 dark:border-purple-800">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Tema
-                </span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
                 <ColorModeToggle />
               </div>
             </div>
@@ -106,34 +107,34 @@ export default function AccountMenu() {
       <div className="block md:hidden">
         <DropdownMenu open={isMobileOpen} onOpenChange={setIsMobileOpen}>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="text-white hover:bg-secondary [&_svg]:size-8 relative overflow-hidden "
             >
               <div className="relative">
                 {/* User icon with fade out animation when open */}
-                <User 
+                <User
                   className={`transition-all duration-300 ease-in-out ${
-                    isMobileOpen 
-                      ? 'opacity-0 scale-75 rotate-180' 
+                    isMobileOpen
+                      ? 'opacity-0 scale-75 rotate-180'
                       : 'opacity-100 scale-100 rotate-0'
                   }`}
                 />
-                
+
                 {/* UserCircle icon with fade in animation when open */}
-                <UserCircle 
+                <UserCircle
                   className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-                    isMobileOpen 
-                      ? 'opacity-100 scale-100 rotate-0' 
+                    isMobileOpen
+                      ? 'opacity-100 scale-100 rotate-0'
                       : 'opacity-0 scale-75 rotate-180'
                   }`}
                 />
               </div>
             </Button>
           </DropdownMenuTrigger>
-          
-          <DropdownMenuContent 
+
+          <DropdownMenuContent
             className="w-72 bg-white dark:bg-purple-950 border-secondary dark:border-purple-800"
             align="end"
             sideOffset={8}
@@ -142,9 +143,7 @@ export default function AccountMenu() {
           >
             {/* Header */}
             <div className="px-4 py-3 border-b border-gray-200 dark:border-purple-800">
-              <h3 className="text-lg font-bold text-secondary dark:text-white">
-                Mi Cuenta
-              </h3>
+              <h3 className="text-lg font-bold text-secondary dark:text-white">Mi Cuenta</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Inicia sesión para acceder a todas las funciones
               </p>
@@ -152,7 +151,7 @@ export default function AccountMenu() {
 
             {/* Sign In Button */}
             <div className="p-4 space-y-3">
-              <Button 
+              <Button
                 onClick={() => {
                   router.push('/login')
                   setIsMobileOpen(false)
@@ -162,8 +161,8 @@ export default function AccountMenu() {
                 <LogIn className="h-4 w-4 mr-2" />
                 Iniciar Sesión
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={() => {
                   router.push('/register')
                   setIsMobileOpen(false)
@@ -181,9 +180,7 @@ export default function AccountMenu() {
             {/* Settings */}
             <div className="p-4">
               <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-purple-900/50 border border-gray-200 dark:border-purple-800">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Tema
-                </span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
                 <ColorModeToggle />
               </div>
             </div>

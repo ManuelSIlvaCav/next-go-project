@@ -1,8 +1,10 @@
 package migration_controller
 
 import (
+	"context"
 	"database/sql"
 
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -11,11 +13,15 @@ import (
 )
 
 type MigrationController struct {
-	Container *container.Container
+	Container  *container.Container
+	AuthModule auth.IAuthModule
 }
 
-func NewMigrationController(container *container.Container) *MigrationController {
-	return &MigrationController{Container: container}
+func NewMigrationController(
+	container *container.Container,
+	authModule auth.IAuthModule,
+) *MigrationController {
+	return &MigrationController{Container: container, AuthModule: authModule}
 }
 
 func (mc *MigrationController) RunMigrations() error {
@@ -56,6 +62,37 @@ func (mc *MigrationController) RunMigrations() error {
 		return err
 	}
 
+	logger.Info("Migrations applied successfully")
+
+	// Create startup admin after migrations are complete
+	if err := mc.CreateStartupAdmin(); err != nil {
+		logger.Error("Error creating startup admin: ", err)
+		return err
+	}
+
 	return nil
 
+}
+
+func (mc *MigrationController) CreateStartupAdmin() error {
+	logger := mc.Container.Logger()
+	ctx := context.Background()
+
+	authService := mc.AuthModule.GetService()
+
+	// Create startup admin with predefined credentials
+	adminEmail := "admin@gmail.com"
+	adminPassword := "RootPassword!"
+
+	admin, err := authService.CreateStartupAdmin(ctx, adminEmail, adminPassword)
+	if err != nil {
+		logger.Error("Failed to create startup admin", "error", err)
+		return err
+	}
+
+	if admin != nil {
+		logger.Info("Startup admin ensured", "admin_id", admin.ID, "email", admin.Email)
+	}
+
+	return nil
 }

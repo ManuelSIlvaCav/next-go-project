@@ -28,21 +28,37 @@ type ScheduledJob struct {
 }
 
 const (
-	AdminNotFoundError    = 3001
-	MagicLinkExpiredError = 3002
-	PolicyFormatError     = 4000
+	AdminNotFoundError      = 3001
+	MagicLinkExpiredError   = 3002
+	InvalidCredentialsError = 3003
+	PolicyFormatError       = 4000
+	UserNotFoundError       = 5001
+	UserAlreadyExistsError  = 5002
+	UserCreationError       = 5003
+	BusinessForeignKeyError = 6001
+	BusinessCreateError     = 6002
 )
 
 var ErrorCodesMessage = map[int]string{
 	3001: "Admin not found",
 	3002: "Login code has expired",
+	3003: "Invalid credentials",
 	4000: "Invalid policy format",
+	5001: "User not found",
+	5002: "User already exists",
+	5003: "Error creating user",
+	6001: "Business not found",
+	6002: "Error creating business",
 }
 
 type HandlerError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 	error
+}
+
+func (he *HandlerError) Error() string {
+	return fmt.Sprintf("Handler error, Code: %d, Message: %s", he.Code, he.Message)
 }
 
 func NewErrorWithCode(code int) *HandlerError {

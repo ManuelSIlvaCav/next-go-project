@@ -5,3 +5,11 @@ export { default as MobileNavigation } from './mobile-navigation'
 export { default as NavigationTitle } from './navigation-title'
 export * from './types'
 export * from './data'
+export type { 
+  ApiCategory, 
+  CategoriesApiResponse, 
+  NavigationCategory, 
+  MainNavigationCategory 
+} from './api-types'
+export { fetchCategories, transformApiCategoriesToNavigation } from './api'
+export { useCategories } from './hooks'

@@ -5,6 +5,7 @@ import (
 	accounting_handlers "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/accounting/handlers"
 	accounting_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/accounting/repositories"
 	accounting_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/accounting/services"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/router"
 	"go.uber.org/fx"
@@ -13,13 +14,13 @@ import (
 type AccountingModule struct {
 	container         *container.Container
 	router            *router.Router
-	authModule        interfaces.AuthModule
+	authModule        auth.IAuthModule
 	accountingService *accounting_services.AccountingService
 }
 
 func NewAccountingModule(container *container.Container,
 	router *router.Router,
-	authModule interfaces.AuthModule) *AccountingModule {
+	authModule auth.IAuthModule) *AccountingModule {
 
 	accountingService := accounting_services.NewAccountingService(
 		accounting_repositories.NewTransactionsRepository(container),

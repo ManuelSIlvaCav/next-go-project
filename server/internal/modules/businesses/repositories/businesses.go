@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 
+	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
 	businesses_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/models"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/utils"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -24,7 +26,7 @@ func NewBusinessRepository(container *container.Container) *BusinessRepository {
 }
 
 func (r *BusinessRepository) CreateBusiness(ctx context.Context,
-	business *businesses_models.CreateBusinessParams) (*businesses_models.Business, error) {
+	business *businesses_models.CreateBusinessParams) (*businesses_models.Business, *internal_models.HandlerError) {
 
 	newBusiness := &businesses_models.Business{
 		Name:       business.Name,
@@ -43,7 +45,8 @@ func (r *BusinessRepository) CreateBusiness(ctx context.Context,
 		newBusiness.IsActive,
 		newBusiness.IsAdmin,
 	).Scan(&newBusiness.ID); err != nil {
-		return nil, err
+
+		return nil, internal_models.NewErrorWithCode(internal_models.BusinessForeignKeyError)
 	}
 
 	return newBusiness, nil
@@ -51,7 +54,9 @@ func (r *BusinessRepository) CreateBusiness(ctx context.Context,
 
 /* Business User Related */
 
-func (r *BusinessRepository) GetBusinessUser(ctx context.Context, params *businesses_models.GetBusinessUserParams) (*businesses_models.BusinessUser, error) {
+func (r *BusinessRepository) GetBusinessUser(
+	ctx context.Context,
+	params *businesses_models.GetBusinessUserParams) (*businesses_models.BusinessUser, error) {
 	logger := r.container.Logger()
 
 	user := &businesses_models.BusinessUser{}
@@ -74,18 +79,20 @@ func (r *BusinessRepository) GetBusinessUser(ctx context.Context, params *busine
 
 func (r *BusinessRepository) CreateBusinessUser(ctx context.Context,
 	user *businesses_models.CreateBusinessUserParams,
-) (*businesses_models.BusinessUser, error) {
+) (*businesses_models.BusinessUser, *internal_models.HandlerError) {
 	logger := r.container.Logger()
 
 	businessUser := &businesses_models.BusinessUser{
-		BusinessID: user.BusinessID,
-		Email:      user.Email,
-		FirstName:  user.FirstName,
-		LastName:   user.LastName,
-		Phone:      user.Phone,
+		BusinessID:   user.BusinessID,
+		Email:        user.Email,
+		FirstName:    user.FirstName,
+		LastName:     user.LastName,
+		Phone:        user.Phone,
+		PasswordHash: user.PasswordHash, // Assume the password is already hashed
 	}
 
-	query := `INSERT INTO businesses_users (business_id, first_name, last_name, email, phone) VALUES ($1, $2, $3, $4, $5) RETURNING id`
+	query := `INSERT INTO businesses_users (business_id, first_name, last_name, email, phone, password_hash) 
+	VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
 
 	if err := r.container.DB().Db.QueryRowContext(ctx, query,
 		businessUser.BusinessID,
@@ -93,9 +100,15 @@ func (r *BusinessRepository) CreateBusinessUser(ctx context.Context,
 		user.LastName,
 		user.Email,
 		user.Phone,
+		user.PasswordHash,
 	).Scan(&businessUser.ID); err != nil {
-		logger.Error("Error creating business user", "error", err, "user", user)
-		return nil, err
+		pqErr := err.(*pgconn.PgError)
+		logger.Error("Error CreateBusinessUser ", "pqErr", pqErr, "error", err, "user", user)
+
+		if pqErr.Code == "23503" {
+			return nil, internal_models.NewErrorWithCode(internal_models.BusinessForeignKeyError)
+		}
+		return nil, internal_models.NewErrorWithCode(internal_models.UserCreationError)
 	}
 
 	return businessUser, nil

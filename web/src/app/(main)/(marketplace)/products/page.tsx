@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import MobileSidebarNavigation from './MobileSidebarNavigation'
+import PetNavigationMenu from '@/components/pet-navigation-menu/pet-navigation-menu'
 
 import ProductsFilter from './ProductListingsComponent/ProductsFilter'
 import ProductsListings from './ProductListingsComponent/ProductsListings'
@@ -55,22 +56,15 @@ export default function MarketplaceProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 overflow-x-hidden">
-      {/* Desktop Navigation Menu */}
-      <div>
-        <div className="bg-white dark:bg-zinc-900 shadow-xs md:hidden">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-between h-16">
-              {/* Logo */}
-              <div className="flex items-center space-x-4">
-                <MobileSidebarNavigation />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* Pet Navigation Menu - Only for products/shop page */}
+      <PetNavigationMenu />
+      
       {/* Content Section */}
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
+        {/* Mobile Sidebar Navigation - Only visible on mobile and only on shop page */}
+        <div className="md:hidden mb-4">
+          <MobileSidebarNavigation />
+        </div>
         {/* Main Content Layout: Filters + Products */}
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Filters Sidebar */}

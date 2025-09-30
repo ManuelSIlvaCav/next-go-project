@@ -15,10 +15,6 @@ func CreateCategory(
 	return func(c echo.Context) error {
 		logger := container.Logger()
 
-		logger.Info(
-			"Create category handler", "path", c.Path(), "method",
-			c.Request().Method)
-
 		params := listings_models.CreateCategoryParams{}
 
 		if err := c.Bind(&params); err != nil {
@@ -31,13 +27,14 @@ func CreateCategory(
 		newCategoryDTO := listings_models.CategoryDTO{
 			ID:          category.ID,
 			Name:        category.Name,
+			Slug:        category.Slug,
 			Description: category.Description.String,
 			CreatedAt:   category.CreatedAt,
 			UpdatedAt:   category.UpdatedAt,
 			DeletedAt:   nil,
 			ParentID:    category.ParentID.String,
 			Parent:      nil,
-			ChildrenID:  nil,
+			ChildrenIDs: nil,
 			Children:    nil,
 		}
 

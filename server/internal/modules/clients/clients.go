@@ -3,6 +3,7 @@ package clients
 import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
 	internal_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/models"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	client_jobs "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/jobs"
 	clients_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/repositories"
 	client_tasks "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/tasks"
@@ -21,10 +22,11 @@ type ClientModule struct {
 
 type ClientsModuleParams struct {
 	fx.In
-	Container   *container.Container
-	Router      *router.Router
-	AuthModule  interfaces.AuthModule
-	FilesModule *files.FilesModule
+	Container        *container.Container
+	Router           *router.Router
+	AuthModule       auth.IAuthModule
+	FilesModule      *files.FilesModule
+	ClientRepository *clients_repositories.ClientRepository
 }
 
 func NewClientModule(params ClientsModuleParams) *ClientModule {
@@ -41,9 +43,10 @@ func NewClientModule(params ClientsModuleParams) *ClientModule {
 	) */
 
 	clientsModule := &ClientModule{
-		container:   params.Container,
-		filesModule: params.FilesModule,
-		router:      params.Router,
+		container:        params.Container,
+		filesModule:      params.FilesModule,
+		router:           params.Router,
+		clientRepository: params.ClientRepository,
 	}
 
 	return clientsModule

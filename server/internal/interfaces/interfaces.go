@@ -5,21 +5,19 @@ import (
 	businesses_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	clients_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/clients/repositories"
 	insurance_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance/repositories"
+	pets_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/pets/repositories"
+	pets_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/pets/services"
 
 	emails_service "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/services"
-	"github.com/labstack/echo/v4"
 )
-
-type AuthModule interface {
-	AuthMiddleware() echo.MiddlewareFunc
-	SetModules(businessModule BusinessModule)
-}
 
 type EmailModule interface {
 	GetEmailService() *emails_service.EmailService
 }
 
 type PetsModule interface {
+	GetPetRepository() *pets_repositories.PetRepository
+	GetPetService() *pets_services.PetService
 }
 
 type BookingsModule interface {

@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
+import QueryProvider from '@/components/providers/query-provider'
 import clsx from 'clsx'
 import type { Metadata } from 'next'
 import '../globals.css'
@@ -23,16 +24,18 @@ export default function RootLayout({
       className={`antialiased` + clsx(latto.variable, fredoka.variable)}
     >
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {/* <NavBar /> */}
-          <InnerClientInit>{children}</InnerClientInit>
-          <Toaster />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* <NavBar /> */}
+            <InnerClientInit>{children}</InnerClientInit>
+            <Toaster richColors expand={true} />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   )

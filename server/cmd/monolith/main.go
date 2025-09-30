@@ -46,7 +46,7 @@ func registerHooks(
 			/* Server start */
 			config := container.Config()
 			go func() {
-				logger.Info(fmt.Sprintf("Server started on :%d asd", config.Port))
+				logger.Info(fmt.Sprintf("Server started on :%d V2", config.Port))
 
 				if err := e.Start(fmt.Sprintf(":%d",
 					config.Port)); err != nil && err != http.ErrServerClosed {

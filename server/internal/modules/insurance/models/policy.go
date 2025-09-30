@@ -15,15 +15,15 @@ type PolicyCreateParams struct {
 }
 
 type PolicyVariant struct {
-	ID          string    `json:"id" db:"id"`
-	PolicyID    string    `json:"policy_id" db:"policy_id"`
-	DisplayName string    `json:"display_name" db:"display_name"`
-	Excess      float64   `json:"excess" db:"excess"`
-	Copay       float64   `json:"copay" db:"copay"`
-	PayoutLimit float64   `json:"payout_limit" db:"payout_limit"`
-	Currency    string    `json:"currency" db:"currency"`
-	CreatedAt   time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
+	ID          string     `json:"id" db:"id"`
+	PolicyID    string     `json:"policy_id" db:"policy_id"`
+	DisplayName string     `json:"display_name" db:"display_name"`
+	Excess      float64    `json:"excess" db:"excess"`
+	Copay       float64    `json:"copay" db:"copay"`
+	PayoutLimit float64    `json:"payout_limit" db:"payout_limit"`
+	Currency    string     `json:"currency" db:"currency"`
+	CreatedAt   *time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at" db:"updated_at"`
 }
 
 type PolicyVariantCreateParams struct {

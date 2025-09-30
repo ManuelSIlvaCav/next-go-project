@@ -3,7 +3,6 @@ package businesses_handlers
 import (
 	"net/http"
 
-	"github.com/ManuelSIlvaCav/next-go-project/server/internal/jobs/tasks"
 	businesses_models "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/models"
 	businesses "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
@@ -27,26 +26,6 @@ func CreateBusinessUserHandler(container *container.Container, businessRepositor
 			logger.Error("Failed to create business user", "error", err)
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Internal Server Error"})
 		}
-
-		jobClient := container.JobTasker().JobClient()
-
-		/* Emit event */
-		task, err := tasks.NewEventsTask(
-			"user_created",
-			businessUsers,
-		)
-
-		if err != nil {
-			logger.Error("could not create task", "error", err)
-		}
-
-		info, err := jobClient.Enqueue(task)
-
-		if err != nil {
-			logger.Error("could not enqueue task", "error", err)
-		}
-
-		logger.Info("Task enqueued", "taskId", info.ID, "queue", info.Queue)
 
 		return c.JSON(http.StatusCreated, echo.Map{"message": "Business users created", "data": businessUsers})
 

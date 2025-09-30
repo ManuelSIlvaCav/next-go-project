@@ -29,25 +29,6 @@ func CreatePolicyHandler(container *container.Container, policyRepository *insur
 			})
 		}
 
-		/* jobClient := container.JobTasker().JobClient()
-
-		task, err := tasks.NewEventsTask(
-			"policy_created",
-			policy,
-		)
-
-		if err != nil {
-			logger.Error("could not create task", "error", err)
-		}
-
-		info, err := jobClient.Enqueue(task)
-
-		if err != nil {
-			logger.Error("could not enqueue task", "error", err)
-		}
-
-		logger.Info("Task enqueued", "taskId", info.ID, "queue", info.Queue) */
-
 		return c.JSON(http.StatusCreated, echo.Map{"message": "Policy created", "data": policy})
 
 	}

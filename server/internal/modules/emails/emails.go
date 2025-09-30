@@ -2,6 +2,7 @@ package emails
 
 import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	emails "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/handlers"
 	emails_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/repositories"
@@ -19,7 +20,7 @@ type EmailsModule struct {
 	EmailTemplateRepository *emails_repositories.EmailTemplateRepository
 	container               *container.Container
 	router                  *router.Router
-	authModule              interfaces.AuthModule
+	authModule              auth.IAuthModule
 }
 
 type EmailsModuleParams struct {
@@ -28,7 +29,7 @@ type EmailsModuleParams struct {
 	EmailService            *emails_service.EmailService
 	EmailTemplateRepository *emails_repositories.EmailTemplateRepository
 	Router                  *router.Router
-	AuthModule              interfaces.AuthModule
+	AuthModule              auth.IAuthModule
 }
 
 func NewEmailsModule(params EmailsModuleParams) *EmailsModule {

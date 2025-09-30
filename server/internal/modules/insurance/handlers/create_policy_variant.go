@@ -27,25 +27,6 @@ func CreatePolicyVariantHandler(container *container.Container, policyRepository
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Internal Server Error"})
 		}
 
-		/* jobClient := container.JobTasker().JobClient()
-
-		task, err := tasks.NewEventsTask(
-			"policy_variant_created",
-			policyVariant,
-		)
-
-		if err != nil {
-			logger.Error("could not create task", "error", err)
-		}
-
-		info, err := jobClient.Enqueue(task)
-
-		if err != nil {
-			logger.Error("could not enqueue task", "error", err)
-		}
-
-		logger.Info("Task enqueued", "taskId", info.ID, "queue", info.Queue) */
-
 		return c.JSON(http.StatusCreated, echo.Map{"message": "Policy variant created", "data": policyVariant})
 
 	}

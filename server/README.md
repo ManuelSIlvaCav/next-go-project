@@ -36,12 +36,34 @@ But it should be handled by the docker image with jobs and migrations
 https://stackoverflow.com/questions/59847325/how-to-design-a-relational-model-for-double-entry-accounting-with-job-costing
 Accounting setup https://stackoverflow.com/questions/59432964/relational-data-model-for-double-entry-accounting/59465148#59465148
 
-
 # Testing production image
 
 > docker build -f Dockerfile.prod --tag 'next-go-server-prod' .
 
 > docker run --env-file ../development/.env --network=next-go-project-network --detach next-go-server-prod
+
+# Schemas
+
+- Clients (general clients for marketplace whitelabel) - If business Petza, they access marketplace, others is ecommerce
+- Business (Entity representing a business on the marketplace)
+- BusinessUsers (Entity for users that can access a particular business)
+- Admins (For employee they can access everything)
+
+# Bookings
+
+- BookableObjectType
+- BookableObject (diff services)
+  - ID
+  - BookableObjectTypeID
+  -
+  - BookingType
+- BookingType (single day, range)
+- Service1
+  - BookableObjectID
+  - AnyParticular
+- Service2
+  - BookableObjectID
+  - Any
 
 # Examples accounting Marketplace
 

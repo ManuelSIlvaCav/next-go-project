@@ -43,7 +43,7 @@ CREATE TABLE ins_quote_insurable_obj (
 
 CREATE TABLE ins_insurable_objs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    client_id INT REFERENCES clients(id) ON DELETE CASCADE,
+    client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
     insurable_obj_type VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

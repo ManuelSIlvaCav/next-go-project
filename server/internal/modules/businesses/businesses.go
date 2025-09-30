@@ -2,6 +2,7 @@ package businesses
 
 import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	businesses_handlers "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/handlers"
 	businesses "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/repositories"
 	businesses_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/businesses/services"
@@ -16,7 +17,7 @@ type BusinessesModule struct {
 	container            *container.Container
 	DomainService        *businesses_services.DomainService
 	router               *router.Router
-	authModule           interfaces.AuthModule
+	authModule           auth.IAuthModule
 }
 
 type BusinessModuleParams struct {
@@ -25,7 +26,7 @@ type BusinessModuleParams struct {
 	BusinessesRepository *businesses.BusinessRepository
 	DomainService        *businesses_services.DomainService
 	Router               *router.Router
-	AuthModule           interfaces.AuthModule
+	AuthModule           auth.IAuthModule
 }
 
 func NewBusinessesModule(params BusinessModuleParams) *BusinessesModule {

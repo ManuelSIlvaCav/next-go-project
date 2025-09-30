@@ -2,6 +2,7 @@ package scrapper
 
 import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	services_pet_vet "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/scrapper/services/pet_vet"
 
@@ -13,14 +14,14 @@ import (
 type ScrapperModule struct {
 	container  *container.Container
 	router     *router.Router
-	authModule interfaces.AuthModule
+	authModule auth.IAuthModule
 }
 
 type ScrapperModuleParams struct {
 	fx.In
 	Container  *container.Container
 	Router     *router.Router
-	AuthModule interfaces.AuthModule
+	AuthModule auth.IAuthModule
 }
 
 func NewScrapperModule(
@@ -52,7 +53,7 @@ func (l *ScrapperModule) SetRoutes() {
 				return c.JSON(500, echo.Map{"error": "Failed to scrape data"})
 			}
 			return c.JSON(200, echo.Map{"message": "Scraping completed successfully"})
-			
+
 		})
 
 }

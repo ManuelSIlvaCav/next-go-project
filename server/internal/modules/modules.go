@@ -11,6 +11,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/files"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/pets"
 	"go.uber.org/fx"
 )
 
@@ -18,12 +19,13 @@ type InternalModule struct {
 	Container        *container.Container
 	FilesModule      *files.FilesModule
 	BusinessesModule interfaces.BusinessModule
-	AuthModule       interfaces.AuthModule
+	AuthModule       auth.IAuthModule
 	EmailsModule     interfaces.EmailModule
 	ListingModule    interfaces.ListingsModule
 	AccountingModule interfaces.AccountingModule
 	InsuranceModule  interfaces.InsuranceModule
 	ClientsModule    interfaces.ClientsModule
+	PetsModule       interfaces.PetsModule
 }
 
 type AllModulesParams struct {
@@ -31,12 +33,13 @@ type AllModulesParams struct {
 	Container        *container.Container
 	FilesModule      *files.FilesModule
 	BusinessesModule interfaces.BusinessModule
-	AuthModule       interfaces.AuthModule
+	AuthModule       auth.IAuthModule
 	EmailsModule     interfaces.EmailModule
 	ListingModule    interfaces.ListingsModule
 	AccountingModule interfaces.AccountingModule
 	InsuranceModule  interfaces.InsuranceModule
 	ClientsModule    interfaces.ClientsModule
+	PetsModule       interfaces.PetsModule
 }
 
 func NewInternalModule(
@@ -53,6 +56,7 @@ func NewInternalModule(
 		AccountingModule: params.AccountingModule,
 		InsuranceModule:  params.InsuranceModule,
 		ClientsModule:    params.ClientsModule,
+		PetsModule:       params.PetsModule,
 	}
 }
 
@@ -66,5 +70,6 @@ var Module = fx.Options(
 	businesses.Module,
 	accounting.Module,
 	insurance.Module,
+	pets.Module,
 	fx.Provide(NewInternalModule),
 )

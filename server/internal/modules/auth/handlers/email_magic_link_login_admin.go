@@ -62,7 +62,6 @@ func MagicLinkAdminLogin(
 		}
 
 		jwtParams := auth_jwt.CreateJwtTokenParams{
-			UserID:  admin.ID,
 			AdminID: admin.ID,
 		}
 

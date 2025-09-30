@@ -1,15 +1,16 @@
 package businesses_models
 
 type CreateBusinessUserParams struct {
-	BusinessID string `json:"business_id" param:"id"`
-	FirstName  string `json:"first_name"`
-	LastName   string `json:"last_name"`
-	Email      string `json:"email"`
-	Phone      string `json:"phone"`
+	BusinessID   int64  `json:"business_id" param:"id"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Email        string `json:"email"`
+	Phone        string `json:"phone"`
+	PasswordHash string `json:"password_hash"`
 }
 
 type UpdateBusinessSettingsParams struct {
-	BusinessID string `json:"business_id" param:"id"`
+	BusinessID int64  `json:"business_id" param:"id"`
 	Subdomain  string `json:"subdomain"`
 }
 
@@ -19,18 +20,19 @@ type GetBusinessUserParams struct {
 }
 
 type GetBusinessUsersParams struct {
-	Limit      int    `json:"limit" query:"limit"`
-	Cursor     int    `json:"cursor" query:"cursor"`
-	BusinessID string `json:"business_id" param:"id"`
+	Limit      int   `json:"limit" query:"limit"`
+	Cursor     int   `json:"cursor" query:"cursor"`
+	BusinessID int64 `json:"business_id" param:"id"`
 }
 
 type BusinessUser struct {
-	ID         string `json:"id" db:"id"`
-	BusinessID string `json:"business_id" db:"business_id"`
-	FirstName  string `json:"first_name" db:"first_name"`
-	LastName   string `json:"last_name" db:"last_name"`
-	Email      string `json:"email" db:"email"`
-	Phone      string `json:"phone" db:"phone"`
+	ID           string `json:"id" db:"id"`
+	BusinessID   int64  `json:"business_id" db:"business_id"`
+	FirstName    string `json:"first_name" db:"first_name"`
+	LastName     string `json:"last_name" db:"last_name"`
+	Email        string `json:"email" db:"email"`
+	PasswordHash string `json:"-" db:"password_hash"`
+	Phone        string `json:"phone" db:"phone"`
 }
 
 type Role struct {

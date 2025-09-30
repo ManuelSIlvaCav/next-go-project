@@ -2,6 +2,7 @@ package insurance
 
 import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/interfaces"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/auth"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/container"
 	insurance_handlers "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance/handlers"
 	insurance_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance/repositories"
@@ -19,7 +20,7 @@ type InsuranceModuleParams struct {
 	fx.In
 	Container  *container.Container
 	Router     *router.Router
-	AuthModule interfaces.AuthModule
+	AuthModule auth.IAuthModule
 }
 
 func NewInsuranceModule(params InsuranceModuleParams) *InsuranceModule {

@@ -17,8 +17,9 @@ type JwtCustomClaims struct {
 }
 
 type CreateJwtTokenParams struct {
-	UserID  string
-	AdminID string
+	ClientID   string
+	BusinessID int64
+	AdminID    string
 }
 
 func GetJWTConfig() echojwt.Config {
@@ -33,6 +34,8 @@ func GetJWTConfig() echojwt.Config {
 			/* Skip these */
 			if c.Path() == "/health" ||
 				c.Path() == "/api/v1/auth/login" ||
+				c.Path() == "/api/v1/auth/register" ||
+				c.Path() == "/api/v1/admin/login" ||
 				//c.Path() == "/api/v1/businesses" ||
 				c.Path() == "/api/v1/auth/magic-link-login" ||
 				c.Path() == "/api/v1/auth/magic-link-login/admin" {
@@ -56,7 +59,9 @@ func CreateJwtToken(
 	// Set custom claims
 	claims := &JwtCustomClaims{
 		auth_models.JWTData{
-			BusinessUserID: jwtParams.UserID,
+			ClientID:   jwtParams.ClientID,
+			BusinessID: jwtParams.BusinessID,
+			AdminID:    jwtParams.AdminID,
 		},
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)), // 1 week duration
@@ -82,14 +87,13 @@ func CreateJwtToken(
 }
 
 func GetJWTData(c echo.Context) auth_models.JWTData {
-	user := c.Get("user").(*jwt.Token)
+	jwt := c.Get("jwt").(*jwt.Token)
 
-	claims := user.Claims.(*JwtCustomClaims)
-	name := claims.Name
-	businessUserID := claims.BusinessUserID
+	claims := jwt.Claims.(*JwtCustomClaims)
 
 	return auth_models.JWTData{
-		Name:           name,
-		BusinessUserID: businessUserID,
+		ClientID:       claims.ClientID,
+		BusinessID:     claims.BusinessID,
+		BusinessUserID: claims.BusinessUserID,
 	}
 }

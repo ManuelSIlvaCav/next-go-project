@@ -54,7 +54,7 @@ func MagicLinkLogin(
 
 		/* Now we get the information of the desired User */
 		businessRepository := businesModule.GetBusinessRepository()
-		businessUser, err := businessRepository.GetBusinessUser(c.Request().Context(), &businesses_models.GetBusinessUserParams{Email: params.Email})
+		_, err := businessRepository.GetBusinessUser(c.Request().Context(), &businesses_models.GetBusinessUserParams{Email: params.Email})
 
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, echo.Map{
@@ -62,9 +62,7 @@ func MagicLinkLogin(
 			})
 		}
 
-		jwtParams := auth_jwt.CreateJwtTokenParams{
-			UserID: businessUser.ID,
-		}
+		jwtParams := auth_jwt.CreateJwtTokenParams{}
 
 		// Create token
 		data, err := auth_jwt.CreateJwtToken(jwtParams)
