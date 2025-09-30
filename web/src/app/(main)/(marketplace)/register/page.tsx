@@ -21,7 +21,7 @@ interface PetFormData {
 export default function RegistrationPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [userFormData, setUserFormData] = useState<UserFormData | null>(null)
-  const [petFormData, _] = useState<PetFormData | null>(null)
+  const [petFormData] = useState<PetFormData | null>(null)
 
   const handleUserNext = (userData: UserFormData) => {
     setUserFormData(userData)
