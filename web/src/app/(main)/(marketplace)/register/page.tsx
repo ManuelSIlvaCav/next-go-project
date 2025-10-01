@@ -4,7 +4,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CreatePetResponse } from '@/lib/api/pets'
 import { CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
-import { PetSignup, UserSignup } from './components'
+import PetSignup from './pet-signup'
+import UserSignup from './user-signup'
 
 interface UserFormData {
   email: string

@@ -35,6 +35,8 @@ func GetJWTConfig() echojwt.Config {
 			if c.Path() == "/health" ||
 				c.Path() == "/api/v1/auth/login" ||
 				c.Path() == "/api/v1/auth/register" ||
+				c.Path() == "/api/v1/auth/clients/register" ||
+				c.Path() == "/api/v1/auth/clients/login" ||
 				c.Path() == "/api/v1/admin/login" ||
 				//c.Path() == "/api/v1/businesses" ||
 				c.Path() == "/api/v1/auth/magic-link-login" ||
@@ -96,4 +98,29 @@ func GetJWTData(c echo.Context) auth_models.JWTData {
 		BusinessID:     claims.BusinessID,
 		BusinessUserID: claims.BusinessUserID,
 	}
+}
+
+// CreateClientJWTResponse creates a JWT token for a client and returns the response map
+func CreateClientJWTResponse(clientID string, businessID int64, email, firstName, lastName string) (*echo.Map, error) {
+	jwtParams := CreateJwtTokenParams{
+		ClientID:   clientID,
+		BusinessID: businessID,
+	}
+
+	data, jwtErr := CreateJwtToken(jwtParams)
+	if jwtErr != nil {
+		return nil, jwtErr
+	}
+
+	return &echo.Map{
+		"access_token": data.AccessToken,
+		"expires_at":   data.ExpiresAt,
+		"client": echo.Map{
+			"id":          clientID,
+			"email":       email,
+			"first_name":  firstName,
+			"last_name":   lastName,
+			"business_id": businessID,
+		},
+	}, nil
 }

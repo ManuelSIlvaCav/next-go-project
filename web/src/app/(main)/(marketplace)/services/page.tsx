@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import MobileFiltersDrawer from './mobile-filters-drawer'
 import { mockServiceProviders } from './mock-data'
@@ -15,6 +16,8 @@ export default function ServicesPage() {
   const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>([])
   const [currentSort, setCurrentSort] = useState<string>('recommended')
   const [currentPage, setCurrentPage] = useState(1)
+
+  const t = useTranslations('ServicesPage')
 
   const maxPrice = 150
 
@@ -134,7 +137,7 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              Pet Care Services
+              {t('title')}
             </h1>
             <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400">
               Find trusted pet care professionals in your area

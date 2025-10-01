@@ -56,6 +56,12 @@ type (
 		LastName        string `json:"last_name" `
 		Phone           string `json:"phone"`
 	}
+
+	LoginClientParams struct {
+		BusinessID int64  `json:"business_id"`
+		Email      string `json:"email"`
+		Password   string `json:"password"`
+	}
 )
 
 func (params RegisterClientParams) Validate() error {
@@ -71,6 +77,14 @@ func (params RegisterClientParams) Validate() error {
 		})),
 		validation.Field(&params.FirstName, validation.Length(5, 50)),
 		validation.Field(&params.LastName, validation.Length(5, 50)),
+	)
+}
+
+func (params LoginClientParams) Validate() error {
+	return validation.ValidateStruct(&params,
+		validation.Field(&params.BusinessID, validation.Required.Error("business_id is required")),
+		validation.Field(&params.Email, validation.Required.Error("email is required"), is.Email),
+		validation.Field(&params.Password, validation.Required.Error("password is required")),
 	)
 }
 
@@ -172,13 +186,24 @@ func (s *AuthService) RegisterClient(
 		return nil, internal_models.NewErrorWithCode(internal_models.UserAlreadyExistsError)
 	}
 
+	// Hash the password
+	hashedPassword, hashErr := auth_utils.HashPassword(params.Password)
+	if hashErr != nil {
+		logger.Error("Error hashing password", "error", hashErr)
+		return nil, &internal_models.HandlerError{
+			Code:    internal_models.UserCreationError,
+			Message: "could not hash password",
+		}
+	}
+
 	// Create client
 	client, handlerError := s.clientsModule.GetClientRepository().CreateClient(ctx, &clients_models.CreateClientParams{
-		BusinessID: params.BusinessID,
-		FirstName:  params.FirstName,
-		LastName:   params.LastName,
-		Email:      params.Email,
-		Phone:      params.Phone,
+		BusinessID:   params.BusinessID,
+		FirstName:    params.FirstName,
+		LastName:     params.LastName,
+		Email:        params.Email,
+		Phone:        params.Phone,
+		PasswordHash: hashedPassword,
 	})
 
 	if handlerError != nil {
@@ -187,5 +212,36 @@ func (s *AuthService) RegisterClient(
 	}
 
 	logger.Info("Client registered successfully", "client_id", client.ID, "email", params.Email)
+	return client, nil
+}
+
+func (s *AuthService) LoginClient(
+	ctx context.Context,
+	params LoginClientParams,
+) (*clients_models.Client, *internal_models.HandlerError) {
+	logger := s.container.Logger()
+
+	logger.Info("Logging in client", "email", params.Email, "business_id", params.BusinessID)
+
+	// Get client by email
+	client, err := s.clientsModule.GetClientRepository().GetClientByEmail(ctx, params.Email, params.BusinessID)
+	if err != nil {
+		logger.Error("Client not found", "email", params.Email, "business_id", params.BusinessID, "error", err)
+		return nil, &internal_models.HandlerError{
+			Code:    internal_models.InvalidCredentialsError,
+			Message: "invalid email or password",
+		}
+	}
+
+	// Verify password
+	if !auth_utils.VerifyPassword(params.Password, client.PasswordHash) {
+		logger.Error("Invalid password", "email", params.Email, "business_id", params.BusinessID)
+		return nil, &internal_models.HandlerError{
+			Code:    internal_models.InvalidCredentialsError,
+			Message: "invalid email or password",
+		}
+	}
+
+	logger.Info("Client logged in successfully", "client_id", client.ID, "email", params.Email)
 	return client, nil
 }

@@ -61,6 +61,7 @@ func (l *AuthModule) SetRoutes() {
 	// Client routes
 	clientGroup := group.Group("/clients")
 	clientGroup.Add("POST", "/register", auth_handlers.RegisterClient(l.container, l.authService))
+	clientGroup.Add("POST", "/login", auth_handlers.LoginClient(l.container, l.authService))
 
 	// Admin routes
 	adminGroup := group.Group("/admin")

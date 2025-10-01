@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RegisterClient(
+func LoginClient(
 	container *container.Container,
 	authService *auth_services.AuthService,
 ) echo.HandlerFunc {
@@ -18,25 +18,25 @@ func RegisterClient(
 
 		ctx := c.Request().Context()
 
-		var registerData auth_services.RegisterClientParams
+		var loginData auth_services.LoginClientParams
 
-		if err := c.Bind(&registerData); err != nil {
-			logger.Error("Failed to bind register client params", "error", err)
+		if err := c.Bind(&loginData); err != nil {
+			logger.Error("Failed to bind login client params", "error", err)
 			return c.JSON(http.StatusBadRequest, &echo.Map{"error": "Bad Request - Invalid parameters"})
 		}
 
-		logger.Info("Registering client", "data", registerData)
+		logger.Info("Logging in client", "data", loginData)
 
-		if err := registerData.Validate(); err != nil {
-			logger.Error("Validation failed for register client params", "error", err)
+		if err := loginData.Validate(); err != nil {
+			logger.Error("Validation failed for login client params", "error", err)
 			return c.JSON(http.StatusBadRequest, echo.Map{"errors": err})
 		}
 
-		// Create client
-		client, err := authService.RegisterClient(ctx, registerData)
+		// Login client
+		client, err := authService.LoginClient(ctx, loginData)
 
 		if err != nil {
-			message := "could not register client"
+			message := "could not login client"
 			if err.Message != "" {
 				message = err.Message
 			}
@@ -62,6 +62,6 @@ func RegisterClient(
 			})
 		}
 
-		return c.JSON(http.StatusCreated, response)
+		return c.JSON(http.StatusOK, response)
 	}
 }

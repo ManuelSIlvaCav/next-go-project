@@ -2,46 +2,61 @@
 
 import { ColorModeToggle } from '@/components/color-mode-toogle'
 import LanguageSelector from '@/components/language-selector'
-import LoggedInAccountMenu from '@/components/main-navbar/logged-in-account-menu'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/hooks/use-auth'
-import { ChevronDown, LogIn, User, UserCircle, UserPlus } from 'lucide-react'
+import { ChevronDown, LogOut, Settings, User, UserCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
-export default function AccountMenu() {
-  const { isAuthenticated, isLoading } = useAuth()
+export default function LoggedInAccountMenu() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const { user, logout } = useAuth()
   const router = useRouter()
 
-  const handleSignInClick = () => {
-    router.push('/login')
+  const handleLogout = () => {
+    logout()
+    toast.success('Logged out successfully', {
+      description: 'See you soon!',
+    })
     setIsOpen(false)
+    setIsMobileOpen(false)
   }
 
-  const handleRegisterClick = () => {
-    router.push('/register')
+  const handleAccountSettings = () => {
+    router.push('/account/settings')
     setIsOpen(false)
+    setIsMobileOpen(false)
   }
 
-  // Show loading state or nothing while checking auth
-  if (isLoading) {
-    return <div className="w-24 h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded" />
+  const getDisplayName = () => {
+    if (user?.first_name && user?.last_name) {
+      return `${user.first_name} ${user.last_name}`
+    }
+    if (user?.first_name) {
+      return user.first_name
+    }
+    if (user?.email) {
+      return user.email.split('@')[0]
+    }
+    return ''
   }
 
-  // If user is authenticated, show the logged-in menu
-  if (isAuthenticated) {
-    return <LoggedInAccountMenu />
+  const getGreeting = () => {
+    if (user?.first_name) {
+      return `Hola, ${user.first_name}`
+    }
+    return 'Hola, '
   }
 
-  // Otherwise, show the login/register menu
   return (
     <>
       {/* Desktop Version */}
@@ -58,7 +73,7 @@ export default function AccountMenu() {
               className="flex flex-col items-start text-white h-auto py-1 px-2 hover:bg-white group dark:hover:bg-primary"
             >
               <span className="text-xs text-gray-300 group-hover:text-primary dark:group-hover:text-white">
-                Hola, Inicia sesión
+                {getGreeting()}
               </span>
               <div className="flex items-center space-x-1">
                 <span className="text-sm font-medium text-white group-hover:text-primary dark:group-hover:text-white">
@@ -70,39 +85,47 @@ export default function AccountMenu() {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="w-72 bg-white dark:bg-secondary "
+            className="w-72 bg-white dark:bg-purple-950 border-secondary dark:border-purple-800"
             align="end"
             sideOffset={8}
             alignOffset={0}
             avoidCollisions={true}
             collisionPadding={8}
           >
-            {/* Header */}
+            {/* Header with User Info */}
             <div className="px-4 py-3 border-b border-gray-200 dark:border-purple-800">
-              <h3 className="text-lg font-bold text-secondary dark:text-white">Mi Cuenta</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Inicia sesión para acceder a todas las funciones
-              </p>
+              <div className="flex items-center space-x-3">
+                <div className="h-12 w-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                  <User className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-bold text-secondary dark:text-white truncate">
+                    {getDisplayName()}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 truncate">{user?.email}</p>
+                </div>
+              </div>
             </div>
 
-            {/* Sign In Button */}
-            <div className="p-4 space-y-3">
-              <Button
-                onClick={handleSignInClick}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
+            {/* Menu Items */}
+            <div className="p-2">
+              <DropdownMenuItem
+                onClick={handleAccountSettings}
+                className="cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-purple-900/50"
               >
-                <LogIn className="h-4 w-4 mr-2" />
-                Iniciar Sesión
-              </Button>
+                <Settings className="h-4 w-4 mr-3 text-gray-600 dark:text-gray-300" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Configuración de cuenta
+                </span>
+              </DropdownMenuItem>
 
-              <Button
-                onClick={handleRegisterClick}
-                variant="outline"
-                className="w-full border-primary text-primary hover:bg-primary hover:text-white font-medium py-2.5 rounded-lg transition-colors"
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer px-3 py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
               >
-                <UserPlus className="h-4 w-4 mr-2" />
-                Registrarse
-              </Button>
+                <LogOut className="h-4 w-4 mr-3" />
+                <span className="text-sm font-medium">Cerrar sesión</span>
+              </DropdownMenuItem>
             </div>
 
             <DropdownMenuSeparator className="bg-gray-200 dark:bg-purple-800" />
@@ -134,7 +157,7 @@ export default function AccountMenu() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-secondary [&_svg]:size-8 relative overflow-hidden "
+              className="text-white hover:bg-secondary [&_svg]:size-8 relative overflow-hidden"
             >
               <div className="relative">
                 {/* User icon with fade out animation when open */}
@@ -165,38 +188,40 @@ export default function AccountMenu() {
             avoidCollisions={true}
             collisionPadding={8}
           >
-            {/* Header */}
+            {/* Header with User Info */}
             <div className="px-4 py-3 border-b border-gray-200 dark:border-purple-800">
-              <h3 className="text-lg font-bold text-secondary dark:text-white">Mi Cuenta</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Inicia sesión para acceder a todas las funciones
-              </p>
+              <div className="flex items-center space-x-3">
+                <div className="h-12 w-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                  <User className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-bold text-secondary dark:text-white truncate">
+                    {getDisplayName()}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 truncate">{user?.email}</p>
+                </div>
+              </div>
             </div>
 
-            {/* Sign In Button */}
-            <div className="p-4 space-y-3">
-              <Button
-                onClick={() => {
-                  router.push('/login')
-                  setIsMobileOpen(false)
-                }}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
+            {/* Menu Items */}
+            <div className="p-2">
+              <DropdownMenuItem
+                onClick={handleAccountSettings}
+                className="cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-purple-900/50"
               >
-                <LogIn className="h-4 w-4 mr-2" />
-                Iniciar Sesión
-              </Button>
+                <Settings className="h-4 w-4 mr-3 text-gray-600 dark:text-gray-300" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Configuración de cuenta
+                </span>
+              </DropdownMenuItem>
 
-              <Button
-                onClick={() => {
-                  router.push('/register')
-                  setIsMobileOpen(false)
-                }}
-                variant="outline"
-                className="w-full border-primary text-primary hover:bg-primary hover:text-white font-medium py-2.5 rounded-lg transition-colors"
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer px-3 py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
               >
-                <UserPlus className="h-4 w-4 mr-2" />
-                Registrarse
-              </Button>
+                <LogOut className="h-4 w-4 mr-3" />
+                <span className="text-sm font-medium">Cerrar sesión</span>
+              </DropdownMenuItem>
             </div>
 
             <DropdownMenuSeparator className="bg-gray-200 dark:bg-purple-800" />

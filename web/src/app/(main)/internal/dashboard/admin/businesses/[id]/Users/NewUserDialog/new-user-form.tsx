@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { useMutation } from '@tanstack/react-query'
 
 import TextInput from '@/components/form/text-input'
-import { useJwt } from '@/components/providers/JwtProvider'
+import { useJwt } from '@/components/providers/jwt-provider'
 import { Form } from '@/components/ui/form'
 import { ApiParams } from '@/lib/types'
 import { zodResolver } from '@hookform/resolvers/zod'

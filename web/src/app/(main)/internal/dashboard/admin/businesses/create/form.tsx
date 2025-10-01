@@ -1,7 +1,7 @@
 'use client'
 
 import TextInput from '@/components/form/text-input'
-import { useJwt } from '@/components/providers/JwtProvider'
+import { useJwt } from '@/components/providers/jwt-provider'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'

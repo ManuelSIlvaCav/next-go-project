@@ -19,23 +19,25 @@ type Identification struct {
 }
 
 type Client struct {
-	ID         string    `json:"id" db:"id"`
-	BusinessID int64     `json:"business_id" db:"business_id"`
-	FirstName  string    `json:"first_name" db:"first_name"`
-	MiddleName string    `json:"middle_name,omitempty" db:"middle_name"`
-	LastName   string    `json:"last_name" db:"last_name"`
-	Email      string    `json:"email" db:"email"`
-	CreatedAt  time.Time `json:"created_at" db:"created_at"`
+	ID           string    `json:"id" db:"id"`
+	BusinessID   int64     `json:"business_id" db:"business_id"`
+	FirstName    string    `json:"first_name" db:"first_name"`
+	MiddleName   string    `json:"middle_name,omitempty" db:"middle_name"`
+	LastName     string    `json:"last_name" db:"last_name"`
+	Email        string    `json:"email" db:"email"`
+	PasswordHash string    `json:"-" db:"password_hash"` // Don't include in JSON responses
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 }
 
 // DTOs for client operations
 type CreateClientParams struct {
-	BusinessID int64  `json:"business_id" validate:"required"`
-	FirstName  string `json:"first_name" validate:"required,min=1,max=255"`
-	MiddleName string `json:"middle_name,omitempty" validate:"omitempty,max=255"`
-	LastName   string `json:"last_name" validate:"required,min=1,max=255"`
-	Email      string `json:"email" validate:"required,email"`
-	Phone      string `json:"phone,omitempty" validate:"omitempty,max=255"`
+	BusinessID   int64  `json:"business_id" validate:"required"`
+	FirstName    string `json:"first_name" validate:"required,min=1,max=255"`
+	MiddleName   string `json:"middle_name,omitempty" validate:"omitempty,max=255"`
+	LastName     string `json:"last_name" validate:"required,min=1,max=255"`
+	Email        string `json:"email" validate:"required,email"`
+	Phone        string `json:"phone,omitempty" validate:"omitempty,max=255"`
+	PasswordHash string `json:"-"` // Password hash, not included in JSON
 }
 
 type UpdateClientParams struct {

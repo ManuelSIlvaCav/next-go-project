@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useAuth } from '@/hooks/use-auth'
 import { registerClient } from '@/lib/api/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useSetCookie } from 'cookies-next'
@@ -39,6 +40,7 @@ export default function UserSignup({ onNext, initialData }: UserSignupProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const setCookie = useSetCookie()
+  const { refreshAuth } = useAuth()
 
   const [userForm, setUserForm] = useState<UserFormData>(
     initialData || {
@@ -58,6 +60,13 @@ export default function UserSignup({ onNext, initialData }: UserSignupProps) {
         description: 'Welcome to our platform',
       })
       setCookie('petza_access_token', data.access_token)
+
+      // Store user data in localStorage
+      localStorage.setItem('petza_user', JSON.stringify(data.client))
+
+      // Refresh auth state using Context
+      refreshAuth()
+
       onNext(userForm)
     },
     onError: (error: Error) => {

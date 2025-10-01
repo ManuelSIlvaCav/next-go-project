@@ -1,0 +1,30 @@
+{
+  "HomePage": {
+    "title": "Hello world!"
+  },
+  "ServicesPage": {
+    "title": "Pet Care Services"
+  },
+  "LoginPage": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to your account",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "loginButton": "Sign In",
+    "loggingIn": "Signing in...",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required"
+  },
+  "RegisterPage": {
+    "title": "Create your account",
+    "subtitle": "Join our community of pet lovers",
+    "stepAboutYou": "About you",
+    "stepAboutPet": "About your pet"
+  }
+}

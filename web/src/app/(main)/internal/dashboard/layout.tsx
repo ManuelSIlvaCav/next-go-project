@@ -1,6 +1,5 @@
-
 import { AppSidebar } from '@/components/app-sidebar'
-import JwtProvider from '@/components/providers/JwtProvider'
+import JwtProvider from '@/components/providers/jwt-provider'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -15,11 +14,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
   return (
     <div className="max-w-full w-screen">
       <JwtProvider initialJwt={cookieStore?.get?.('jwt')?.value as string}>
-          <SidebarProvider className="">
-            <AppSidebar />
-            {children}
-          </SidebarProvider>
-        </JwtProvider>
+        <SidebarProvider className="">
+          <AppSidebar />
+          {children}
+        </SidebarProvider>
+      </JwtProvider>
     </div>
   )
 }

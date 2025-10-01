@@ -1,8 +1,10 @@
+import QueryProvider from '@/components/providers/query-provider'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
-import QueryProvider from '@/components/providers/query-provider'
+import { AuthProvider } from '@/hooks/use-auth'
 import clsx from 'clsx'
 import type { Metadata } from 'next'
+import { NextIntlClientProvider } from 'next-intl'
 import '../globals.css'
 import InnerClientInit from './inner-client-init'
 import { fredoka, latto } from './internal/dashboard/fonts'
@@ -31,9 +33,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* <NavBar /> */}
-            <InnerClientInit>{children}</InnerClientInit>
-            <Toaster richColors expand={true} />
+            <AuthProvider>
+              <NextIntlClientProvider>
+                <InnerClientInit>{children}</InnerClientInit>
+              </NextIntlClientProvider>
+              <Toaster richColors expand={true} />
+            </AuthProvider>
           </ThemeProvider>
         </QueryProvider>
       </body>

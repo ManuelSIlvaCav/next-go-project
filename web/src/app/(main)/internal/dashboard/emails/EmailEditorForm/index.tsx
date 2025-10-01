@@ -1,6 +1,6 @@
 'use client'
 
-import { useJwt } from '@/components/providers/JwtProvider'
+import { useJwt } from '@/components/providers/jwt-provider'
 import { Button } from '@/components/ui/button'
 import {
   Form,

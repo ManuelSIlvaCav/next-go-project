@@ -1,8 +1,14 @@
-import { NextConfig } from 'next'
+import { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
 
 const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001'
+
+  
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
@@ -24,4 +30,5 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+
+export default withNextIntl(nextConfig)

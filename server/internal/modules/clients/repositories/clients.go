@@ -38,13 +38,14 @@ func (r *ClientRepository) CreateClient(ctx context.Context, params *clients_mod
 	now := time.Now()
 
 	newClient := &clients_models.Client{
-		ID:         clientID,
-		BusinessID: params.BusinessID,
-		FirstName:  params.FirstName,
-		MiddleName: params.MiddleName,
-		LastName:   params.LastName,
-		Email:      params.Email,
-		CreatedAt:  now,
+		ID:           clientID,
+		BusinessID:   params.BusinessID,
+		FirstName:    params.FirstName,
+		MiddleName:   params.MiddleName,
+		LastName:     params.LastName,
+		Email:        params.Email,
+		PasswordHash: params.PasswordHash,
+		CreatedAt:    now,
 	}
 
 	// Start a transaction
@@ -57,14 +58,15 @@ func (r *ClientRepository) CreateClient(ctx context.Context, params *clients_mod
 	defer tx.Rollback()
 
 	// Insert client with ON CONFLICT to handle unique constraint on (business_id, email)
-	clientQuery := `INSERT INTO clients (id, business_id, first_name, middle_name, last_name, email, created_at) 
-	VALUES ($1, $2, $3, $4, $5, $6, $7) 
+	clientQuery := `INSERT INTO clients (id, business_id, first_name, middle_name, last_name, email, password_hash, created_at) 
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
 	ON CONFLICT (business_id, email) 
 	DO UPDATE SET 
 		first_name = EXCLUDED.first_name,
 		middle_name = EXCLUDED.middle_name,
-		last_name = EXCLUDED.last_name
-	RETURNING id, business_id, first_name, middle_name, last_name, email, created_at`
+		last_name = EXCLUDED.last_name,
+		password_hash = EXCLUDED.password_hash
+	RETURNING id, business_id, first_name, middle_name, last_name, email, password_hash, created_at`
 
 	var returnedClient clients_models.Client
 	if err := tx.QueryRowContext(ctx, clientQuery,
@@ -74,6 +76,7 @@ func (r *ClientRepository) CreateClient(ctx context.Context, params *clients_mod
 		newClient.MiddleName,
 		newClient.LastName,
 		newClient.Email,
+		newClient.PasswordHash,
 		newClient.CreatedAt,
 	).Scan(
 		&returnedClient.ID,
@@ -82,6 +85,7 @@ func (r *ClientRepository) CreateClient(ctx context.Context, params *clients_mod
 		&returnedClient.MiddleName,
 		&returnedClient.LastName,
 		&returnedClient.Email,
+		&returnedClient.PasswordHash,
 		&returnedClient.CreatedAt,
 	); err != nil {
 		pqErr := err.(*pgconn.PgError)
@@ -131,7 +135,7 @@ func (r *ClientRepository) GetClient(ctx context.Context, params *clients_models
 
 	client := &clients_models.Client{}
 
-	query := `SELECT id, business_id, first_name, middle_name, last_name, email, created_at 
+	query := `SELECT id, business_id, first_name, middle_name, last_name, email, password_hash, created_at 
 	FROM clients WHERE id = $1 AND business_id = $2`
 
 	if err := r.container.DB().Db.QueryRowContext(ctx, query, params.ID, params.BusinessID).Scan(
@@ -141,6 +145,7 @@ func (r *ClientRepository) GetClient(ctx context.Context, params *clients_models
 		&client.MiddleName,
 		&client.LastName,
 		&client.Email,
+		&client.PasswordHash,
 		&client.CreatedAt,
 	); err != nil {
 		if err == sql.ErrNoRows {
@@ -159,7 +164,7 @@ func (r *ClientRepository) GetClientByEmail(ctx context.Context, email string, b
 
 	client := &clients_models.Client{}
 
-	query := `SELECT id, business_id, first_name, middle_name, last_name, email, created_at 
+	query := `SELECT id, business_id, first_name, middle_name, last_name, email, password_hash, created_at 
 	FROM clients WHERE email = $1 AND business_id = $2`
 
 	if err := r.container.DB().Db.QueryRowContext(ctx, query, email, businessID).Scan(
@@ -169,6 +174,7 @@ func (r *ClientRepository) GetClientByEmail(ctx context.Context, email string, b
 		&client.MiddleName,
 		&client.LastName,
 		&client.Email,
+		&client.PasswordHash,
 		&client.CreatedAt,
 	); err != nil {
 		if err == sql.ErrNoRows {
