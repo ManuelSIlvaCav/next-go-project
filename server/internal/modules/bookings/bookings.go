@@ -17,14 +17,7 @@ func (b *BookingsModule) GetDomain() string {
 }
 
 func (b *BookingsModule) SetRoutes() {
-	// group := params.Router.MainGroup.Group(b.GetDomain())
-	//
-	// group.Use(params.AuthModule.AuthMiddleware())
-	//
-	// group.Add("POST", "", emails.CreateEmailTemplate(l.container,
-	// 	l.EmailTemplateRepository))
-	// group.Add("GET", "", emails.GetEmailTemplates(l.container,
-	// 	l.EmailTemplateRepository))
+
 }
 
 func (b *BookingsModule) SetTasks() {

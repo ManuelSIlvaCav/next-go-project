@@ -5,6 +5,7 @@ import "time"
 type (
 	JWTData struct {
 		ClientID       string `json:"client_id"`
+		SellerID       string `json:"seller_id"`
 		BusinessID     int64  `json:"business_id"`
 		BusinessUserID int64  `json:"business_user_id"`
 		AdminID        string `json:"admin_id"`

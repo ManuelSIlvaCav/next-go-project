@@ -12,6 +12,7 @@ import (
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/listings"
 	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/pets"
+	"github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/sellers"
 	"go.uber.org/fx"
 )
 
@@ -26,6 +27,7 @@ type InternalModule struct {
 	InsuranceModule  interfaces.InsuranceModule
 	ClientsModule    interfaces.ClientsModule
 	PetsModule       interfaces.PetsModule
+	SellersModule    interfaces.SellersModule
 }
 
 type AllModulesParams struct {
@@ -40,6 +42,7 @@ type AllModulesParams struct {
 	InsuranceModule  interfaces.InsuranceModule
 	ClientsModule    interfaces.ClientsModule
 	PetsModule       interfaces.PetsModule
+	SellersModule    interfaces.SellersModule
 }
 
 func NewInternalModule(
@@ -57,6 +60,7 @@ func NewInternalModule(
 		InsuranceModule:  params.InsuranceModule,
 		ClientsModule:    params.ClientsModule,
 		PetsModule:       params.PetsModule,
+		SellersModule:    params.SellersModule,
 	}
 }
 
@@ -71,5 +75,6 @@ var Module = fx.Options(
 	accounting.Module,
 	insurance.Module,
 	pets.Module,
+	sellers.Module,
 	fx.Provide(NewInternalModule),
 )

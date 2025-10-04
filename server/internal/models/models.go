@@ -37,6 +37,8 @@ const (
 	UserCreationError       = 5003
 	BusinessForeignKeyError = 6001
 	BusinessCreateError     = 6002
+	ErrSellerAlreadyExists  = 7001
+	ErrSellerNotFound       = 7002
 )
 
 var ErrorCodesMessage = map[int]string{
@@ -49,6 +51,8 @@ var ErrorCodesMessage = map[int]string{
 	5003: "Error creating user",
 	6001: "Business not found",
 	6002: "Error creating business",
+	7001: "Seller already exists with the provided email",
+	7002: "Seller not found",
 }
 
 type HandlerError struct {
@@ -58,7 +62,7 @@ type HandlerError struct {
 }
 
 func (he *HandlerError) Error() string {
-	return fmt.Sprintf("Handler error, Code: %d, Message: %s", he.Code, he.Message)
+	return fmt.Sprintf("ErrorCode: %d, Message: %s", he.Code, he.Message)
 }
 
 func NewErrorWithCode(code int) *HandlerError {

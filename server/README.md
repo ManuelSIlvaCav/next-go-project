@@ -6,6 +6,10 @@
 
 ## Migration
 
+0. Install migrate clie
+
+> brew install golang-migrate
+
 1. To create migrations
 
 > migrate create -ext sql -dir db/migrations -seq create_users_table

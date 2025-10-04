@@ -38,3 +38,5 @@ ai-initiatives/*
 *.png
 
 /*.tfstate
+
+.DS_Store

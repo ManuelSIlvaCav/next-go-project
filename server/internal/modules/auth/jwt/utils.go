@@ -18,6 +18,7 @@ type JwtCustomClaims struct {
 
 type CreateJwtTokenParams struct {
 	ClientID   string
+	SellerID   string
 	BusinessID int64
 	AdminID    string
 }
@@ -37,6 +38,7 @@ func GetJWTConfig() echojwt.Config {
 				c.Path() == "/api/v1/auth/register" ||
 				c.Path() == "/api/v1/auth/clients/register" ||
 				c.Path() == "/api/v1/auth/clients/login" ||
+				c.Path() == "/api/v1/sellers" ||
 				c.Path() == "/api/v1/admin/login" ||
 				//c.Path() == "/api/v1/businesses" ||
 				c.Path() == "/api/v1/auth/magic-link-login" ||
@@ -62,6 +64,7 @@ func CreateJwtToken(
 	claims := &JwtCustomClaims{
 		auth_models.JWTData{
 			ClientID:   jwtParams.ClientID,
+			SellerID:   jwtParams.SellerID,
 			BusinessID: jwtParams.BusinessID,
 			AdminID:    jwtParams.AdminID,
 		},
@@ -95,16 +98,28 @@ func GetJWTData(c echo.Context) auth_models.JWTData {
 
 	return auth_models.JWTData{
 		ClientID:       claims.ClientID,
+		SellerID:       claims.SellerID,
 		BusinessID:     claims.BusinessID,
 		BusinessUserID: claims.BusinessUserID,
 	}
 }
 
 // CreateClientJWTResponse creates a JWT token for a client and returns the response map
-func CreateClientJWTResponse(clientID string, businessID int64, email, firstName, lastName string) (*echo.Map, error) {
+type CreateClientJWTResponseParams struct {
+	ClientID   string
+	BusinessID int64
+	Email      string
+	FirstName  string
+	LastName   string
+	SellerID   string
+}
+
+func CreateClientJWTResponse(
+	params CreateClientJWTResponseParams) (*echo.Map, error) {
 	jwtParams := CreateJwtTokenParams{
-		ClientID:   clientID,
-		BusinessID: businessID,
+		ClientID:   params.ClientID,
+		BusinessID: params.BusinessID,
+		SellerID:   params.SellerID,
 	}
 
 	data, jwtErr := CreateJwtToken(jwtParams)
@@ -115,12 +130,48 @@ func CreateClientJWTResponse(clientID string, businessID int64, email, firstName
 	return &echo.Map{
 		"access_token": data.AccessToken,
 		"expires_at":   data.ExpiresAt,
-		"client": echo.Map{
-			"id":          clientID,
-			"email":       email,
-			"first_name":  firstName,
-			"last_name":   lastName,
-			"business_id": businessID,
+		"user": echo.Map{
+			"id":          params.ClientID,
+			"email":       params.Email,
+			"first_name":  params.FirstName,
+			"last_name":   params.LastName,
+			"business_id": params.BusinessID,
+		},
+	}, nil
+}
+
+// CreateSellerJWTResponse creates a JWT token for a seller and returns the response map
+type CreateSellerJWTResponseParams struct {
+	SellerID   string
+	BusinessID int64
+	Email      string
+	FirstName  string
+	LastName   string
+	Name       string
+}
+
+func CreateSellerJWTResponse(
+	params CreateSellerJWTResponseParams) (*echo.Map, error) {
+	jwtParams := CreateJwtTokenParams{
+		SellerID:   params.SellerID,
+		BusinessID: params.BusinessID,
+	}
+
+	data, jwtErr := CreateJwtToken(jwtParams)
+	if jwtErr != nil {
+		return nil, jwtErr
+	}
+
+	return &echo.Map{
+		"access_token": data.AccessToken,
+		"expires_at":   data.ExpiresAt,
+		"seller": echo.Map{
+			"id":          params.SellerID,
+			"email":       params.Email,
+			"name":        params.Name,
+			"first_name":  params.FirstName,
+			"last_name":   params.LastName,
+			"business_id": params.BusinessID,
 		},
 	}, nil
 }

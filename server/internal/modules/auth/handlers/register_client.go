@@ -48,12 +48,16 @@ func RegisterClient(
 		}
 
 		// Create JWT token response for the client
+
 		response, jwtErr := auth_jwt.CreateClientJWTResponse(
-			client.ID,
-			client.BusinessID,
-			client.Email,
-			client.FirstName,
-			client.LastName,
+			auth_jwt.CreateClientJWTResponseParams{
+				ClientID:   client.ID,
+				BusinessID: client.BusinessID,
+				Email:      client.Email,
+				FirstName:  client.FirstName,
+				LastName:   client.LastName,
+				SellerID:   "",
+			},
 		)
 		if jwtErr != nil {
 			logger.Error("Error creating JWT token", "error", jwtErr)

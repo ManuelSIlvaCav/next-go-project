@@ -7,6 +7,8 @@ import (
 	insurance_repository "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/insurance/repositories"
 	pets_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/pets/repositories"
 	pets_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/pets/services"
+	sellers_repositories "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/sellers/repositories"
+	sellers_services "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/sellers/services"
 
 	emails_service "github.com/ManuelSIlvaCav/next-go-project/server/internal/modules/emails/services"
 )
@@ -18,6 +20,11 @@ type EmailModule interface {
 type PetsModule interface {
 	GetPetRepository() *pets_repositories.PetRepository
 	GetPetService() *pets_services.PetService
+}
+
+type SellersModule interface {
+	GetSellerRepository() *sellers_repositories.SellerRepository
+	GetSellerService() *sellers_services.SellerService
 }
 
 type BookingsModule interface {
