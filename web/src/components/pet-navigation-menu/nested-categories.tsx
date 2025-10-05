@@ -29,9 +29,9 @@ export default function NestedCategories({ categories }: NestedCategoriesProps) 
                   <Link
                     href={`/categories/${category.slug}`}
                     className={cn(
-                      'block h-10 sm:h-12 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium font-lato text-gray-700 hover:text-primary hover:bg-gray-50',
+                      'block h-10 sm:h-12 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium font-latto text-gray-700 hover:text-primary hover:bg-gray-50',
                       'dark:text-gray-200 dark:hover:text-primary dark:hover:bg-gray-800',
-                      'rounded-md transition-colors'
+                      'rounded-md transition-colors',
                     )}
                   >
                     {category.name}
@@ -46,12 +46,12 @@ export default function NestedCategories({ categories }: NestedCategoriesProps) 
             <NavigationMenuItem key={category.id}>
               <NavigationMenuTrigger
                 className={cn(
-                  'h-10 sm:h-12 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium font-lato text-gray-700 hover:text-primary hover:bg-gray-50',
+                  'h-10 sm:h-12 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium font-latto text-gray-700 hover:text-primary hover:bg-gray-50',
                   'dark:text-gray-200 dark:hover:text-primary dark:hover:bg-gray-800',
                   'data-[state=open]:text-primary data-[state=open]:bg-gray-50',
                   'data-[active]:text-primary data-[active]:bg-gray-50',
                   'dark:data-[state=open]:text-primary dark:data-[state=open]:bg-gray-800',
-                  'dark:data-[active]:text-primary dark:data-[active]:bg-gray-800'
+                  'dark:data-[active]:text-primary dark:data-[active]:bg-gray-800',
                 )}
               >
                 {category.name}
@@ -65,8 +65,9 @@ export default function NestedCategories({ categories }: NestedCategoriesProps) 
                     <div className="font-fredoka text-sm font-medium leading-none text-primary dark:text-blue-400">
                       Ver todo en {category.name}
                     </div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground font-lato dark:text-gray-400">
-                      {category.description || `Explora toda nuestra selección de ${category.name.toLowerCase()}`}
+                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground font-latto dark:text-gray-400">
+                      {category.description ||
+                        `Explora toda nuestra selección de ${category.name.toLowerCase()}`}
                     </p>
                   </Link>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
@@ -81,7 +82,7 @@ export default function NestedCategories({ categories }: NestedCategoriesProps) 
                               {subcategory.name}
                             </div>
                             {subcategory.description && (
-                              <p className="line-clamp-2 text-xs leading-snug text-muted-foreground font-lato dark:text-gray-400">
+                              <p className="line-clamp-2 text-xs leading-snug text-muted-foreground font-latto dark:text-gray-400">
                                 {subcategory.description}
                               </p>
                             )}

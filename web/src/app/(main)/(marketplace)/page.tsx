@@ -1,5 +1,6 @@
 'use client'
 
+import MainServiceSearchComponent from '@/components/main-service-search-component/MainSearch'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -166,10 +167,9 @@ function CategoryCarousel({ title, categories, showNow = false }: CategoryCarous
 export default function MarketplacePage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      
-
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <MainServiceSearchComponent className="mt-[4rem]" />
         {/* Services Section */}
         <CategoryCarousel
           title="Professional Pet Services"

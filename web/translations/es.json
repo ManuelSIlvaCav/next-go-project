@@ -5,6 +5,20 @@
   "ServicesPage": {
     "title": "Lo que necesitas para tu mascota"
   },
+  "SearchComponent": {
+    "title": "Conseguir cuidadores de Mascotas",
+    "subtitle": "para alojar gatos y perros",
+    "serviceLabel": "Estoy buscando",
+    "servicePlaceholder": "Seleccionar servicio",
+    "addressLabel": "Dirección",
+    "datesLabel": "Fechas",
+    "datesPlaceholder": "Seleccionar fechas",
+    "searchButton": "Buscar",
+    "infoText": "Encuentra los mejores cuidadores de mascotas cerca de ti",
+    "rangeMode": "Rango",
+    "multipleMode": "Múltiples días",
+    "datesSelected": "fechas seleccionadas"
+  },
   "LoginPage": {
     "title": "Bienvenido de nuevo",
     "subtitle": "Inicia sesión en tu cuenta",

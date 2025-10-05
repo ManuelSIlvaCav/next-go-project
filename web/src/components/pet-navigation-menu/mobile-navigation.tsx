@@ -53,7 +53,7 @@ export default function MobileNavigation({ mainCategories }: MobileNavigationPro
             <SheetTitle className="text-left font-fredoka text-lg dark:text-white">
               Categorías
             </SheetTitle>
-            <SheetDescription className="text-left font-lato dark:text-gray-400">
+            <SheetDescription className="text-left font-latto dark:text-gray-400">
               Explora nuestros productos y servicios para mascotas
             </SheetDescription>
           </SheetHeader>
@@ -108,7 +108,9 @@ export default function MobileNavigation({ mainCategories }: MobileNavigationPro
                               onClick={() => toggleSubCategory(category.id)}
                               className="w-full justify-between p-2 h-auto text-left dark:text-white dark:hover:bg-gray-800 hover:bg-gray-50"
                             >
-                              <span className="font-fredoka font-medium text-sm">{category.name}</span>
+                              <span className="font-fredoka font-medium text-sm">
+                                {category.name}
+                              </span>
                               <ChevronDown
                                 className={cn(
                                   'h-3 w-3 transition-transform',
@@ -139,11 +141,11 @@ export default function MobileNavigation({ mainCategories }: MobileNavigationPro
                                     className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                   >
                                     <div>
-                                      <span className="text-xs font-lato dark:text-gray-300">
+                                      <span className="text-xs font-latto dark:text-gray-300">
                                         {subcategory.name}
                                       </span>
                                       {subcategory.description && (
-                                        <p className="text-xs text-gray-500 font-lato dark:text-gray-400">
+                                        <p className="text-xs text-gray-500 font-latto dark:text-gray-400">
                                           {subcategory.description}
                                         </p>
                                       )}

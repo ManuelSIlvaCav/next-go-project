@@ -156,31 +156,31 @@ export const AddressInput = forwardRef<AddressInputRef, AddressInputProps>(
           <Input
             ref={inputRef}
             type="text"
-            className={`font-fredoka flex w-full rounded-md border px-3 py-1 text-base shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-12 pl-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500`}
+            className={`font-latto flex w-full rounded-md border px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-11 sm:h-12 pl-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500`}
             placeholder={placeholder}
             value={inputValue}
             onChange={handleChange}
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MapPinIcon className="h-5 w-5 text-gray-400" />
+            <MapPinIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
           </div>
           {isLoading && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+              <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
             </div>
           )}
         </div>
 
         {suggestions.length > 0 && isDropdownOpen && (
-          <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 text-base shadow-lg ring-1 ring-black dark:ring-gray-700 ring-opacity-5 focus:outline-none sm:text-sm">
             {suggestions.map((suggestion, index) => (
               <li
                 key={index}
-                className="relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-gray-100"
+                className="relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => handleSelectSuggestion(suggestion)}
               >
                 <div className="flex items-center">
-                  <span className="ml-3 truncate  font-latto text-black">
+                  <span className="ml-3 truncate font-latto text-gray-900 dark:text-gray-100">
                     {suggestion.placePrediction?.text?.text}
                   </span>
                 </div>
@@ -190,9 +190,9 @@ export const AddressInput = forwardRef<AddressInputRef, AddressInputProps>(
         )}
 
         {(isValidating || isValidatingPlaceDetails) && (
-          <div className="mt-2 text-sm text-blue-500 flex items-center">
+          <div className="mt-2 text-sm text-blue-500 dark:text-blue-400 flex items-center">
             <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-            <span>Validating address...</span>
+            <span className="font-latto">Validating address...</span>
           </div>
         )}
       </div>

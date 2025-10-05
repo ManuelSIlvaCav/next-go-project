@@ -31,6 +31,7 @@
   --color-complement-alt2: #ffdfc2;
 
   --font-fredoka: var(--font-fredoka);
+  --font-latto: var(--font-latto);
 
   --color-secondary-foreground: hsl(var(--secondary-foreground));
 
@@ -143,7 +144,7 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary-foreground: #f7fcf8;
     --color-secondary: #291c34;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
@@ -251,3 +252,4 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+

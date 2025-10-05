@@ -5,6 +5,20 @@
   "ServicesPage": {
     "title": "Pet Care Services"
   },
+  "SearchComponent": {
+    "title": "Find Pet Caretakers",
+    "subtitle": "to host cats and dogs",
+    "serviceLabel": "I'm looking for",
+    "servicePlaceholder": "Select service",
+    "addressLabel": "Address",
+    "datesLabel": "Dates",
+    "datesPlaceholder": "Select dates",
+    "searchButton": "Search",
+    "infoText": "Find the best pet caretakers near you",
+    "rangeMode": "Range",
+    "multipleMode": "Multiple days",
+    "datesSelected": "dates selected"
+  },
   "LoginPage": {
     "title": "Welcome back",
     "subtitle": "Sign in to your account",

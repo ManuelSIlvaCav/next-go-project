@@ -15,7 +15,7 @@ export default function NavBar({ className }: NavBarProps) {
       className={cn('fixed top-0 left-0 right-0 z-50 bg-secondary dark:bg-secondary', className)}
     >
       {/* Main Navbar */}
-      <div className="py-4 md:py-4 px-4">
+      <div className="py-4 md:py-4 px-4 ">
         {/* Mobile and Desktop: Logo, Navigation, and Account/Cart */}
         <div className="flex flex-row justify-between items-center">
           <div className="flex items-center gap-8">

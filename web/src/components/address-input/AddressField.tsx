@@ -6,6 +6,7 @@ import { AddressPlaceDetailsResponse, AddressValidationResponse, SuggestionResul
 
 type AddressInputProps = {
   className?: string
+  label?: string
 }
 
 export default function AddressField(props: AddressInputProps) {
@@ -123,8 +124,12 @@ export default function AddressField(props: AddressInputProps) {
 
   console.log('Rendering AddressField with props:', { selectedAddress })
   return (
-    <div className={clsx('', props.className)}>
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Direccion</label>
+    <div className={clsx('space-y-2', props.className)}>
+      {props.label && (
+        <label className="font-latto text-sm font-medium text-gray-700 dark:text-gray-200 block">
+          {props.label}
+        </label>
+      )}
       <AddressInput
         className=""
         ref={addressInputRef}
