@@ -1,6 +1,6 @@
 
 CREATE TABLE IF NOT EXISTS categories (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
     description VARCHAR(100),
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
@@ -26,7 +26,7 @@ as $$
 $$;
 
 CREATE TABLE IF NOT EXISTS listings (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR(100) NOT NULL,
     description VARCHAR(100) NOT NULL,
     price DECIMAL(12, 2) NOT NULL,

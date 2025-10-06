@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS pets(
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     business_id SERIAL REFERENCES businesses(id) ON DELETE CASCADE,
     client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
     pet_name VARCHAR(255) NOT NULL,

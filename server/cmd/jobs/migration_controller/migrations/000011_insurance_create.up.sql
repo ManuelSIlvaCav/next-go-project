@@ -1,5 +1,5 @@
 CREATE TABLE ins_policies (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     policy_number VARCHAR(50) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -7,7 +7,7 @@ CREATE TABLE ins_policies (
 );
 
 CREATE TABLE ins_policy_variants (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     policy_id UUID REFERENCES ins_policies(id),
     display_name VARCHAR(255) NOT NULL,
     excess DECIMAL(10, 2) NOT NULL,
@@ -19,30 +19,30 @@ CREATE TABLE ins_policy_variants (
 );
 
 CREATE TABLE ins_features (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     feature VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE ins_policy_variant_features (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     policy_variant_id UUID REFERENCES ins_policy_variants(id),
     feature_id UUID REFERENCES ins_features(id)
 );
 
 CREATE TABLE ins_quotes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE ins_quote_insurable_obj (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     quote_id UUID REFERENCES ins_quotes(id),
     insurable_obj_id UUID NOT NULL
 );
 
 CREATE TABLE ins_insurable_objs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
     insurable_obj_type VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -50,7 +50,7 @@ CREATE TABLE ins_insurable_objs (
 );
 
 CREATE TABLE ins_insurable_obj_pet (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     insurable_obj_id UUID REFERENCES ins_insurable_objs(id) ON DELETE CASCADE,
     pet_name VARCHAR(255) NOT NULL,
     pet_type VARCHAR(50) NOT NULL,

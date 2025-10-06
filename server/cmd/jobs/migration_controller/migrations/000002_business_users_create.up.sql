@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_businesses_users_email ON businesses_users(email)
 CREATE TABLE IF NOT EXISTS user_email_login (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
-    authentication_token uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    authentication_token uuid DEFAULT uuid_generate_v4() NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '1 day',
     used_at TIMESTAMP,

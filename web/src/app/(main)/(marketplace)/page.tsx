@@ -170,19 +170,19 @@ export default function MarketplacePage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <MainServiceSearchComponent className="mt-[4rem]" />
-        {/* Services Section */}
-        <CategoryCarousel
+
+        {/* <CategoryCarousel
           title="Professional Pet Services"
           categories={servicesCategories}
           showNow
         />
 
-        {/* Marketplace Section */}
+        
         <CategoryCarousel
           title="Everything you need to start the year right"
           categories={marketplaceCategories}
           showNow
-        />
+        /> */}
 
         {/* Additional Info Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8 mt-8 sm:mt-12">

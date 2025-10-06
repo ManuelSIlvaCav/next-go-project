@@ -133,7 +133,7 @@ export default function MainServiceSearchComponent({
           </label>
           <Select value={service} onValueChange={setService}>
             <SelectTrigger
-              className="data-[size=default]:h-12 w-full font-latto bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors text-[14px]"
+              className="data-[size=default]:h-12 w-full  transition-colors text-[14px]"
               size="default"
             >
               <div className="flex items-center">
@@ -218,7 +218,7 @@ export default function MainServiceSearchComponent({
         </div>
 
         {/* Search Button */}
-        <div className="space-y-2 w-[14rem] h-[5rem] items-end pb-1">
+        <div className="space-y-2 w-[14rem] h-[5rem] content-end pb-1">
           <Button
             onClick={handleSearch}
             disabled={isSearchDisabled}

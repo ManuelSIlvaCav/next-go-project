@@ -42,7 +42,7 @@ INSERT INTO acc_ledgers (ledger_number, account_type_code, ledger_name) VALUES
 
 
 CREATE TABLE IF NOT EXISTS acc_ledger_transactions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ledger_id_cr INT NOT NULL REFERENCES acc_ledgers(id) ON DELETE CASCADE,
     ledger_id_dr INT NOT NULL REFERENCES acc_ledgers(id) ON DELETE CASCADE,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS acc_ledger_transactions (
 );
 
 CREATE TABLE IF NOT EXISTS acc_accounts (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     account_number VARCHAR(20) NOT NULL UNIQUE,
     account_name VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -61,7 +61,7 @@ INSERT INTO acc_accounts (account_number, account_name) VALUES
 ('1000', 'Customer General Account');
 
 CREATE TABLE IF NOT EXISTS acc_account_transactions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     ledger_number VARCHAR(20) NOT NULL REFERENCES acc_ledgers(ledger_number) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     account_type_code VARCHAR(10) NOT NULL REFERENCES acc_transaction_types(xact_type_code),

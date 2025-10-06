@@ -22,7 +22,7 @@ func NewPetService(container *container.Container, petRepository *pets_repositor
 	}
 }
 
-func (s *PetService) CreatePet(ctx context.Context, params *pets_models.CreatePetParams) (*pets_models.Pet, *internal_models.HandlerError) {
+func (s *PetService) CreatePet(ctx context.Context, params *pets_models.CreatePetParams) (*pets_models.Pet, error) {
 	logger := s.container.Logger()
 
 	newPet := &pets_models.Pet{
@@ -37,7 +37,6 @@ func (s *PetService) CreatePet(ctx context.Context, params *pets_models.CreatePe
 	// Call repository to create the pet
 	pet, err := s.petRepository.CreatePet(ctx, newPet)
 	if err != nil {
-		logger.Error("Failed to create pet in repository", "error", err, "params", params)
 		return nil, err
 	}
 

@@ -1,5 +1,5 @@
 CREATE TABLE sellers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     business_id SERIAL REFERENCES businesses(id) ON DELETE CASCADE,
     email VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -31,7 +31,7 @@ INSERT INTO seller_listings_type (id, name) VALUES
 (2, 'product');
 
 CREATE TABLE seller_listings (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     seller_id UUID REFERENCES sellers(id) ON DELETE CASCADE,
     business_id INT REFERENCES businesses(id) ON DELETE CASCADE,
     type_id INT REFERENCES seller_listings_type(id),
@@ -49,6 +49,7 @@ CREATE TABLE seller_listings_details (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     currency VARCHAR(10) NOT NULL,
+    location GEOMETRY(POINT, 4326),
     metadata JSONB DEFAULT '{}'
 );
 

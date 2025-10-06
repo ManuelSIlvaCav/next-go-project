@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS clients(
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     business_id SERIAL REFERENCES businesses(id) ON DELETE CASCADE,
     first_name VARCHAR(255),
     middle_name VARCHAR(255),

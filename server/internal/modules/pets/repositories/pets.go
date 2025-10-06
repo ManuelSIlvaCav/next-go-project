@@ -44,12 +44,12 @@ func (r *PetRepository) CreatePet(ctx context.Context, params *pets_models.Pet) 
 		newPet.Age,
 	).Scan(&newPet.ID); err != nil {
 		pqErr := err.(*pgconn.PgError)
-		logger.Error("Error creating pet", "error", err, "pqErr", pqErr, "params", params)
+		logger.Error("PetRepository - Error creating pet", "error", err, "pqErr", pqErr, "params", params)
 
 		if pqErr.Code == "23503" {
 			return nil, internal_models.NewErrorWithCode(internal_models.BusinessForeignKeyError)
 		}
-		return nil, internal_models.NewErrorWithCode(internal_models.UserCreationError)
+		return nil, internal_models.NewErrorWithCode(internal_models.ErrPetCreation)
 	}
 
 	return newPet, nil
@@ -71,10 +71,9 @@ func (r *PetRepository) GetPet(ctx context.Context, params *pets_models.GetPetPa
 		&pet.PetType,
 		&pet.Breed,
 		&pet.Age,
-
 		&pet.CreatedAt,
 	); err != nil {
-		logger.Error("Error getting pet", "error", err, "params", params)
+		logger.Error("PetRepository - Error getting pet", "error", err, "params", params)
 		return nil, err
 	}
 

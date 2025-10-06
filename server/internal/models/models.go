@@ -39,6 +39,7 @@ const (
 	BusinessCreateError     = 6002
 	ErrSellerAlreadyExists  = 7001
 	ErrSellerNotFound       = 7002
+	ErrPetCreation          = 8001
 )
 
 var ErrorCodesMessage = map[int]string{
@@ -58,11 +59,15 @@ var ErrorCodesMessage = map[int]string{
 type HandlerError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-	error
+	Err     error  `json:"-"`
 }
 
 func (he *HandlerError) Error() string {
 	return fmt.Sprintf("ErrorCode: %d, Message: %s", he.Code, he.Message)
+}
+
+func (he *HandlerError) Unwrap() error {
+	return he.Err
 }
 
 func NewErrorWithCode(code int) *HandlerError {
@@ -70,7 +75,7 @@ func NewErrorWithCode(code int) *HandlerError {
 	return &HandlerError{
 		Code:    code,
 		Message: message,
-		error:   fmt.Errorf("%d: %s", code, message),
+		Err:     fmt.Errorf("%d: %s", code, message),
 	}
 
 }
