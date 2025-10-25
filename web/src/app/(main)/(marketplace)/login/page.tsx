@@ -5,7 +5,7 @@ import LoginForm from './login-form'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 mt-[5rem]">
       <div className="max-w-md mx-auto px-4 py-12 sm:py-16">
         {/* Login Form Card */}
         <Card className="bg-white dark:bg-zinc-800 border-gray-200 dark:border-gray-700">

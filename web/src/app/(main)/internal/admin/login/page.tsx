@@ -1,78 +1,36 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useMutation } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import LoginForm from '../../login/form'
+import LoginForm from '@/app/(main)/(marketplace)/login/login-form'
+import { Card, CardContent } from '@/components/ui/card'
 
-async function createLoginRequest(data: { type: string; email: string }) {
-  const resp = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/v1/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!resp?.ok) {
-    throw new Error('Error de conexión')
-  }
-
-  if (resp.status !== 201) {
-    console.log('resp', { resp, api: process.env.NEXT_PUBLIC_API_PATH })
-    throw new Error('Error en la solicitud')
-  }
-
-  const jsonResponse = await resp.json()
-
-  if (!jsonResponse) {
-    throw new Error('Invalid response')
-  }
-
-  return jsonResponse
-}
-
-export default function AdminLogin() {
-  const mutation = useMutation({
-    mutationFn: createLoginRequest,
-  })
-
-  function onSubmit(data: { email: string }, callbackfn: () => void) {
-    mutation.mutate(
-      { type: 'email-only', ...data },
-      {
-        onSuccess: () => {
-          callbackfn()
-        },
-        onError: (error) => {
-          toast.error(error?.message, {
-            description: 'Retry with a different email.',
-            position: 'top-right',
-            action: {
-              label: 'Undo',
-              onClick: () => console.log('Undo'),
-            },
-          })
-        },
-      },
-    )
-  }
-
+export default function AdminLoginPage() {
   return (
-    <main className="overflow-hidden">
-      <div className="isolate flex min-h-dvh items-center justify-center p-6 lg:p-8">
-        <div className="w-full max-w-md ">
-          <Card className="w-[350px]">
-            <CardHeader>
-              <CardTitle>Admin Login</CardTitle>
-              <CardDescription>Ingresa tu correo</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col px-6">
-              <LoginForm ui="admin" onSubmit={onSubmit} />
-            </CardContent>
-          </Card>
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 flex items-center justify-center">
+      <div className="max-w-md w-full px-4 py-12 sm:py-16">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white font-fredoka mb-2">
+            Admin Portal
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 font-lato">
+            Sign in to access the admin dashboard
+          </p>
+        </div>
+
+        {/* Login Form Card */}
+        <Card className="bg-white dark:bg-zinc-800 border-gray-200 dark:border-gray-700 shadow-lg">
+          <CardContent className="p-6 sm:p-8">
+            <LoginForm type="admin" redirectPath="/internal/dashboard" />
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Admin access only. Unauthorized access is prohibited.
+          </p>
         </div>
       </div>
-    </main>
+    </div>
   )
 }

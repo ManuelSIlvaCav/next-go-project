@@ -26,7 +26,7 @@ func Register(
 		logger.Info("Registering user", "email", registerData.Email, "business_id", registerData.BusinessID)
 
 		// Create business user
-		_, err := authService.RegisterUser(ctx, registerData)
+		_, err := authService.RegisterBusinessUser(ctx, registerData)
 
 		if err != nil {
 			message := "could not register user"

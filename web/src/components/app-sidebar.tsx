@@ -16,12 +16,12 @@ import {
   BookUser,
   ChartLine,
   ChevronDown,
+  Layers2,
   MailPlus,
   Settings,
   Shield,
   Users,
   WorkflowIcon,
-  Layers2
 } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
@@ -102,12 +102,11 @@ const adminItems = [
 
 const cmsItems = [
   {
-    title: "Categorias",
-    url: "/internal/dashboard/cms/categories",
+    title: 'Categorias',
+    url: '/internal/dashboard/cms/categories',
     icon: Layers2,
-  }
+  },
 ]
-
 
 function SideBarMainGroup() {
   return (
@@ -175,7 +174,7 @@ async function SideBarAdminGroup() {
   const cookieStore = await cookies()
   /* Make a sleep 2 secs */
   await new Promise((resolve) => setTimeout(resolve, 2000))
-  const jwt = cookieStore.get('jwt')
+  const jwt = cookieStore.get('petza_admin_token')
   if (!jwt) {
     return null
   }

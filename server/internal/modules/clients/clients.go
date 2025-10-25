@@ -18,6 +18,7 @@ type ClientModule struct {
 	router           *router.Router
 	filesModule      *files.FilesModule
 	clientRepository *clients_repositories.ClientRepository
+	authModule       auth.IAuthModule
 }
 
 type ClientsModuleParams struct {
@@ -30,30 +31,29 @@ type ClientsModuleParams struct {
 }
 
 func NewClientModule(params ClientsModuleParams) *ClientModule {
-	/* routes := []internal_models.Route{}
-
-	routes = append(routes,
-		internal_models.Route{
-			Method:        "POST",
-			Path:          "/upload_csv",
-			Handler:       clients.UploadClients(container, filesModule),
-			Description:   "Upload a csv file with clients",
-			Authenticated: true,
-		},
-	) */
 
 	clientsModule := &ClientModule{
 		container:        params.Container,
 		filesModule:      params.FilesModule,
 		router:           params.Router,
 		clientRepository: params.ClientRepository,
+		authModule:       params.AuthModule,
 	}
+
+	clientsModule.SetRoutes()
 
 	return clientsModule
 }
 
 func (c *ClientModule) GetDomain() string {
 	return "/clients"
+}
+
+func (l *ClientModule) SetRoutes() {
+	group := l.router.MainGroup.Group(l.GetDomain())
+
+	group.Use(l.authModule.AuthMiddleware())
+
 }
 
 func (c *ClientModule) GetClientRepository() *clients_repositories.ClientRepository {

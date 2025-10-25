@@ -82,7 +82,7 @@ export default function ServiceCard({ provider, className, onSelect }: ServiceCa
               </Button>
               <Button
                 variant="outline"
-                className="w-full border-primary text-primary hover:bg-primary/10 dark:border-primary dark:text-primary dark:hover:bg-primary/20 font-latto text-xs sm:text-sm px-2 sm:px-4"
+                className="w-full border-primary text-primary hover:bg-primary/10 dark:border-primary dark:text-primary dark:hover:bg-primary/20 font-latto text-xs sm:text-sm px-2 sm:px-4 "
               >
                 View
               </Button>

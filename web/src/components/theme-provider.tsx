@@ -1,4 +1,11 @@
-import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from 'next-themes'
+'use client'
+
+import { ThemeProviderProps } from 'next-themes'
+import dynamic from 'next/dynamic'
+
+const NextThemesProvider = dynamic(() => import('next-themes').then((mod) => mod.ThemeProvider), {
+  ssr: false, // Disable server-side rendering for this component
+})
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>

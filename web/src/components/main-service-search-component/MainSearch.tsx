@@ -158,7 +158,7 @@ export default function MainServiceSearchComponent({
         <AddressField label={t('addressLabel')} className="w-[14rem] h-[5rem]" />
 
         {/* Date Selection */}
-        <div className="space-y-2 w-[14rem] h-[5rem]">
+        <div className="space-y-2 w-[16rem] h-[5rem]">
           <label className="font-latto text-sm font-medium text-gray-700 dark:text-gray-200 block">
             {t('datesLabel')}
           </label>
@@ -222,7 +222,7 @@ export default function MainServiceSearchComponent({
           <Button
             onClick={handleSearch}
             disabled={isSearchDisabled}
-            className="h-12 sm:h-12 w-full bg-primary hover:bg-primary/90  text-white disabled:bg-gray-300 dark:bg-purple-900 dark:hover:bg-purple-900/50 dark:disabled:bg-gray-700 font-medium text-sm sm:text-base transition-colors"
+            className="h-12 sm:h-12 w-full   text-white disabled:bg-gray-300  dark:disabled:bg-gray-700 font-medium text-sm sm:text-base transition-colors"
             size="lg"
           >
             <SearchIcon className="mr-2 h-4 w-5 flex-shrink-0" />

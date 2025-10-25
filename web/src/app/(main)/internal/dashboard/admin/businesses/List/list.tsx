@@ -35,7 +35,7 @@ async function getData(apiParams: ApiParams): Promise<Business[]> {
 
 export default async function BusinessesList() {
   const cookieStore = await cookies()
-  const data = await getData({ jwt: cookieStore.get('jwt')?.value ?? '' })
+  const data = await getData({ jwt: cookieStore.get('petza_admin_token')?.value ?? '' })
 
   return (
     <div className="flex flex-col container mx-auto py-10 gap-4">

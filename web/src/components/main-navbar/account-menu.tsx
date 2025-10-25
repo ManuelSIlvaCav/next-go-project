@@ -87,19 +87,12 @@ export default function AccountMenu() {
 
             {/* Sign In Button */}
             <div className="p-4 space-y-3">
-              <Button
-                onClick={handleSignInClick}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
-              >
+              <Button onClick={handleSignInClick} variant={'default'} className="w-full py-2.5">
                 <LogIn className="h-4 w-4 mr-2" />
                 Iniciar Sesión
               </Button>
 
-              <Button
-                onClick={handleRegisterClick}
-                variant="outline"
-                className="w-full border-primary text-primary hover:bg-primary hover:text-white font-medium py-2.5 rounded-lg transition-colors"
-              >
+              <Button onClick={handleRegisterClick} variant="outline" className="w-full  py-2.5 ">
                 <UserPlus className="h-4 w-4 mr-2" />
                 Registrarse
               </Button>
@@ -180,7 +173,7 @@ export default function AccountMenu() {
                   router.push('/login')
                   setIsMobileOpen(false)
                 }}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 rounded-lg transition-colors"
+                className="w-full font-medium py-2.5 rounded-lg"
               >
                 <LogIn className="h-4 w-4 mr-2" />
                 Iniciar Sesión

@@ -88,7 +88,7 @@ func (params LoginClientParams) Validate() error {
 	)
 }
 
-func (s *AuthService) RegisterUser(
+func (s *AuthService) RegisterBusinessUser(
 	ctx context.Context,
 	params RegisterUserParams) (*businesses_models.BusinessUser, *internal_models.HandlerError) {
 	logger := s.container.Logger()

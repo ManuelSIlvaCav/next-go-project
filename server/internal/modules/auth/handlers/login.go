@@ -30,42 +30,13 @@ func Login(container *container.Container, authService *auth_services.AuthServic
 			return c.JSON(http.StatusBadRequest, &echo.Map{"message": err.Error()})
 		}
 
-		logger.Info("Logging user", "user", user)
+		logger.Info("Login user", "user", user)
 
 		if user.Password == "" {
 			return c.JSON(http.StatusBadRequest, echo.Map{
 				"message": "password is required",
 			})
 		}
-
-		/* if user.Type == "email-only" {
-			admin, err := LoginAdmin(ctx, authRepository, user)
-			if err != nil || admin == nil {
-				message := "could not login user"
-				if err != nil {
-					message = err.Message
-				}
-				return c.JSON(http.StatusBadRequest, echo.Map{
-					"code":  err.Code,
-					"error": message,
-				})
-			}
-
-
-			redirectURL := "http://localhost:3001/internal/login/redirect"
-			task, emailSendError := emails_tasks.NewSendEmailTask(user.Email, redirectURL)
-			if emailSendError != nil {
-				return c.JSON(http.StatusInternalServerError, echo.Map{
-					"error": "could not create email task",
-				})
-			}
-			container.EnqueueTask(task)
-
-			return c.JSON(http.StatusCreated, echo.Map{
-				"message": "email sent",
-				"email":   user.Email,
-			})
-		} */
 
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"message": "could not login user",

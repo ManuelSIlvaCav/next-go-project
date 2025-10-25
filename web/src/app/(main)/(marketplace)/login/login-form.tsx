@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/use-auth'
-import { loginClient } from '@/lib/api/auth'
+import { loginAdmin, LoginAdminResponse, loginClient, LoginClientResponse } from '@/lib/api/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useSetCookie } from 'cookies-next'
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
@@ -17,9 +17,15 @@ import { z } from 'zod'
 
 interface LoginFormProps {
   onSubmit?: (data: { email: string; password: string }) => void
+  type?: 'client' | 'admin'
+  redirectPath?: string
 }
 
-export default function LoginForm({ onSubmit }: LoginFormProps) {
+export default function LoginForm({
+  onSubmit,
+  type = 'client',
+  redirectPath = '/',
+}: LoginFormProps) {
   const t = useTranslations('LoginPage')
   const router = useRouter()
   const setCookie = useSetCookie()
@@ -35,15 +41,26 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
 
   // TanStack Query mutation for login
   const loginMutation = useMutation({
-    mutationFn: loginClient,
-    onSuccess: (data) => {
-      toast.success('Login successful!', {
-        description: `Welcome back, ${data.client.email}`,
+    mutationFn: type === 'admin' ? loginAdmin : loginClient,
+    onSuccess: (data: LoginAdminResponse | LoginClientResponse) => {
+      console.log('Login successful:', data)
+
+      const userType = type === 'admin' ? 'Admin' : 'User'
+
+      const dataPerUser =
+        type === 'admin' ? (data as LoginAdminResponse).admin : (data as LoginClientResponse).user
+
+      toast.success(`${userType} login successful!`, {
+        description: `Welcome back, ${dataPerUser.email}`,
       })
-      setCookie('petza_access_token', data.access_token)
+
+      // Set cookie based on user type
+      const cookieName = type === 'admin' ? 'petza_admin_token' : 'petza_access_token'
+      setCookie(cookieName, data.access_token)
 
       // Store user data in localStorage
-      localStorage.setItem('petza_user', JSON.stringify(data.client))
+      const storageKey = type === 'admin' ? 'petza_admin_user' : 'petza_user'
+      localStorage.setItem(storageKey, JSON.stringify(dataPerUser))
 
       // Refresh auth state using Context
       refreshAuth()
@@ -52,12 +69,13 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
         onSubmit(loginForm)
       }
 
-      // Redirect to home page
-      router.push('/')
+      // Redirect to specified path or home
+      router.push(redirectPath)
       router.refresh()
     },
     onError: (error: Error) => {
-      toast.error('Login failed', {
+      const userType = type === 'admin' ? 'Admin login' : 'Login'
+      toast.error(`${userType} failed`, {
         description: error.message,
       })
     },
@@ -136,7 +154,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
               value={loginForm.email}
               onChange={(e) => handleFormChange('email', e.target.value)}
               onKeyPress={handleKeyPress}
-              className={`pl-10 h-12 ${errors.email ? 'border-red-500' : ''}`}
+              className={`pl-10 h-12 dark:border-white ${errors.email ? 'border-red-500' : ''}`}
             />
           </div>
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
@@ -155,7 +173,9 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
               value={loginForm.password}
               onChange={(e) => handleFormChange('password', e.target.value)}
               onKeyPress={handleKeyPress}
-              className={`pl-10 pr-10 h-12 ${errors.password ? 'border-red-500' : ''}`}
+              className={`pl-10 pr-10 h-12 dark:border-white ${
+                errors.password ? 'border-red-500' : ''
+              }`}
             />
             <Button
               type="button"
@@ -167,7 +187,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </Button>
           </div>
-          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+          {errors.password && <p className="text-red-505 text-sm">{errors.password}</p>}
         </div>
 
         <div className="flex items-center justify-end">

@@ -20,19 +20,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning={true}
-      className={`antialiased` + clsx(latto.variable, fredoka.variable)}
-    >
+    <html lang="en" className={`antialiased` + clsx(latto.variable, fredoka.variable)}>
       <body>
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <AuthProvider>
               <NextIntlClientProvider>
                 <InnerClientInit>{children}</InnerClientInit>

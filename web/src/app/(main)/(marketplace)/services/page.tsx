@@ -131,9 +131,9 @@ export default function ServicesPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 ">
       {/* Header Section */}
-      <div className="bg-white dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700">
+      <div className="bg-white dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700 mt-[5rem]">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">

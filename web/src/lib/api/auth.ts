@@ -48,7 +48,7 @@ export interface LoginClientParams {
 export interface LoginClientResponse {
   access_token: string
   expires_at: string
-  client: {
+  user: {
     id: string
     email: string
     first_name: string
@@ -72,6 +72,43 @@ export const loginClient = async (params: LoginClientParams): Promise<LoginClien
   }
 
   const data: LoginClientResponse = await response.json()
+
+  return data
+}
+
+export interface LoginAdminParams {
+  email: string
+  password: string
+  business_id: number
+}
+
+export interface LoginAdminResponse {
+  access_token: string
+  expires_at: string
+  admin: {
+    id: string
+    email: string
+    first_name: string
+    last_name: string
+    business_id: number
+  }
+}
+
+export const loginAdmin = async (params: LoginAdminParams): Promise<LoginAdminResponse> => {
+  const response = await fetch(`${API_BASE_URL}/v1/auth/admin/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.error || 'Admin login failed')
+  }
+
+  const data: LoginAdminResponse = await response.json()
 
   return data
 }

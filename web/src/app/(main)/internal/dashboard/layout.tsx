@@ -7,13 +7,13 @@ import { redirect } from 'next/navigation'
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
 
-  if (!cookieStore?.get('jwt')) {
+  if (!cookieStore?.get('petza_admin_token')) {
     redirect('/internal/admin/login')
   }
 
   return (
     <div className="max-w-full w-screen">
-      <JwtProvider initialJwt={cookieStore?.get?.('jwt')?.value as string}>
+      <JwtProvider initialJwt={cookieStore?.get?.('petza_admin_token')?.value as string}>
         <SidebarProvider className="">
           <AppSidebar />
           {children}

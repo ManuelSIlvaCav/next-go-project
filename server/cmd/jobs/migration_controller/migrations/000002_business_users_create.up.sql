@@ -50,3 +50,10 @@ CREATE TABLE IF NOT EXISTS user_email_login (
     used_at TIMESTAMP,
     deleted_at TIMESTAMP
 );
+
+
+INSERT INTO businesses (id, name, identifier, legal_name, is_active, is_admin)
+VALUES (1, 'Petza Business', 'petza_business', 'Petza Business LLC', TRUE, TRUE)
+
+INSERT INTO businesses_users (business_id, email, first_name, last_name, is_active)
+VALUES (1, 'petzahelp@gmail.com', 'Petza', 'Help', TRUE);
